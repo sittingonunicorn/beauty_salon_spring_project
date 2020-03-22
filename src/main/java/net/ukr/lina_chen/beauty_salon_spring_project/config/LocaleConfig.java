@@ -23,9 +23,9 @@ public class LocaleConfig implements WebMvcConfigurer {
 
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
-        LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
-        lci.setParamName("lang");
-        return lci;
+        LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+        localeChangeInterceptor.setParamName("lang");
+        return localeChangeInterceptor;
     }
 
     @Override
@@ -37,7 +37,8 @@ public class LocaleConfig implements WebMvcConfigurer {
         @Override
         public Locale resolveLocale(HttpServletRequest request) {
             String language = request.getParameter("lang");
-            Locale locale = Locale.getDefault();
+            Locale locale;
+            locale= new Locale("ua", "UA");
             if (!StringUtils.isEmpty(language)) {
                 String[] split = language.split("_");
                 locale = new Locale(split[0], split[1]);

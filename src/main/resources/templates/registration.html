@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <title>Registration</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-default" style="margin-top:45px">
+                <div class="panel-heading">
+                    <h3 class="panel-title" th:text="#{form.registration}">Registration form</h3>
+                </div>
+                <div class="panel-body">
+                    <!--/*@thymesVar id="emailError" type="String"*/-->
+                    <div class="alert" th:if="${emailError}">
+                        <div class="alert alert-danger" role="alert" th:text="#{email.not.unique}"></div>
+                    </div>
+                    <form method="post" action="/registration">
+                        <!--                        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden">-->
+                        <div class="form-group">
+                            <label for="e-mail" th:text="#{email}">E-mail</label>
+                            <input required type="email" class="form-control" id="e-mail" th:placeholder="#{email}"
+                                   name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="password" th:text="#{password}">Password</label>
+                            <input type="password" class="form-control" id="password" th:placeholder="#{password}"
+                                   name="password">
+                        </div>
+                        <div class="form-group">
+                            <label for="name" th:text="#{name}">Name</label>
+                            <input type="text" class="form-control" id="name" th:placeholder="#{name}"
+                                   name="name">
+                        </div>
+                        <input name="_csrf" th:value="${_csrf.token}" type="hidden">
+                        <button type="submit" class="btn btn-default" th:text="#{register}">Register</button>
+                    </form>
+                    <div class="login-links">
+                            <a class="txt-brand" href="/login">
+                                <span style="color:#29aafe;" th:text="#{log.in}">Sign in</span>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+    </div>
+</div>
+</body>
+</html>
