@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 @Data
+@Entity
 @Table(name = "beautyservices")
 public class BeautyService {
     @Id

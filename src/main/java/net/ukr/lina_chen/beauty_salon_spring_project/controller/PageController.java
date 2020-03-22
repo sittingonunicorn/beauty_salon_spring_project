@@ -2,7 +2,6 @@ package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import net.ukr.lina_chen.beauty_salon_spring_project.config.LocaleConfig;
-import net.ukr.lina_chen.beauty_salon_spring_project.dto.UserDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.User;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,10 +54,10 @@ public class PageController {
 
     private User getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserDTO currentUser;
+        User currentUser;
 
         try {
-            currentUser = (UserDTO) auth.getPrincipal();
+            currentUser = (User) auth.getPrincipal();
         } catch (ClassCastException e) {
             return new User(); //this is likely wrong, there should be a better way to build dummy objects in Spring
         }

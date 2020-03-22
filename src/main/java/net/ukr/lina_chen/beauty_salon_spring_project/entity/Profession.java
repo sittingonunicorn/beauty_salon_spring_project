@@ -8,6 +8,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Entity
 @Data
 @Table(name = "professions")
 public class Profession {

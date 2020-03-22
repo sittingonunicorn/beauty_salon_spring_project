@@ -7,15 +7,18 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@NoArgsConstructor
+
 @Builder
 @Entity
 @Data
-@Table(name = "schedule")
-public class Schedule {
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "record")
+public class Record {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "schedule_id")
+    @Column(name = "record_id")
     private Long id;
 
     @ManyToOne(cascade = CascadeType.MERGE)
