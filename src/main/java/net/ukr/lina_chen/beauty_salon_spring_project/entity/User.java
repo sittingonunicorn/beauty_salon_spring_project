@@ -9,6 +9,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.HashSet;
@@ -20,7 +22,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "users",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"username", "user_id"})})
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"email", "user_id"})})
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -35,6 +37,11 @@ public class User implements UserDetails {
     @Column(name = "username", nullable = false)
     @Size(min = 8, max = 32, message = "Username should be from 8 to 32 symbols.")
     private String username;
+    @Column(name = "email"/*, nullable = false*/)
+    @Size(min = 8, max = 32, message = "E-mail should be from 8 to 32 symbols.")
+    //@NotEmpty(message = "{email.notempty}")
+    @Email
+    private String email;
     @Column(name = "name", nullable = false)
     @Size(min = 2, max = 32, message = "Username should be from 2 to 32 symbols.")
     private String name;

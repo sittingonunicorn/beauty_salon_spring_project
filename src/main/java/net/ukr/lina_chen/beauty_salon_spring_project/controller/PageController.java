@@ -37,7 +37,7 @@ public class PageController {
     public String mainPage(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
-        model.addAttribute("username", user.getUsername());
+        model.addAttribute("email", user.getEmail());
         model.addAttribute("name", user.getName());
        // model.addAttribute("roles", user.getAuthorities().stream().map(Role::getAuthority).collect(joining(",")));
         return "main.html";
@@ -52,18 +52,17 @@ public class PageController {
         return "login.html";
     }
 
-    private User getCurrentUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser;
-
-        try {
-            currentUser = (User) auth.getPrincipal();
-        } catch (ClassCastException e) {
-            return new User(); //this is likely wrong, there should be a better way to build dummy objects in Spring
-        }
-
-        return currentUser.getUser();
-    }
+//    private User getCurrentUser() {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        User currentUser;
+//
+//        try {
+//            currentUser = (User) auth.getPrincipal();
+//        } catch (ClassCastException e) {
+//            return new User();
+//        }
+//        return currentUser.getUser();
+//    }
 
 
 }
