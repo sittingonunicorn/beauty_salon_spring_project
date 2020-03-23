@@ -23,6 +23,9 @@ public class Profession {
     @OneToMany( mappedBy = "profession",  cascade = CascadeType.MERGE)
     private Set<Master> masters;
 
+    @Column(name = "language_code", nullable = false)
+    private String languageCode;
+
 //    @OneToMany( mappedBy = "profession",  cascade = CascadeType.MERGE)
 //    private Set<Procedure> procedures;
 

@@ -11,6 +11,9 @@
     <title>Login</title>
 </head>
 <body>
+<h4 th:text="#{message.language}"></h4>
+<button type="button" class="btn btn-outline-secondary"> <a th:href="@{/login(lang='en_US')}" th:text="#{language.en}">English</a></button>
+<button type="button" class="btn btn-outline-secondary"> <a th:href="@{/login(lang='ua_UA')}" th:text="#{language.ua}">Ukrainian</a></button>
 <div class="container">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
