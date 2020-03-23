@@ -14,17 +14,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Slf4j
 @Controller
 public class PageController {
     private UserService userService;
-    private LocaleConfig localeConfig;
+  //  private LocaleConfig localeConfig;
     private ProfessionService professionService;
 
     @Autowired
     public PageController(UserService userService, LocaleConfig localeConfig, ProfessionService professionService) {
         this.userService = userService;
-        this.localeConfig = localeConfig;
+     //   this.localeConfig = localeConfig;
         this.professionService = professionService;
     }
 
@@ -56,8 +58,8 @@ public class PageController {
     }
 
     @GetMapping("/user/mastertypes")
-    public String mastertypesPage(Model model) {
-        model.addAttribute("mastertypes", professionService.findAll());
+    public String mastertypesPage(Model model, HttpServletRequest request) {
+        model.addAttribute("mastertypes", professionService.findAll(request));
         return "user/mastertypes.html";
     }
 
