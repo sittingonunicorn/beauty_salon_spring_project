@@ -3,6 +3,7 @@ package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 import lombok.extern.slf4j.Slf4j;
 import net.ukr.lina_chen.beauty_salon_spring_project.config.LocaleConfig;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.User;
+import net.ukr.lina_chen.beauty_salon_spring_project.service.ProfessionService;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -16,16 +17,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Slf4j
 @Controller
 public class PageController {
-    private final UserService userService;
+    private UserService userService;
     private LocaleConfig localeConfig;
+    private ProfessionService professionService;
 
     @Autowired
-    public PageController(UserService userService, LocaleConfig localeConfig) {
+    public PageController(UserService userService, LocaleConfig localeConfig, ProfessionService professionService) {
         this.userService = userService;
         this.localeConfig = localeConfig;
+        this.professionService = professionService;
     }
 
-    @GetMapping({"/index","/"})
+    @GetMapping({"/index", "/"})
     public /*@ResponseBody
     UsersDTO*/ String indexPage() {
         //return userService.getAllUsers();
@@ -39,7 +42,7 @@ public class PageController {
         User user = (User) authentication.getPrincipal();
         model.addAttribute("email", user.getEmail());
         model.addAttribute("name", user.getName());
-       // model.addAttribute("roles", user.getAuthorities().stream().map(Role::getAuthority).collect(joining(",")));
+        // model.addAttribute("roles", user.getAuthorities().stream().map(Role::getAuthority).collect(joining(",")));
         return "main.html";
     }
 
@@ -50,6 +53,12 @@ public class PageController {
         model.addAttribute("error", error != null);
         model.addAttribute("logout", logout != null);
         return "login.html";
+    }
+
+    @GetMapping("/user/mastertypes")
+    public String mastertypesPage(Model model) {
+        model.addAttribute("mastertypes", professionService.findAll());
+        return "user/mastertypes.html";
     }
 
 //    private User getCurrentUser() {
