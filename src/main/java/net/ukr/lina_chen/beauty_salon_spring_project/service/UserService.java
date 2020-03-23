@@ -18,12 +18,14 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class UserService implements UserDetailsService {
-    @Autowired
+
     private UserRepository userRepository;
-    @Autowired
+
     private final PasswordEncoder bcryptPasswordEncoder;
 
-    public UserService(PasswordEncoder bcryptPasswordEncoder) {
+    @Autowired
+    public UserService(UserRepository userRepository, PasswordEncoder bcryptPasswordEncoder) {
+        this.userRepository = userRepository;
         this.bcryptPasswordEncoder = bcryptPasswordEncoder;
     }
 
