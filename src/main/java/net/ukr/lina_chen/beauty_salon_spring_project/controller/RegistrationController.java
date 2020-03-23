@@ -28,11 +28,11 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(User user, Model model, Locale locale) {
-        if (userService.loadUserByUsername(user.getEmail()) != null) {
+        if (((User)userService.loadUserByUsername(user.getEmail())).getEmail() != null) {
             model.addAttribute("emailError", messageSource.getMessage("email.not.unique", null, locale));
             return "registration.html";
         }
         userService.saveNewUser(user);
-        return "redirect:/login.html";
+        return "redirect:/login";
     }
 }

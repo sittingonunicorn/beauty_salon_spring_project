@@ -40,13 +40,12 @@ public class UserService implements UserDetailsService {
     public void saveNewUser(User user) {
         user.setRole(Role.USER);
         user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));
-        log.info(user.getUsername());
         log.info(user.getEmail());
         try {
             userRepository.save(user);
             log.info("User " + user.getEmail() + " is successfully registered.");
         } catch (Exception ex) {
-            System.out.println("Error: duplicate user email");
+            ex.printStackTrace();
         }
 
     }
@@ -54,7 +53,9 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(@NonNull String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User " + email + " not found."));
+        Optional<User> optional = userRepository.findByEmail(email);
+        User user = optional.orElseGet(User::new);/*.orElseThrow(() -> new UsernameNotFoundException("User " + email + " not found."))*/;
+        return user;
     }
 
     public Optional<User> findById(@NonNull Long id) {
