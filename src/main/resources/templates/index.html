@@ -12,25 +12,27 @@
 </head>
 <body>
 <h4 th:text="#{message.language}"></h4>
-<a th:href="@{/index(lang='en_US')}" th:text="#{language.en}"></a>
-<a th:href="@{/index(lang='ua_UA')}" th:text="#{language.ua}"></a>
-<span th:text="#{lang.change}"></span>:
-<select id="locales">
-    <option value=""></option>
-    <option value="en_US" th:text="#{language.en}"></option>
-    <option value="ua_UA" th:text="#{language.ua}"></option>
-</select>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
-</script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        $("#locales").change(function () {
-            var selectedOption = $('#locales').val();
-            if (selectedOption != ''){
-                window.location.replace('main?lang=' + selectedOption);
-            }
-        });
-    });
-</script>
+<button type="button" class="btn btn-outline-secondary"> <a th:href="@{/index(lang='en_US')}" th:text="#{language.en}"></a></button>
+<button type="button" class="btn btn-outline-secondary"> <a th:href="@{/index(lang='ua_UA')}" th:text="#{language.ua}"></a></button>
+
+
+<!--<span th:text="#{lang.change}"></span>:-->
+<!--<select id="locales">-->
+<!--    <option value=""></option>-->
+<!--    <option value="en_US" th:text="#{language.en}"></option>-->
+<!--    <option value="ua_UA" th:text="#{language.ua}"></option>-->
+<!--</select>-->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--    $(document).ready(function() {-->
+<!--        $("#locales").change(function () {-->
+<!--            var selectedOption = $('#locales').val();-->
+<!--            if (selectedOption != ''){-->
+<!--                window.location.replace('main?lang=' + selectedOption);-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
 </body>
 </html>

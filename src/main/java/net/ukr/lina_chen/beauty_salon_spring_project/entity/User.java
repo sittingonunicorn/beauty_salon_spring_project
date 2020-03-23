@@ -32,14 +32,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
     @Column(name = "password", nullable = false)
-    @Size(min = 8, max = 32, message = "Password should be from 8 to 32 symbols.")
+    @Size(min = 8, message = "Password should be from 8 to 32 symbols.")
     private String password;
-    @Column(name = "username", nullable = false)
-    @Size(min = 8, max = 32, message = "Username should be from 8 to 32 symbols.")
-    private String username;
-    @Column(name = "email"/*, nullable = false*/)
+    @Column(name = "email", nullable = false)
     @Size(min = 8, max = 32, message = "E-mail should be from 8 to 32 symbols.")
-    //@NotEmpty(message = "{email.notempty}")
     @Email
     private String email;
     @Column(name = "name", nullable = false)
@@ -86,4 +82,10 @@ public class User implements UserDetails {
     public User getUser() {
         return this;
     }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
 }

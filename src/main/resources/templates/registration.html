@@ -24,7 +24,7 @@
                         <div class="alert alert-danger" role="alert" th:text="#{email.not.unique}"></div>
                     </div>
                     <form method="post" action="/registration">
-                        <!--                        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden">-->
+                        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden">
                         <div class="form-group">
                             <label for="e-mail" th:text="#{email}">E-mail</label>
                             <input required type="email" class="form-control" id="e-mail" th:placeholder="#{email}"
@@ -40,18 +40,17 @@
                             <input type="text" class="form-control" id="name" th:placeholder="#{name}"
                                    name="name">
                         </div>
-                        <input name="_csrf" th:value="${_csrf.token}" type="hidden">
                         <button type="submit" class="btn btn-default" th:text="#{register}">Register</button>
                     </form>
                     <div class="login-links">
-                            <a class="txt-brand" href="/login">
-                                <span style="color:#29aafe;" th:text="#{log.in}">Sign in</span>
-                            </a>
+                        <a class="txt-brand" href="/login">
+                            <span style="color:#29aafe;" th:text="#{log.in}">Sign in</span>
+                        </a>
                         </p>
                     </div>
                 </div>
-                </div>
             </div>
+        </div>
 
     </div>
 </div>

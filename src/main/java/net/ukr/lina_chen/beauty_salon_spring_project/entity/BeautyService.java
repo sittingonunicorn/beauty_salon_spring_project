@@ -26,6 +26,6 @@ public class BeautyService {
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "profession_id", nullable = false)
-    private Profession profession;
+    private Profession professionId;
 
 }
