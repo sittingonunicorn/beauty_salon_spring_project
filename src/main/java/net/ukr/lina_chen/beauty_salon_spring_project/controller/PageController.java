@@ -19,14 +19,12 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @Controller
 public class PageController {
-    private UserService userService;
-  //  private LocaleConfig localeConfig;
+    //private UserService userService;
     private ProfessionService professionService;
 
     @Autowired
-    public PageController(UserService userService, LocaleConfig localeConfig, ProfessionService professionService) {
-        this.userService = userService;
-     //   this.localeConfig = localeConfig;
+    public PageController(UserService userService, ProfessionService professionService) {
+      //  this.userService = userService;
         this.professionService = professionService;
     }
 
