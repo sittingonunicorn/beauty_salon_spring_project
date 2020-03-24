@@ -23,7 +23,7 @@ mvnw
 *.ipr
 
 ### NetBeans ###
-/nbproject/private/
+/nbproject/private/2
 /nbbuild/
 /dist/
 /nbdist/
