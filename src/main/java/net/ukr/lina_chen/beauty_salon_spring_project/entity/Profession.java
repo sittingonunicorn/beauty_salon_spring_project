@@ -26,6 +26,9 @@ public class Profession {
     @Column(name = "language_code", nullable = false)
     private String languageCode;
 
+    @Column(name = "beautyservices_type", nullable = false)
+    private String beautyservicesType;
+
 //    @OneToMany( mappedBy = "profession",  cascade = CascadeType.MERGE)
 //    private Set<Procedure> procedures;
 

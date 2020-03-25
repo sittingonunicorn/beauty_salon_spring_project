@@ -20,7 +20,7 @@ public class MasterService{
     }
 
 
-    List <Master> findAllByProfession(Long professionId){
+    List <Master> findAllByProfessionId(Long professionId){
         return masterRepository.findAllByProfessionId(professionId);
     }
 }

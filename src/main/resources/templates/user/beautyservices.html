@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th> Name</th>
+        <th> Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${#lists.isEmpty(beautyservices)}">
+        <td colspan="2"> No services available</td>
+    </tr>
+    <!--/*@thymesVar id="beautyservices" type="List"*/-->
+    <tr th:each="beautyservice : ${beautyservices}">
+        <td>
+            <!--/*@thymesVar id="name" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService"*/-->
+            <span th:text="${beautyservice.name}"> Name </span>
+            <!--/*@thymesVar id="price" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService"*/-->
+            <span th:text="${beautyservice.price}"> Price </span></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
