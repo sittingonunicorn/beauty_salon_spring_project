@@ -13,12 +13,12 @@ import java.time.LocalTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "record")
-public class Record {
+@Table(name = "appointment")
+public class Appointment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "record_id")
+    @Column(name = "appointment_id")
     private Long id;
 
     @ManyToOne(cascade = CascadeType.MERGE)

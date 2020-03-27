@@ -5,7 +5,9 @@ import net.ukr.lina_chen.beauty_salon_spring_project.entity.Profession;
 import net.ukr.lina_chen.beauty_salon_spring_project.repository.MasterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +22,8 @@ public class MasterService{
     }
 
 
-    List <Master> findAllByProfessionId(Long professionId){
-        return masterRepository.findAllByProfessionId(professionId);
+    public List <Master> findAllByProfessionId(Long professionId, HttpServletRequest request){
+        return masterRepository.findAllByProfessionIdAndLanguageCode(professionId,
+                RequestContextUtils.getLocale(request).toString());
     }
 }

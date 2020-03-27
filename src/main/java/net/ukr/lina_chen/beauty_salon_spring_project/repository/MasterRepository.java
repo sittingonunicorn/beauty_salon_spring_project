@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface MasterRepository extends JpaRepository<Master, Long> {
-    List<Master> findAllByProfessionId(Long professionId);
+    List<Master> findAllByProfessionIdAndLanguageCode(Long profession_id, String languageCode);
 
 }

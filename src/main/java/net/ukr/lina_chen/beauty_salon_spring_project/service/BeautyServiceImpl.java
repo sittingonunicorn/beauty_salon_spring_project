@@ -3,7 +3,6 @@ package net.ukr.lina_chen.beauty_salon_spring_project.service;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService;
-import net.ukr.lina_chen.beauty_salon_spring_project.entity.Profession;
 import net.ukr.lina_chen.beauty_salon_spring_project.repository.BeautyServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

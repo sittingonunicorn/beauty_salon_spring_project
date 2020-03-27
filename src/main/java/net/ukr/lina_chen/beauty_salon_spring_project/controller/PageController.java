@@ -25,14 +25,10 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class PageController {
     //private UserService userService;
-    private ProfessionService professionService;
-    private BeautyServiceImpl beautyServiceImpl;
 
     @Autowired
-    public PageController(UserService userService, ProfessionService professionService, BeautyServiceImpl beautyServiceImpl) {
+    public PageController(UserService userService) {
       //  this.userService = userService;
-        this.professionService = professionService;
-        this.beautyServiceImpl = beautyServiceImpl;
     }
 
     @GetMapping({"/index", "/"})
@@ -62,30 +58,11 @@ public class PageController {
         return "login.html";
     }
 
-    @GetMapping("/user/servicetypes")
-    public String mastertypesPage(Model model, HttpServletRequest request) {
-        model.addAttribute("servicetypes", professionService.findAll(request));
-        return "user/servicetypes.html";
-    }
 
-//    @GetMapping("/user/beautyservices")
-//    public String beautyservicesPage(Model model, HttpServletRequest request) {
-//        model.addAttribute("beautyservices", beautyServiceImpl.findAll(request));
-//        return "user/beautyservices.html";
-//    }
-
-    @GetMapping("/user/beautyservices/{profession}")
-    public String beautyservicesPage(Model model, HttpServletRequest request,
-                                @PathVariable Profession profession) {
-        model.addAttribute("url", "/user/beautyservices/{profession}");
-        model.addAttribute("beautyservices", beautyServiceImpl.findAllByProfessionId(profession.getId(), request));
-        return "/user/beautyservices.html";
-    }
 
 //    private User getCurrentUser() {
 //        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 //        User currentUser;
-//
 //        try {
 //            currentUser = (User) auth.getPrincipal();
 //        } catch (ClassCastException e) {

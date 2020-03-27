@@ -31,6 +31,9 @@ public class Master {
     @Column(name = "time_end", nullable = false)
     private LocalTime timeEnd;
 
+    @Column(name = "language_code", nullable = false)
+    private String languageCode;
+
 //    @OneToMany( mappedBy = "master",  cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 //    private Set<Comment> comments;
 

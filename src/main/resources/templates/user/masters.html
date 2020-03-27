@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th> Id</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${#lists.isEmpty(masters)}">
+        <td colspan="2"> No services available</td>
+    </tr>
+    <!--/*@thymesVar id="masters" type="java.util.List"*/-->
+    <tr th:each="master : ${masters}">
+        <td>
+            <!--/*@thymesVar id="getUser" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Master"*/-->
+            <!--/*@thymesVar id="getName" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.User"*/-->
+            <span th:text="${master.getUser().getName()}"> Id </span>
+
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
