@@ -14,7 +14,8 @@
 <h4 th:text="#{message.language}"></h4>
 <button type="button" class="btn btn-outline-secondary"> <a th:href="@{/index(lang='en_US')}" th:text="#{language.en}"></a></button>
 <button type="button" class="btn btn-outline-secondary"> <a th:href="@{/index(lang='ua_UA')}" th:text="#{language.ua}"></a></button>
-
+<!--/*@thymesVar id="date" type="java.time.LocalDate"*/-->
+<span th:text="${{date}}"></span>
 
 <!--<span th:text="#{lang.change}"></span>:-->
 <!--<select id="locales">-->

@@ -7,6 +7,7 @@ import net.ukr.lina_chen.beauty_salon_spring_project.service.BeautyServiceImpl;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.ProfessionService;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -18,24 +19,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ResourceBundle;
 
 @Slf4j
 @Controller
 public class PageController {
-    //private UserService userService;
-
-    @Autowired
-    public PageController(UserService userService) {
-      //  this.userService = userService;
-    }
+    private MessageSource messageSource;
 
     @GetMapping({"/index", "/"})
-    public /*@ResponseBody
-    UsersDTO*/ String indexPage() {
-        //return userService.getAllUsers();
-//        model.addAttribute(userService.getAllUsers());
+    public String indexPage(Model model, HttpServletRequest request) {
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
+//                ResourceBundle.getBundle("messages",RequestContextUtils.getLocale(request)).
+//                        getString("date.format"));
+        model.addAttribute("date"/*, formatter.format(LocalDate.now())*/);
         return "index.html";
     }
 
@@ -57,7 +59,6 @@ public class PageController {
         model.addAttribute("logout", logout != null);
         return "login.html";
     }
-
 
 
 //    private User getCurrentUser() {

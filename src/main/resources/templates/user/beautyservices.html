@@ -2,9 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Beauty Salon Choose Service</title>
 </head>
 <body>
+<div class="col-4 buttons">
+    <button type="submit" class="btn btn-light" onclick="location.href='?lang=en_US'" th:text="#{language.en}"></button>
+    <button type="submit" class="btn btn-light" onclick="location.href='?lang=ua_UA'" th:text="#{language.ua}"></button>
+</div>
 <table>
     <thead>
     <tr>
@@ -19,9 +23,6 @@
     <!--/*@thymesVar id="beautyservices" type="List"*/-->
     <tr th:each="beautyservice : ${beautyservices}">
         <td>
-            <!--/*@thymesVar id="name" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService"*/-->
-            <span th:text="${beautyservice.name}"> Name </span>
-
             <!--/*@thymesVar id="getProfession" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService"*/-->
             <!--/*@thymesVar id="getId" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Profession"*/-->
             <!--/*@thymesVar id="name" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService"*/-->

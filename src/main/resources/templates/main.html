@@ -11,17 +11,21 @@
     <title>Beauty Salon Main page</title>
 </head>
 <body>
+<div class="col-4 buttons">
+    <button type="submit" class="btn btn-light" onclick="location.href='?lang=en_US'" th:text="#{language.en}"></button>
+    <button type="submit" class="btn btn-light" onclick="location.href='?lang=ua_UA'" th:text="#{language.ua}"></button>
+</div>
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
-            <p class="text-right">
-            <fieldset>
-                <h4 th:text="#{message.welcome}"> Hello</h4>
-                <h4 th:text="${name}">User</h4>
-            </fieldset>
+        <div class="col-md-20">
+            <p class="text-left">
+            <p th:utext="#{message.welcome(${name})}">
+                Welcome to our Beauty Salon, User!
+            </p>
             </p>
         </div>
     </div>
 </div>
+<span th:text="${#locale.country}">Country</span>
 </body>
 </html>

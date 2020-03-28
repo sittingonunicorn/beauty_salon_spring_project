@@ -2,9 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Beauty Salon Choose Master</title>
 </head>
 <body>
+<div class="col-4 buttons">
+    <button type="submit" class="btn btn-light" onclick="location.href='?lang=en_US'" th:text="#{language.en}"></button>
+    <button type="submit" class="btn btn-light" onclick="location.href='?lang=ua_UA'" th:text="#{language.ua}"></button>
+</div>
 <table>
     <thead>
     <tr>
@@ -17,11 +21,25 @@
     </tr>
     <!--/*@thymesVar id="masters" type="java.util.List"*/-->
     <tr th:each="master : ${masters}">
-        <td>
-            <!--/*@thymesVar id="getUser" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Master"*/-->
-            <!--/*@thymesVar id="getName" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.User"*/-->
-            <span th:text="${master.getUser().getName()}"> Id </span>
 
+        <td>
+            <!--/*@thymesVar id="getId" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Master"*/-->
+
+            <!--/*@thymesVar id="getUser" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Master"*/-->
+
+            <!--/*@thymesVar id="getName" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.User"*/-->
+            <a th:href="@{'/user/schedule/' + ${master.getId()}}" th:text="${master.user.getName()}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <!--/*@thymesVar id="id" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Master"*/-->
+                <input type="hidden" th:value="${master.id}" th:name="masterId">
+            </a>
+<!--            -->
+<!--            -->
+<!--            -->
+<!--            <form th:action="@{/user/schedule/${master.getId()}}">-->
+<!--                <span th:text="${master.getUser().getName()}"> Id</span>-->
+<!--            </form>-->
+        <td>
     </tr>
     </tbody>
 </table>

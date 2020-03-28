@@ -26,4 +26,8 @@ public class MasterService{
         return masterRepository.findAllByProfessionIdAndLanguageCode(professionId,
                 RequestContextUtils.getLocale(request).toString());
     }
+
+    public Optional<Master> findMasterById(Long id){
+        return masterRepository.findById(id);
+    }
 }
