@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Beauty Salon Schedule</title>
+</head>
+<body>
+<div class="col-4 buttons">
+    <button type="submit" class="btn btn-light" onclick="location.href='?lang=en_US'" th:text="#{language.en}"></button>
+    <button type="submit" class="btn btn-light" onclick="location.href='?lang=ua_UA'" th:text="#{language.ua}"></button>
+</div>
+<!--        <th th:text = "#{var.beautyservicesType}">Beautyservices Type</th>-->
+<!--/*@thymesVar id="master" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Master"*/-->
+<!--/*@thymesVar id="getName" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Master"*/-->
+<p th:utext="#{message.chosen.master(${master.getUser().getName()})}">Chosen master</p>
+<!--        <th th:text = "#{var.beautyservicesType}">Beautyservices Type</th>-->
+<form action="/user/saveappointment">
+    <label th:for="day" th:text="#{message.choose.date.time}">Choose the day and time:</label>
+
+<!--    /*@thymesVar id="days" type="List"*/-->
+<select >
+    <option th:each="day : ${days}" th:value="${day}" th:text="${day}">
+    </option>
+</select>
+
+<select >
+    <!--/*@thymesVar id="time" type="java.util.List"*/-->
+    <option th:each="seance : ${time}" th:value="${time}" th:text="${seance}">
+    </option>
+</select>
+<input type="submit" value="Submit">
+</form>
+</body>
+</html>
+<!--<form action = "/eng" method = get><button type="submit" class="btn btn-secondary">Eng</button ></form>-->
+<!--<a th:href="@{'/user/saveappointment'}"></a>-->

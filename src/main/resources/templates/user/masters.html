@@ -28,17 +28,11 @@
             <!--/*@thymesVar id="getUser" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Master"*/-->
 
             <!--/*@thymesVar id="getName" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.User"*/-->
-            <a th:href="@{'/user/schedule/' + ${master.getId()}}" th:text="${master.user.getName()}">
+            <a th:href="@{'/user/time/' + ${master.getId()}}" th:text="${master.user.getName()}">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <!--/*@thymesVar id="id" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Master"*/-->
                 <input type="hidden" th:value="${master.id}" th:name="masterId">
             </a>
-<!--            -->
-<!--            -->
-<!--            -->
-<!--            <form th:action="@{/user/schedule/${master.getId()}}">-->
-<!--                <span th:text="${master.getUser().getName()}"> Id</span>-->
-<!--            </form>-->
         <td>
     </tr>
     </tbody>
