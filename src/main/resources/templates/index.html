@@ -16,6 +16,9 @@
 <button type="button" class="btn btn-outline-secondary"> <a th:href="@{/index(lang='ua_UA')}" th:text="#{language.ua}"></a></button>
 <!--/*@thymesVar id="date" type="java.time.LocalDate"*/-->
 <span th:text="${{date}}"></span>
-
+<div>
+    <div class="name" th:text="${name}"></div>
+    <button type="button" class="btn btn-outline-secondary" onclick="location.href='/logout'" th:text="logout"></button>
+</div>
 </body>
 </html>

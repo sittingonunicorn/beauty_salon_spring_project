@@ -33,15 +33,15 @@ public class AppointmentService {
 
 
     public void createAppointment(Appointment appointment) {
-        if (isTimeBusy(appointment.getMaster().getId(),
-                appointment.getTime(), appointment.getDate())) {
-            log.warn("The master is busy at this time");
-            //TODO Make an exception
-        } else {
+//        if (isTimeBusy(appointment.getMaster().getId(),
+//                appointment.getTime(), appointment.getDate())) {
+//            log.warn("The master is busy at this time");
+//            //TODO Make an exception
+//        } else {
             appointmentRepository.save(appointment);
-            log.info("The appointment is successfully added to Master's" +
+            log.info("The appointment is successfully added to Master's " +
                     appointment.getMaster().getUser().getName() + " schedule");
-        }
+//        }
 
     }
 

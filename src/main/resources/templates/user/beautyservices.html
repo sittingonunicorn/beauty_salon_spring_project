@@ -26,11 +26,13 @@
             <!--/*@thymesVar id="getProfession" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService"*/-->
             <!--/*@thymesVar id="getId" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Profession"*/-->
             <!--/*@thymesVar id="name" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService"*/-->
-            <a th:href="@{'/user/masters/' + ${beautyservice.getProfession().getId()}}" th:text="${beautyservice.name}">
+            <a th:href="@{'/user/masters/' + ${beautyservice.getId()}}" th:text="${beautyservice.name}">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <!--/*@thymesVar id="getProfession" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService"*/-->
                 <!--/*@thymesVar id="id" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Profession"*/-->
-                <input type="hidden" th:value="${beautyservice.getProfession().id}" th:name="masterId">
+<!--                <input type="hidden" th:value="${beautyservice.getProfession().id}" th:name="masterId">-->
+                <!--/*@thymesVar id="id" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService"*/-->
+                <input type="hidden" th:value="${beautyservice.id}" th:name="beautyserviceId">
             </a>
             <!--/*@thymesVar id="price" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService"*/-->
             <span th:text="${beautyservice.price}"> Price </span></td>

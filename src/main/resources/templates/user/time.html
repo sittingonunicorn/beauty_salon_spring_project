@@ -13,24 +13,43 @@
 <!--/*@thymesVar id="master" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Master"*/-->
 <!--/*@thymesVar id="getName" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Master"*/-->
 <p th:utext="#{message.chosen.master(${master.getUser().getName()})}">Chosen master</p>
+<p th:utext="#{output.master.schedule(${master.getTimeBegin()},${master.getTimeEnd()})}">Worktime</p>
 <!--        <th th:text = "#{var.beautyservicesType}">Beautyservices Type</th>-->
 <form action="/user/saveappointment">
     <label th:for="day" th:text="#{message.choose.date.time}">Choose the day and time:</label>
-
-<!--    /*@thymesVar id="days" type="List"*/-->
-<select >
-    <option th:each="day : ${days}" th:value="${day}" th:text="${day}">
-    </option>
-</select>
-
-<select >
-    <!--/*@thymesVar id="time" type="java.util.List"*/-->
-    <option th:each="seance : ${time}" th:value="${time}" th:text="${seance}">
-    </option>
-</select>
-<input type="submit" value="Submit">
+    <!--    /*@thymesVar id="days" type="List"*/-->
+    <select>
+        <option th:each="day : ${days}" th:value="${day}" th:name="${day}" th:text="${day}">
+            <input type="text" class="form-control" th:id="${day}" name="day"/>
+        </option>
+    </select>
+    <input type="submit" value="Submit">
 </form>
+
+<form action="/user/saveappointment" th:each="day : ${days}">
+    <ul class="media-list">
+        <li class="media">
+            <div class="media-body">
+                <div class="medi-heading">
+                    <div class="autor"><h4 th:text="${day}"></h4></div>
+                </div>
+                <label class="radio-label" th:each="seance : ${time}">
+                    <div class="radio1">
+                        <input class="radio-input" type="submit" pattern="HH:mm"
+                               th:value="${seance}" name="seanceTime"/>
+                    </div>
+                </label>
+            </div>
+        </li>
+    </ul>
+    <input type="hidden" th:value="${day}" name="day"/>
+</form>
+<!--<select >-->
+<!--    &lt;!&ndash;/*@thymesVar id="time" type="java.util.List"*/&ndash;&gt;-->
+<!--    <option th:each="seance : ${time}" th:value="${time}" th:text="${seance}">-->
+<!--    </option>-->
+<!--</select>-->
+
+
 </body>
 </html>
-<!--<form action = "/eng" method = get><button type="submit" class="btn btn-secondary">Eng</button ></form>-->
-<!--<a th:href="@{'/user/saveappointment'}"></a>-->

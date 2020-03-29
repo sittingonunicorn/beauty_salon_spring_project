@@ -8,9 +8,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 
-@Builder
+
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "appointment")

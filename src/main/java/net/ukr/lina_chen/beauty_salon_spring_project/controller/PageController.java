@@ -60,18 +60,5 @@ public class PageController {
         return "login.html";
     }
 
-
-//    private User getCurrentUser() {
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        User currentUser;
-//        try {
-//            currentUser = (User) auth.getPrincipal();
-//        } catch (ClassCastException e) {
-//            return new User();
-//        }
-//        return currentUser.getUser();
-//    }
-
-
 }
 

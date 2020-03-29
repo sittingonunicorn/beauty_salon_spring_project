@@ -27,8 +27,8 @@ public class BeautyServiceImpl {
         return beautyServiceRepository.findAllByProfessionIdAndLanguageCode(professionId, RequestContextUtils.getLocale(request).toString());
     }
 
-    public Optional<BeautyService> findBeautyServiceById(@NonNull Long procedureId) {
-        return beautyServiceRepository.findById(procedureId);
+    public Optional<BeautyService> findBeautyServiceById(@NonNull Long beautyserviceId) {
+        return beautyServiceRepository.findById(beautyserviceId);
     }
 
     public List<BeautyService> findAll(HttpServletRequest request) {

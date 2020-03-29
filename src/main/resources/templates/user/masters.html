@@ -24,9 +24,7 @@
 
         <td>
             <!--/*@thymesVar id="getId" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Master"*/-->
-
             <!--/*@thymesVar id="getUser" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Master"*/-->
-
             <!--/*@thymesVar id="getName" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.User"*/-->
             <a th:href="@{'/user/time/' + ${master.getId()}}" th:text="${master.user.getName()}">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
