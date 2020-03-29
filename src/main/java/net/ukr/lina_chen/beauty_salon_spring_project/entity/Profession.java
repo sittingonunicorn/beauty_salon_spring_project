@@ -9,7 +9,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "professions")
 public class Profession {
     @Id

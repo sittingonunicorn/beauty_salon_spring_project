@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress ALL -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -9,6 +10,11 @@
     <button type="submit" class="btn btn-light" onclick="location.href='?lang=en_US'" th:text="#{language.en}"></button>
     <button type="submit" class="btn btn-light" onclick="location.href='?lang=ua_UA'" th:text="#{language.ua}"></button>
 </div>
+<div class="panel-body">
+    <!--/*@thymesVar id="logout" type="java.lang.String"*/-->
+    <div class="info" th:if="${failed}">
+        <div class="alert alert-danger" role="alert">The master is busy at that time</div>
+    </div>
 <!--        <th th:text = "#{var.beautyservicesType}">Beautyservices Type</th>-->
 <!--/*@thymesVar id="master" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Master"*/-->
 <!--/*@thymesVar id="getName" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Master"*/-->

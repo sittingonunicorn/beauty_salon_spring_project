@@ -4,7 +4,8 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalTime;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
