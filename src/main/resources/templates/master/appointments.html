@@ -23,6 +23,7 @@
         <th th:text="#{var.time}">Time</th>
         <th th:text="#{var.username}">User's name</th>
         <th th:text="#{var.provided}">Provided</th>
+        <th>Set Provided</th>
     </tr>
     </thead>
     <tbody>
@@ -46,14 +47,22 @@
         <td>
             <span th:text="#{|bool.${appointment.isProvided()}|}">Provided</span>
         </td>
+        <td>
+            <form th:action="@{/master/appointments}">
+                <div class="radio1">
+                    <input class="radio-input" type="submit"
+                           th:value="${true}" name="is_provided"/>
+                </div>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>
 <div th:if="${appointments.totalPages > 0}" class="pagination"
      th:each="pageNumber : ${pageNumbers}">
     <a th:href="@{/master/appointments(size=${appointments.size}, page=${pageNumber})}"
-       th:text=${pageNumber}
-       th:class="${pageNumber==appointments.number + 1} ? active"></a>
+       th:text="${pageNumber+1}"
+       th:class="${pageNumber==appointments.number+1} ? active"></a>
 </div>
 </body>
 </html>

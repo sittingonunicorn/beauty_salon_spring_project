@@ -15,11 +15,13 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "appointment")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Appointment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "appointment_id")
+
     private Long id;
 
     @ManyToOne(cascade = CascadeType.MERGE)
@@ -40,7 +42,7 @@ public class Appointment {
     @Column(name = "date")
     private LocalDate date;
 
-    @Column(name = "provided")
+    @Column(name = "is_provided")
     private boolean isProvided;
 
 }

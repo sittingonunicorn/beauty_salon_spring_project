@@ -28,7 +28,7 @@ public class AppointmentService {
     }
 
     public Page<Appointment> findAppointmentsForMaster(@NonNull Long masterId, Pageable pageable) {
-        return appointmentRepository.findAppointmentsByMasterId(masterId , pageable);
+        return appointmentRepository.findAppointmentsByMasterIdAndIsProvidedFalse(masterId , pageable);
     }
 
     public List<Appointment> findAllAppointments() {

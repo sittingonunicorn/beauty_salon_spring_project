@@ -9,6 +9,9 @@ import net.ukr.lina_chen.beauty_salon_spring_project.service.MasterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -39,21 +42,18 @@ public class MasterPagesController {
 
     @RequestMapping("appointments")
     public String appointmentsPage(Model model, @AuthenticationPrincipal User user, HttpServletRequest request,
-                                   @RequestParam("page") Optional<Integer> page,
-                                   @RequestParam("size") Optional<Integer> size) {
+                                   @PageableDefault(sort = {"date", "time"},
+                                           direction = Sort.Direction.ASC, size = 3) Pageable pageable) {
         Optional<Master> master = masterService.findMasterByUser(user, request);
-        int currentPage = page.orElse(1);
-        int pageSize = size.orElse(3);
         Page<Appointment> appointments = appointmentService.findAppointmentsForMaster(
-                master.get().getId(), PageRequest.of(currentPage - 1, pageSize));
+                master.get().getId(), pageable);
         int totalPages = appointments.getTotalPages();
         if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+            List<Integer> pageNumbers = IntStream.rangeClosed(0, totalPages-1)
                     .boxed()
                     .collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
         }
-
         model.addAttribute("master", master.get());
         model.addAttribute("appointments", appointments);
         return "master/appointments.html";

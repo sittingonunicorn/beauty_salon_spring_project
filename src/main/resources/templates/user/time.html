@@ -2,7 +2,13 @@
 <!--suppress ALL -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <title>Beauty Salon Schedule</title>
 </head>
 <body>
@@ -27,36 +33,30 @@
 <!--    </select>-->
 <!--    <input type="submit" value="Submit">-->
 <!--</form>-->
-<div class="info" th:if="${error}" >
+<div class="info" th:if="${error}">
     <div class="alert alert-danger" role="alert" th:text="#{message.master.busy}">The master is busy at that time</div>
 </div>
 <form action="/user/saveappointment" th:each="day : ${days}">
     <div class="panel-body">
         <!--/*@thymesVar id="logout" type="java.lang.String"*/-->
 
-    <ul class="media-list">
-        <li class="media">
-            <div class="media-body">
-                <div class="medi-heading">
-                    <div class="autor"><h4 th:text="${day}"></h4></div>
-                </div>
-                <label class="radio-label" th:each="seance : ${time}">
-                    <div class="radio1">
-                        <input class="radio-input" type="submit" pattern="HH:mm"
-                               th:value="${seance}" name="seanceTime"/>
+        <ul class="media-list">
+            <li class="media">
+                <div class="media-body">
+                    <div class="medi-heading" th:with="df=#{date.format}">
+                        <div class="autor"><h4 th:text="${#calendars.format(day, df)}"></h4></div>
                     </div>
-                </label>
-            </div>
-        </li>
-    </ul>
-    <input type="hidden" th:value="${day}" name="day"/>
+                    <label class="radio-label" th:each="seance : ${time}">
+                        <div class="radio1">
+                            <input class="radio-input" type="submit" pattern="HH:mm"
+                                   th:value="${seance}" name="seanceTime"/>
+                        </div>
+                    </label>
+                </div>
+            </li>
+        </ul>
+        <input type="hidden" th:value="${day}" name="day"/>
+    </div>
 </form>
-<!--<select >-->
-<!--    &lt;!&ndash;/*@thymesVar id="time" type="java.util.List"*/&ndash;&gt;-->
-<!--    <option th:each="seance : ${time}" th:value="${time}" th:text="${seance}">-->
-<!--    </option>-->
-<!--</select>-->
-
-
 </body>
 </html>
