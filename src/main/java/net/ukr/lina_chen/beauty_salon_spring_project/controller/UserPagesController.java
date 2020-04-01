@@ -9,17 +9,27 @@ import net.ukr.lina_chen.beauty_salon_spring_project.service.MasterService;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.ProfessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -41,6 +51,11 @@ public class UserPagesController {
         this.appointmentService = appointmentService;
     }
 
+    @PostConstruct
+    public void init() {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+    }
+
     @ModelAttribute("appointment")
     public Appointment createAppointment() {
         return new Appointment();
@@ -55,7 +70,9 @@ public class UserPagesController {
     @GetMapping("beautyservices/{profession}")
     public String beautyservicesPage(Model model, HttpServletRequest request,
                                      @PathVariable Profession profession) {
-        model.addAttribute("beautyservices", beautyServiceImpl.findAllByProfessionId(profession.getId(), request));
+
+        model.addAttribute("beautyservices", beautyServiceImpl.findAllByProfessionId(
+                profession.getId(), request));
         return "user/beautyservices.html";
     }
 
@@ -80,14 +97,14 @@ public class UserPagesController {
         return "redirect:time";
     }
 
-    @GetMapping("approve/time")
+    @RequestMapping("approve/time")
     public String schedulePage(Model model, HttpServletRequest request,
                                @ModelAttribute("appointment") Appointment appointment,
-                               @RequestParam(value = "failed", required = false) String failed, Locale locale) {
+                               @RequestParam(value = "error", required = false) String error) {
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
 //                ResourceBundle.getBundle("messages", RequestContextUtils.getLocale(request)).
 //                        getString("date.format"));
-        model.addAttribute("failed", messageSource.getMessage("message.master.busy", null, locale));
+        model.addAttribute("error", error != null);
         Master master = appointment.getMaster();
         model.addAttribute("master", master);
         model.addAttribute("days", Stream.iterate(LocalDate.now(), curr -> curr.plusDays(1))
@@ -100,24 +117,16 @@ public class UserPagesController {
         return "user/time.html";
     }
 
-
     @GetMapping("saveappointment")
     public String saveAppointment(@RequestParam(required = false) String day,
                                   @RequestParam(required = false) String seanceTime,
                                   @ModelAttribute("appointment") Appointment appointment,
-                                  Model model) {
-
+                                  Model model, Locale locale) throws DoubleTimeRequestException {
         appointment.setDate(LocalDate.parse(day));
         log.info("Date is added to appointment: " + appointment.getDate());
         appointment.setTime(LocalTime.parse(seanceTime));
         log.info("Time is added to appointment: " + appointment.getTime());
-        try {
-            appointmentService.createAppointment(appointment);
-        } catch (DoubleTimeRequestException e) {
-            model.addAttribute("master", appointment.getMaster().getId());
-            model.addAttribute("failed", true);
-            return "redirect:approve/time";
-        }
+        appointmentService.createAppointment(appointment);
         return "user/appointment.html";
     }
 
@@ -125,5 +134,12 @@ public class UserPagesController {
     public String appointment(@ModelAttribute("appointment") Appointment appointment, Model model) {
         model.addAttribute("appointment", appointment);
         return "user/appointment.html";
+    }
+
+    @ExceptionHandler(DoubleTimeRequestException.class)
+    String handleDoubleTimeRequestException(DoubleTimeRequestException e, Model model) {
+//        model.addAttribute("newOrder", new OrderDTO());
+        model.addAttribute("error", true);
+        return "redirect:approve/time?error";
     }
 }

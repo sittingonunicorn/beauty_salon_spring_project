@@ -21,12 +21,13 @@
     <tr th:if="${mastertypes.empty}">
         <td colspan="2"> No Masters Available</td>
     </tr>
-<!--    /*@thymesVar id="mastertypes" type="List"*/-->
+    <!--    /*@thymesVar id="mastertypes" type="List"*/-->
     <tr th:each="mastertypes : ${mastertypes}">
         <td>
             <!--/*@thymesVar id="id" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Profession"*/-->
-            <span th:text="${mastertypes.id}"> Title </span>
-            <!--/*@thymesVar id="user" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Profession"*/-->
+            <span th:text="${mastertypes.id}"> Title </span></td>
+        <!--/*@thymesVar id="user" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Profession"*/-->
+        <td>
             <span th:text="${mastertypes.name}"> Name </span></td>
     </tr>
     </tbody>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Beauty Salon Appointments</title>
+</head>
+<body>
+<div class="col-4 buttons">
+    <button type="submit" class="btn btn-light" onclick="location.href='?lang=en_US'" th:text="#{language.en}"></button>
+    <button type="submit" class="btn btn-light" onclick="location.href='?lang=ua_UA'" th:text="#{language.ua}"></button>
+</div>
+<div>
+    <div class="name" th:text="${name}"></div>
+    <button type="button" class="btn btn-outline-secondary" onclick="location.href='/logout'" th:text="logout"></button>
+</div>
+<p th:utext="#{message.master.schedule(${master.getUser().getName()})}">Chosen master</p>
+<table>
+    <thead>
+    <tr>
+        <th th:text="#{var.beautyservice}">Service</th>
+        <th th:text="#{var.date}">Date</th>
+        <th th:text="#{var.time}">Time</th>
+        <th th:text="#{var.username}">User's name</th>
+        <th th:text="#{var.provided}">Provided</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${#lists.isEmpty(appointments)}">
+        <td colspan="2"> No appointments available</td>
+    </tr>
+    <!--    /*@thymesVar id="servicetypes" type="List"*/-->
+    <tr th:each="appointment : ${appointments}">
+        <td>
+            <span th:text="${appointment.getBeautyService().getName()}">Service</span>
+        </td>
+        <td>
+            <span th:text="${appointment.getDate()}">Date</span>
+        </td>
+        <td>
+            <span th:text="${appointment.getTime()}">Time</span>
+        </td>
+        <td>
+            <span th:text="${appointment.getUser().getName()}">User's name</span>
+        </td>
+        <td>
+            <span th:text="#{|bool.${appointment.isProvided()}|}">Provided</span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div th:if="${appointments.totalPages > 0}" class="pagination"
+     th:each="pageNumber : ${pageNumbers}">
+    <a th:href="@{/master/appointments(size=${appointments.size}, page=${pageNumber})}"
+       th:text=${pageNumber}
+       th:class="${pageNumber==appointments.number + 1} ? active"></a>
+</div>
+</body>
+</html>

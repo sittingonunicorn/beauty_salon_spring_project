@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Beauty Salon Appointments</title>
+</head>
+<body>
+<div class="col-4 buttons">
+    <button type="submit" class="btn btn-light" onclick="location.href='?lang=en_US'" th:text="#{language.en}"></button>
+    <button type="submit" class="btn btn-light" onclick="location.href='?lang=ua_UA'" th:text="#{language.ua}"></button>
+</div>
+<div>
+    <div class="name" th:text="${name}"></div>
+    <button type="button" class="btn btn-outline-secondary" onclick="location.href='/logout'" th:text="logout"></button>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th th:text="#{var.mastername}">Master's name</th>
+        <th th:text="#{var.beautyservice}">Service</th>
+        <th th:text="#{var.date}">Date</th>
+        <th th:text="#{var.time}">Time</th>
+        <th th:text="#{var.username}">User's name</th>
+        <th th:text="#{var.provided}">Provided</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${#lists.isEmpty(appointments)}">
+        <td colspan="2"> No appointments available</td>
+    </tr>
+    <!--    /*@thymesVar id="servicetypes" type="List"*/-->
+    <tr th:each="appointment : ${appointments}">
+        <td>
+            <span th:text="${appointment.getMaster().getUser().getName()}">Master's name</span>
+        </td>
+        <td>
+            <span th:text="${appointment.getBeautyService().getName()}">Service</span>
+        </td>
+        <td>
+            <span th:text="${appointment.getDate()}">Date</span>
+        </td>
+        <td>
+            <span th:text="${appointment.getTime()}">Time</span>
+        </td>
+        <td>
+            <span th:text="${appointment.getUser().getName()}">User's name</span>
+        </td>
+        <td>
+            <span th:text="#{|bool.${appointment.isProvided()}|}">Provided</span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

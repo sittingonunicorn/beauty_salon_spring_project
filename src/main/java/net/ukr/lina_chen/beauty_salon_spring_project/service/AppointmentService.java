@@ -6,6 +6,8 @@ import net.ukr.lina_chen.beauty_salon_spring_project.entity.Appointment;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.DoubleTimeRequestException;
 import net.ukr.lina_chen.beauty_salon_spring_project.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,8 +27,8 @@ public class AppointmentService {
         this.appointmentRepository = appointmentRepository;
     }
 
-    public List<Appointment> findAppointmentsForMaster(@NonNull Long masterId) {
-        return appointmentRepository.findAppointmentsByMasterId(masterId);
+    public Page<Appointment> findAppointmentsForMaster(@NonNull Long masterId, Pageable pageable) {
+        return appointmentRepository.findAppointmentsByMasterId(masterId , pageable);
     }
 
     public List<Appointment> findAllAppointments() {
