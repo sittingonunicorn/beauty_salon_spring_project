@@ -3,14 +3,10 @@ package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 import lombok.extern.slf4j.Slf4j;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.*;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.DoubleTimeRequestException;
-import net.ukr.lina_chen.beauty_salon_spring_project.service.AppointmentService;
-import net.ukr.lina_chen.beauty_salon_spring_project.service.BeautyServiceImpl;
-import net.ukr.lina_chen.beauty_salon_spring_project.service.MasterService;
-import net.ukr.lina_chen.beauty_salon_spring_project.service.ProfessionService;
+import net.ukr.lina_chen.beauty_salon_spring_project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -26,7 +22,6 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -41,14 +36,16 @@ public class UserPagesController {
     private BeautyServiceImpl beautyServiceImpl;
     private MasterService masterService;
     private AppointmentService appointmentService;
+    private ArchiveAppointmentService archiveAppointmentService;
     @Autowired
     private MessageSource messageSource;
 
-    public UserPagesController(ProfessionService professionService, BeautyServiceImpl beautyServiceImpl, MasterService masterService, AppointmentService appointmentService) {
+    public UserPagesController(ProfessionService professionService, BeautyServiceImpl beautyServiceImpl, MasterService masterService, AppointmentService appointmentService, ArchiveAppointmentService archiveAppointmentService) {
         this.professionService = professionService;
         this.beautyServiceImpl = beautyServiceImpl;
         this.masterService = masterService;
         this.appointmentService = appointmentService;
+        this.archiveAppointmentService = archiveAppointmentService;
     }
 
     @PostConstruct
@@ -138,8 +135,38 @@ public class UserPagesController {
 
     @ExceptionHandler(DoubleTimeRequestException.class)
     String handleDoubleTimeRequestException(DoubleTimeRequestException e, Model model) {
-//        model.addAttribute("newOrder", new OrderDTO());
         model.addAttribute("error", true);
         return "redirect:approve/time?error";
+    }
+
+    @RequestMapping("archiveappointments")
+    public String appointmentsPage(Model model, @AuthenticationPrincipal User user, HttpServletRequest request,
+                                   @PageableDefault(sort = {"date", "time"},
+                                           direction = Sort.Direction.ASC, size = 3) Pageable pageable) {
+        Page<ArchiveAppointment> archiveAppointments = archiveAppointmentService.findArchiveAppointmentsForUser(
+                user.getId(), pageable);
+        int totalPages = archiveAppointments.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(0, totalPages - 1)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("archiveAppointments", archiveAppointments);
+        return "user/archiveappointments.html";
+    }
+
+    @GetMapping("comment")
+    public String leaveComment(@RequestParam Long appointmentId, Model model) {
+        model.addAttribute("appointment", archiveAppointmentService.findById(appointmentId).get());
+        return "user/comment.html";
+    }
+
+    @PostMapping("comment")
+    public String submitComment(@RequestParam Long appointmentId, Model model, @RequestParam String comment) {
+        archiveAppointmentService.addComment(appointmentId, comment);
+        model.addAttribute("appointment", archiveAppointmentService.findById(appointmentId).get());
+        return "redirect:archiveappointments";
     }
 }

@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -28,11 +29,15 @@ public class AppointmentService {
     }
 
     public Page<Appointment> findAppointmentsForMaster(@NonNull Long masterId, Pageable pageable) {
-        return appointmentRepository.findAppointmentsByMasterIdAndIsProvidedFalse(masterId , pageable);
+        return appointmentRepository.findAppointmentsByMasterIdAndIsProvidedFalse(masterId, pageable);
     }
 
-    public List<Appointment> findAllAppointments() {
-        return appointmentRepository.findAll();
+    public Page<Appointment> findAppointmentsForUser(@NonNull Long userId, Pageable pageable) {
+        return appointmentRepository.findAppointmentsByUserId(userId, pageable);
+    }
+
+    public Page<Appointment> findAllAppointments(Pageable pageable) {
+        return appointmentRepository.findAll(pageable);
     }
 
     public boolean isTimeBusy(Long master_id, LocalTime time, LocalDate date) {
@@ -51,6 +56,18 @@ public class AppointmentService {
                     appointment.getMaster().getUser().getName() + " schedule");
         }
 
+    }
+
+    public Optional<Appointment> findAppointmentById (Long id){
+        return appointmentRepository.findAppointmentById(id);
+    }
+
+    public void setAppointmentProvided(Long appointmentId) {
+        appointmentRepository.setProvidedById(appointmentId, true);
+    }
+
+    public void deleteAppointment(Appointment appointment){
+        appointmentRepository.delete(appointment);
     }
 
 }

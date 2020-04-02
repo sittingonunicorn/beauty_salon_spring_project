@@ -14,8 +14,8 @@
     <div class="name" th:text="${name}"></div>
     <button type="button" class="btn btn-outline-secondary" onclick="location.href='/logout'" th:text="logout"></button>
 </div>
-<p th:utext="#{message.master.schedule(${master.getUser().getName()})}">Master</p>
-<form th:action="@{/master/makeprovided}">
+<p th:utext="#{message.user.appointments}">Upcoming appointments</p>
+
     <table>
         <thead>
         <tr>
@@ -28,11 +28,11 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:if="${#lists.isEmpty(appointments)}">
+        <tr th:if="${#lists.isEmpty(archiveAppointments)}">
             <td colspan="2"> No appointments available</td>
         </tr>
         <!--    /*@thymesVar id="servicetypes" type="List"*/-->
-        <tr th:each="appointment : ${appointments}">
+        <tr th:each="appointment : ${archiveAppointments}">
             <td>
                 <span th:text="${appointment.getBeautyService().getName()}">Service</span>
             </td>
@@ -49,24 +49,23 @@
                 <span th:text="#{|bool.${appointment.isProvided()}|}">Provided</span>
             </td>
             <td>
+                <form th:action="@{/user/comment}">
                 <div class="row-fluid practice" style="width: 99%; height: 100%;">
                     <button type="submit" name="appointmentId" th:value="${appointment.id}"
-                    th:text="#{message.provided}">
-                        Finished</button>
+                    th:text="#{message.leave.comment}">
+                        Leave a comment</button>
                 </div>
-<!--                <label for="isProvided">isProvided</label>-->
-<!--                <input type="radio" name="isProvided" id="true" value="true"><br>-->
-<!--                <input type="submit" value="Submit">-->
+                </form>
             </td>
         </tr>
         </tbody>
     </table>
-</form>
-<div th:if="${appointments.totalPages > 0}" class="pagination"
+
+<div th:if="${archiveAppointments.totalPages > 0}" class="pagination"
      th:each="pageNumber : ${pageNumbers}">
-    <a th:href="@{/master/appointments(size=${appointments.size}, page=${pageNumber})}"
+    <a th:href="@{/user/archiveAppointments(size=${archiveAppointments.size}, page=${pageNumber})}"
        th:text="${pageNumber+1}"
-       th:class="${pageNumber==appointments.number+1} ? active"></a>
+       th:class="${pageNumber==archiveAppointments.number+1} ? active"></a>
 </div>
 </body>
 </html>
