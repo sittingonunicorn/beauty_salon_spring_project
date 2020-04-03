@@ -10,14 +10,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Locale;
+
 @Controller
 public class RegistrationController {
 
-    @Autowired
     private MessageSource messageSource;
     private final UserService userService;
 
-    public RegistrationController(UserService userService) {
+    @Autowired
+    public RegistrationController(MessageSource messageSource, UserService userService) {
+        this.messageSource = messageSource;
         this.userService = userService;
     }
 

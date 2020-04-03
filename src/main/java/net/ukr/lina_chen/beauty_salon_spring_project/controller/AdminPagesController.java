@@ -5,7 +5,7 @@ import net.ukr.lina_chen.beauty_salon_spring_project.entity.Appointment;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.ArchiveAppointment;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.AppointmentService;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.ArchiveAppointmentService;
-import static net.ukr.lina_chen.beauty_salon_spring_project.controller.Iconstants.*;
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

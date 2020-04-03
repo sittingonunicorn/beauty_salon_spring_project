@@ -6,8 +6,6 @@ import lombok.*;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity

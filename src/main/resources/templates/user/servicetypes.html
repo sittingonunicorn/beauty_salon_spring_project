@@ -26,15 +26,11 @@
     </tr>
     </thead>
     <tbody>
-    <!--    /*@thymesVar id="servicetypes" type="List"*/-->
     <tr th:if="${#lists.isEmpty(servicetypes)}">
         <td colspan="2"> No Masters Available</td>
     </tr>
-    <!--    /*@thymesVar id="servicetypes" type="List"*/-->
     <tr th:each="servicetype : ${servicetypes}">
         <td>
-            <!--/*@thymesVar id="beautyservicesType" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Profession"*/-->
-            <!--/*@thymesVar id="getId" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService"*/-->
             <a th:href="@{'/user/beautyservices/' + ${servicetype.getId()}}" th:text="${servicetype.beautyservicesType}">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <input type="hidden" th:value="${servicetype.id}" th:name="professionId">

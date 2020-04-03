@@ -30,7 +30,4 @@ public class Profession {
     @Column(name = "beautyservices_type", nullable = false)
     private String beautyservicesType;
 
-//    @OneToMany( mappedBy = "profession",  cascade = CascadeType.MERGE)
-//    private Set<Procedure> procedures;
-
 }

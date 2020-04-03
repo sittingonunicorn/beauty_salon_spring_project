@@ -40,8 +40,6 @@ public class User implements UserDetails {
     @Column(name = "name", nullable = false)
     @Size(min = 2, max = 32, message = "Username should be from 2 to 32 symbols.")
     private String name;
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
-//    private Set<Comment> comments;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

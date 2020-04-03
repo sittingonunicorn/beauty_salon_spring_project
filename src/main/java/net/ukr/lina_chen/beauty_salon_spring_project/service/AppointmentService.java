@@ -9,13 +9,11 @@ import net.ukr.lina_chen.beauty_salon_spring_project.repository.AppointmentRepos
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Optional;
 
 
 @Slf4j
@@ -30,7 +28,7 @@ public class AppointmentService {
     }
 
     public Page<Appointment> findAppointmentsForMaster(@NonNull Long masterId, Pageable pageable) {
-        return appointmentRepository.findAppointmentsByMasterIdAndIsProvidedFalse(masterId, pageable);
+        return appointmentRepository.findAppointmentsByMasterIdAndProvidedFalse(masterId, pageable);
     }
 
     public Page<Appointment> findAppointmentsForUser(@NonNull Long userId, Pageable pageable) {
@@ -38,7 +36,7 @@ public class AppointmentService {
     }
 
     public Page<Appointment> findAllUpcomingAppointments(Pageable pageable) {
-        return appointmentRepository.findAppointmentsByIsProvidedFalse(pageable);
+        return appointmentRepository.findAppointmentsByProvidedFalse(pageable);
     }
 
     private boolean isTimeBusy(Long master_id, LocalTime time, LocalDate date) {

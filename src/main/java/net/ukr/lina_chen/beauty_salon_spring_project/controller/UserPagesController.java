@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static net.ukr.lina_chen.beauty_salon_spring_project.controller.Iconstants.*;
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.*;
 
 
 @Slf4j

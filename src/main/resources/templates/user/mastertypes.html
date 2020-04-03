@@ -24,17 +24,17 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:if="${mastertypes.empty}">
+    <tr th:if="${#lists.isEmpty(mastertypes)}">
         <td colspan="2"> No Masters Available</td>
     </tr>
     <!--    /*@thymesVar id="mastertypes" type="List"*/-->
-    <tr th:each="mastertypes : ${mastertypes}">
+    <tr th:each="mastertype : ${mastertypes}">
         <td>
             <!--/*@thymesVar id="id" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Profession"*/-->
-            <span th:text="${mastertypes.id}"> Title </span></td>
+            <span th:text="${mastertype.id}"> Title </span></td>
         <!--/*@thymesVar id="user" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Profession"*/-->
         <td>
-            <span th:text="${mastertypes.name}"> Name </span></td>
+            <span th:text="${mastertype.name}"> Name </span></td>
     </tr>
     </tbody>
 </table>

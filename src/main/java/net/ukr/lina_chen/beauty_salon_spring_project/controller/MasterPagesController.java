@@ -6,7 +6,6 @@ import net.ukr.lina_chen.beauty_salon_spring_project.entity.ArchiveAppointment;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.Master;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.User;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.AppointmentNotFoundException;
-import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.DoubleTimeRequestException;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.MasterNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.AppointmentService;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.ArchiveAppointmentService;
@@ -29,11 +28,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static net.ukr.lina_chen.beauty_salon_spring_project.controller.Iconstants.*;
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.*;
 
 @Slf4j
 @PreAuthorize("hasAuthority('MASTER')")
