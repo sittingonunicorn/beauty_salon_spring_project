@@ -5,6 +5,8 @@ import net.ukr.lina_chen.beauty_salon_spring_project.entity.Appointment;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.ArchiveAppointment;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.Master;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.User;
+import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.AppointmentNotFoundException;
+import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.DoubleTimeRequestException;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.AppointmentService;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.ArchiveAppointmentService;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.MasterService;
@@ -18,15 +20,19 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.Iconstants.*;
 
 @Slf4j
 @PreAuthorize("hasAuthority('MASTER')")
@@ -53,26 +59,31 @@ public class MasterPagesController {
         Optional<Master> master = masterService.findMasterByUser(user, request);
         Page<Appointment> appointments = appointmentService.findAppointmentsForMaster(
                 master.get().getId(), pageable);
-        int totalPages = appointments.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(0, totalPages-1)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
+        model.addAttribute("pageNumbers", this.getPageNumbers(appointments.getTotalPages()));
         model.addAttribute("master", master.get());
         model.addAttribute("appointments", appointments);
         return "master/appointments.html";
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @GetMapping("makeprovided")
-    public String makeProvided(@RequestParam Long appointmentId) {
-        Appointment appointment = appointmentService.findAppointmentById(appointmentId).get();
+    public String makeProvided(@RequestParam Long appointmentId) throws AppointmentNotFoundException {
+        Appointment appointment = appointmentService.findAppointmentById(appointmentId);
         appointmentService.setAppointmentProvided(appointmentId);
         ArchiveAppointment archiveAppointment= new ArchiveAppointment(appointment, null);
         archiveAppointmentService.save(archiveAppointment);
         appointmentService.deleteAppointment(appointment);
         return "redirect:/master/appointments";
     }
+
+    private List<Integer> getPageNumbers(int totalPages) {
+        List<Integer> pageNumbers = new ArrayList<>();
+        if (totalPages > MIN_QUANTITY_PAGES) {
+            pageNumbers = IntStream.rangeClosed(MIN_QUANTITY_PAGES, totalPages - ADJUSTMENT_FOR_PAGES)
+                    .boxed()
+                    .collect(Collectors.toList());
+        }
+        return pageNumbers;
+    }
+
 }

@@ -34,10 +34,10 @@ public class PageController {
 
     @GetMapping({"/index", "/"})
     public String indexPage(Model model, HttpServletRequest request) {
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
-//                ResourceBundle.getBundle("messages",RequestContextUtils.getLocale(request)).
-//                        getString("date.format"));
-        model.addAttribute("date"/*, formatter.format(LocalDate.now())*/);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
+                ResourceBundle.getBundle("messages",RequestContextUtils.getLocale(request)).
+                        getString("date.format"));
+        model.addAttribute("date", formatter.format(LocalDate.now()));
         return "index.html";
     }
 

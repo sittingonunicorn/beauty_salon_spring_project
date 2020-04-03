@@ -48,22 +48,22 @@
             <td>
                 <span th:text="#{|bool.${appointment.isProvided()}|}">Provided</span>
             </td>
-            <td>
-                <form th:action="@{/user/comment}">
-                <div class="row-fluid practice" style="width: 99%; height: 100%;">
-                    <button type="submit" name="appointmentId" th:value="${appointment.id}"
-                    th:text="#{message.leave.comment}">
-                        Leave a comment</button>
-                </div>
-                </form>
-            </td>
+<!--            <td>-->
+<!--                <form th:action="@{/user/comment}">-->
+<!--                <div class="row-fluid practice" style="width: 99%; height: 100%;">-->
+<!--                    <button type="submit" name="appointmentId" th:value="${appointment.id}"-->
+<!--                    th:text="#{message.leave.comment}">-->
+<!--                        Leave a comment</button>-->
+<!--                </div>-->
+<!--                </form>-->
+<!--            </td>-->
         </tr>
         </tbody>
     </table>
 
 <div th:if="${archiveAppointments.totalPages > 0}" class="pagination"
      th:each="pageNumber : ${pageNumbers}">
-    <a th:href="@{/user/archiveAppointments(size=${archiveAppointments.size}, page=${pageNumber})}"
+    <a th:href="@{/admin/archiveappointments(size=${archiveAppointments.size}, page=${pageNumber})}"
        th:text="${pageNumber+1}"
        th:class="${pageNumber==archiveAppointments.number+1} ? active"></a>
 </div>

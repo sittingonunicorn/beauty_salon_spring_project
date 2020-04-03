@@ -3,17 +3,18 @@ package net.ukr.lina_chen.beauty_salon_spring_project.service;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.Appointment;
+import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.AppointmentNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.DoubleTimeRequestException;
 import net.ukr.lina_chen.beauty_salon_spring_project.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -36,11 +37,11 @@ public class AppointmentService {
         return appointmentRepository.findAppointmentsByUserId(userId, pageable);
     }
 
-    public Page<Appointment> findAllAppointments(Pageable pageable) {
-        return appointmentRepository.findAll(pageable);
+    public Page<Appointment> findAllUpcomingAppointments(Pageable pageable) {
+        return appointmentRepository.findAppointmentsByIsProvidedFalse(pageable);
     }
 
-    public boolean isTimeBusy(Long master_id, LocalTime time, LocalDate date) {
+    private boolean isTimeBusy(Long master_id, LocalTime time, LocalDate date) {
         return appointmentRepository.findAppointmentByMasterIdAndTimeAndDate(master_id, time, date).isPresent();
     }
 
@@ -58,8 +59,9 @@ public class AppointmentService {
 
     }
 
-    public Optional<Appointment> findAppointmentById (Long id){
-        return appointmentRepository.findAppointmentById(id);
+    public Appointment findAppointmentById (Long id) throws AppointmentNotFoundException {
+        return appointmentRepository.findAppointmentById(id)
+                .orElseThrow(() -> new AppointmentNotFoundException("appointment with id " + id + " not found"));
     }
 
     public void setAppointmentProvided(Long appointmentId) {

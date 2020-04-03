@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress ALL -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,21 +9,22 @@
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <title>Beauty Salon Choose Service type</title>
 </head>
 <body>
-<div class="col-4 buttons">
+<div class="col-2 buttons">
     <button type="submit" class="btn btn-light" onclick="location.href='?lang=en_US'" th:text="#{language.en}"></button>
     <button type="submit" class="btn btn-light" onclick="location.href='?lang=ua_UA'" th:text="#{language.ua}"></button>
 </div>
 <div>
-    <div class="name" th:text="${name}"></div>
     <button type="button" class="btn btn-outline-secondary" onclick="location.href='/logout'" th:text="logout"></button>
 </div>
-<table>
+<table class="table table-hover">
     <thead>
     <tr>
-        <th th:text = "#{var.beautyservicesType}">Beautyservices Type</th>
+        <th scope="col" th:text = "#{var.beautyservicesType}">Beautyservices Type</th>
     </tr>
     </thead>
     <tbody>

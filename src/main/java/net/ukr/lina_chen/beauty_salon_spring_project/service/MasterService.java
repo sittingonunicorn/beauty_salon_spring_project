@@ -1,7 +1,6 @@
 package net.ukr.lina_chen.beauty_salon_spring_project.service;
 
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.Master;
-import net.ukr.lina_chen.beauty_salon_spring_project.entity.Profession;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.User;
 import net.ukr.lina_chen.beauty_salon_spring_project.repository.MasterRepository;
 import org.springframework.beans.factory.annotation.Autowired;

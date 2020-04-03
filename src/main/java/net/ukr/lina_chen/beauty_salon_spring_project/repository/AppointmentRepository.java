@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -25,6 +24,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     Optional<Appointment> findAppointmentByMasterIdAndTimeAndDate(@NonNull Long master_id, LocalTime time, LocalDate date);
 
     Optional<Appointment> findAppointmentById(@NonNull Long id);
+
+    Page<Appointment> findAppointmentsByIsProvidedFalse(Pageable pageable);
+
+
     @Transactional
     @Modifying
     @Query("update Appointment a set a.isProvided=:provided where a.id=:appointmentId")

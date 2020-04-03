@@ -2,6 +2,7 @@ package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.*;
+import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.AppointmentNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.DoubleTimeRequestException;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,16 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.Iconstants.*;
+
 
 @Slf4j
 @RequestMapping("/user/")
@@ -82,7 +87,8 @@ public class UserPagesController {
         log.info("Beautyservice is added to appointment: " + appointment.getBeautyService().getName());
         appointment.setUser(user);
         log.info("User is added to appointment: " + appointment.getUser().getName());
-        model.addAttribute("masters", masterService.findAllByProfessionId(beautyService.getProfession().getId(), request));
+        model.addAttribute("masters", masterService.findAllByProfessionId(
+                beautyService.getProfession().getId(), request));
         return "user/masters.html";
     }
 
@@ -139,34 +145,48 @@ public class UserPagesController {
         return "redirect:approve/time?error";
     }
 
+    @ExceptionHandler(AppointmentNotFoundException.class)
+    String handleAppointmentNotFoundException(AppointmentNotFoundException e, Model model) {
+        model.addAttribute("error", true);
+        return "redirect:archiveappointments?error";
+    }
+
     @RequestMapping("archiveappointments")
     public String appointmentsPage(Model model, @AuthenticationPrincipal User user, HttpServletRequest request,
                                    @PageableDefault(sort = {"date", "time"},
-                                           direction = Sort.Direction.ASC, size = 3) Pageable pageable) {
+                                           direction = Sort.Direction.ASC, size = 3) Pageable pageable,
+                                   @RequestParam(value = "error", required = false) String error) {
         Page<ArchiveAppointment> archiveAppointments = archiveAppointmentService.findArchiveAppointmentsForUser(
                 user.getId(), pageable);
-        int totalPages = archiveAppointments.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(0, totalPages - 1)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
+        model.addAttribute("pageNumbers", this.getPageNumbers(archiveAppointments.getTotalPages()));
         model.addAttribute("user", user);
+        model.addAttribute("error", error != null);
         model.addAttribute("archiveAppointments", archiveAppointments);
         return "user/archiveappointments.html";
     }
 
     @GetMapping("comment")
-    public String leaveComment(@RequestParam Long appointmentId, Model model) {
-        model.addAttribute("appointment", archiveAppointmentService.findById(appointmentId).get());
+    public String leaveComment(@RequestParam Long appointmentId, Model model)
+            throws AppointmentNotFoundException {
+        model.addAttribute("appointment", archiveAppointmentService.findById(appointmentId));
         return "user/comment.html";
     }
 
     @PostMapping("comment")
-    public String submitComment(@RequestParam Long appointmentId, Model model, @RequestParam String comment) {
+    public String submitComment(@RequestParam Long appointmentId, Model model, @RequestParam String comment)
+            throws AppointmentNotFoundException {
         archiveAppointmentService.addComment(appointmentId, comment);
-        model.addAttribute("appointment", archiveAppointmentService.findById(appointmentId).get());
+        model.addAttribute("appointment", archiveAppointmentService.findById(appointmentId));
         return "redirect:archiveappointments";
+    }
+
+    private List<Integer> getPageNumbers(int totalPages) {
+        List<Integer> pageNumbers = new ArrayList<>();
+        if (totalPages > MIN_QUANTITY_PAGES) {
+            pageNumbers = IntStream.rangeClosed(MIN_QUANTITY_PAGES, totalPages - ADJUSTMENT_FOR_PAGES)
+                    .boxed()
+                    .collect(Collectors.toList());
+        }
+        return pageNumbers;
     }
 }

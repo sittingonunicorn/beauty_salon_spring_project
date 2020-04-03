@@ -1,10 +1,14 @@
 package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import net.ukr.lina_chen.beauty_salon_spring_project.entity.Appointment;
+import net.ukr.lina_chen.beauty_salon_spring_project.entity.ArchiveAppointment;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.AppointmentService;
-import net.ukr.lina_chen.beauty_salon_spring_project.service.MasterService;
-import net.ukr.lina_chen.beauty_salon_spring_project.service.ProfessionService;
+import net.ukr.lina_chen.beauty_salon_spring_project.service.ArchiveAppointmentService;
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.Iconstants.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -16,6 +20,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+
 @Slf4j
 @PreAuthorize("hasAuthority('ADMIN')")
 @RequestMapping("/admin/")
@@ -23,22 +33,42 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AdminPagesController {
 
     private AppointmentService appointmentService;
-    private ProfessionService professionService;
-    private MasterService masterService;
+    private ArchiveAppointmentService archiveAppointmentService;
 
     @Autowired
-    public AdminPagesController(AppointmentService appointmentService, ProfessionService professionService, MasterService masterService) {
+    public AdminPagesController(AppointmentService appointmentService,
+                                ArchiveAppointmentService archiveAppointmentService) {
         this.appointmentService = appointmentService;
-        this.professionService = professionService;
-        this.masterService = masterService;
+        this.archiveAppointmentService = archiveAppointmentService;
     }
 
 
-    @GetMapping("appointments")
-    public String appointmentsPage(Model model,  @PageableDefault(sort = {"date", "time"},
+    @GetMapping("archiveappointments")
+    public String archiveAppointmentsPage(Model model, @PageableDefault(sort = {"date", "time"},
             direction = Sort.Direction.ASC, size = 3) Pageable pageable) {
-        model.addAttribute("appointments", appointmentService.findAllAppointments(pageable));
+        Page<ArchiveAppointment> archiveAppointments = archiveAppointmentService.findAllProvidedAppointments(pageable);
+        model.addAttribute("archiveAppointments", archiveAppointments);
+        model.addAttribute("pageNumbers", this.getPageNumbers(archiveAppointments.getTotalPages()));
+        return "admin/archiveappointments.html";
+    }
+
+    @GetMapping("appointments")
+    public String appointmentsPage(Model model, @PageableDefault(sort = {"date", "time"},
+            direction = Sort.Direction.ASC, size = 3) Pageable pageable) {
+        Page<Appointment> appointments = appointmentService.findAllUpcomingAppointments(pageable);
+        model.addAttribute("appointments", appointments);
+        model.addAttribute("pageNumbers", this.getPageNumbers(appointments.getTotalPages()));
         return "admin/appointments.html";
+    }
+
+    private List<Integer> getPageNumbers(int totalPages) {
+        List<Integer> pageNumbers = new ArrayList<>();
+        if (totalPages > MIN_QUANTITY_PAGES) {
+            pageNumbers = IntStream.rangeClosed(MIN_QUANTITY_PAGES, totalPages - ADJUSTMENT_FOR_PAGES)
+                    .boxed()
+                    .collect(Collectors.toList());
+        }
+        return pageNumbers;
     }
 
     @PostMapping("appointments")

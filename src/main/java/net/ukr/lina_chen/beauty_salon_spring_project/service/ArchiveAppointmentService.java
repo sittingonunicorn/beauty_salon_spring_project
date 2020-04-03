@@ -2,8 +2,8 @@ package net.ukr.lina_chen.beauty_salon_spring_project.service;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.ukr.lina_chen.beauty_salon_spring_project.entity.Appointment;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.ArchiveAppointment;
+import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.AppointmentNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.repository.ArchiveAppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,7 +34,13 @@ public class ArchiveAppointmentService {
         archiveAppointmentRepository.save(appointment);
     }
 
-    public Optional<ArchiveAppointment> findById(Long appointmentId){
-        return archiveAppointmentRepository.findById(appointmentId);
+    public ArchiveAppointment findById(Long appointmentId) throws AppointmentNotFoundException {
+        return archiveAppointmentRepository.findById(appointmentId)
+                .orElseThrow(()-> new AppointmentNotFoundException(
+                        "archive appointment with id " + appointmentId + " not found"));
+    }
+
+    public Page<ArchiveAppointment> findAllProvidedAppointments(Pageable pageable) {
+        return archiveAppointmentRepository.findAll(pageable);
     }
 }
