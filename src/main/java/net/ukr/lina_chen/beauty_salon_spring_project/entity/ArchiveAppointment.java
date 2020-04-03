@@ -15,7 +15,6 @@ import java.time.LocalTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//@RequiredArgsConstructor
 @Table(name = "archive_appointment")
 public class ArchiveAppointment extends Appointment {
 

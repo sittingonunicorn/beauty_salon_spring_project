@@ -13,5 +13,5 @@ import java.util.Optional;
 public interface MasterRepository extends JpaRepository<Master, Long> {
     List<Master> findAllByProfessionIdAndLanguageCode(Long profession_id, String languageCode);
     Optional<Master> findById(Long id);
-    public Optional <Master> findMasterByUserAndLanguageCode(@NonNull User user, String languageCode);
+    Optional <Master> findMasterByUserAndLanguageCode(@NonNull User user, String languageCode);
 }

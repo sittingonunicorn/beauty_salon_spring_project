@@ -7,6 +7,7 @@ import net.ukr.lina_chen.beauty_salon_spring_project.entity.Master;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.User;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.AppointmentNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.DoubleTimeRequestException;
+import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.MasterNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.AppointmentService;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.ArchiveAppointmentService;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.MasterService;
@@ -55,13 +56,16 @@ public class MasterPagesController {
     @RequestMapping("appointments")
     public String appointmentsPage(Model model, @AuthenticationPrincipal User user, HttpServletRequest request,
                                    @PageableDefault(sort = {"date", "time"},
-                                           direction = Sort.Direction.ASC, size = 3) Pageable pageable) {
-        Optional<Master> master = masterService.findMasterByUser(user, request);
+                                           direction = Sort.Direction.ASC, size = 3) Pageable pageable,
+                                   @RequestParam(value = "error", required = false) String error)
+            throws MasterNotFoundException {
+        Master master = masterService.findMasterByUser(user, request);
         Page<Appointment> appointments = appointmentService.findAppointmentsForMaster(
-                master.get().getId(), pageable);
+                master.getId(), pageable);
         model.addAttribute("pageNumbers", this.getPageNumbers(appointments.getTotalPages()));
-        model.addAttribute("master", master.get());
+        model.addAttribute("master", master);
         model.addAttribute("appointments", appointments);
+        model.addAttribute("error", error != null);
         return "master/appointments.html";
     }
 
@@ -84,6 +88,12 @@ public class MasterPagesController {
                     .collect(Collectors.toList());
         }
         return pageNumbers;
+    }
+
+    @ExceptionHandler(MasterNotFoundException.class)
+    String handleDoubleTimeRequestException(MasterNotFoundException e, Model model) {
+        model.addAttribute("error", true);
+        return "redirect:master/appointments?error";
     }
 
 }

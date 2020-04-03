@@ -36,11 +36,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/registration", "/login", "/index", "/").anonymous()
-                .and()
-                .authorizeRequests().antMatchers("/index", "/").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("/login").permitAll()
+                .formLogin().loginPage("/login").permitAll().successForwardUrl("/main")
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll();
     }

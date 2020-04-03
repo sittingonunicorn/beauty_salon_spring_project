@@ -29,15 +29,15 @@ public class UserService implements UserDetailsService {
         this.bcryptPasswordEncoder = bcryptPasswordEncoder;
     }
 
-    public Optional<User> findByEmail(User user) {
-        //TODO check for user availability. password check
-        return userRepository.findByEmail(user.getUsername());
-    }
-
-    public UsersDTO getAllUsers() {
-        //TODO checking for an empty user list
-        return new UsersDTO(userRepository.findAll());
-    }
+//    public Optional<User> findByEmail(User user) {
+//        //TODO check for user availability. password check
+//        return userRepository.findByEmail(user.getUsername());
+//    }
+//
+//    public UsersDTO getAllUsers() {
+//        //TODO checking for an empty user list
+//        return new UsersDTO(userRepository.findAll());
+//    }
 
     public void saveNewUser(User user) {
         user.setRole(Role.USER);

@@ -3,6 +3,7 @@ package net.ukr.lina_chen.beauty_salon_spring_project.service;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService;
+import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.BeautyServiceNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.repository.BeautyServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,10 @@ public class BeautyServiceImpl {
         return beautyServiceRepository.findAllByProfessionIdAndLanguageCode(professionId, RequestContextUtils.getLocale(request).toString());
     }
 
-    public Optional<BeautyService> findBeautyServiceById(@NonNull Long beautyserviceId) {
-        return beautyServiceRepository.findById(beautyserviceId);
+    public BeautyService findBeautyServiceById(@NonNull Long beautyserviceId) throws BeautyServiceNotFoundException {
+        return beautyServiceRepository.findById(beautyserviceId)
+                .orElseThrow(()-> new BeautyServiceNotFoundException(
+                        "beauty service with id " + beautyserviceId + " not found"));
     }
 
     public List<BeautyService> findAll(HttpServletRequest request) {

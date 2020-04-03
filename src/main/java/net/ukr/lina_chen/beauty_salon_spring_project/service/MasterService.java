@@ -2,6 +2,7 @@ package net.ukr.lina_chen.beauty_salon_spring_project.service;
 
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.Master;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.User;
+import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.MasterNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.repository.MasterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,11 +28,14 @@ public class MasterService {
                 RequestContextUtils.getLocale(request).toString());
     }
 
-    public Optional<Master> findMasterById(Long id) {
-        return masterRepository.findById(id);
+    public Master findMasterById(Long id) throws MasterNotFoundException {
+        return masterRepository.findById(id).orElseThrow(()-> new MasterNotFoundException(
+                "master with id " + id + " not found"));
     }
 
-    public Optional<Master> findMasterByUser(User user, HttpServletRequest request) {
-        return masterRepository.findMasterByUserAndLanguageCode(user, RequestContextUtils.getLocale(request).toString());
+    public Master findMasterByUser(User user, HttpServletRequest request) throws MasterNotFoundException {
+        return masterRepository.findMasterByUserAndLanguageCode(user, RequestContextUtils.getLocale(request).toString())
+                .orElseThrow(()-> new MasterNotFoundException(
+                "master with user id " + user.getId() + " not found"));
     }
 }
