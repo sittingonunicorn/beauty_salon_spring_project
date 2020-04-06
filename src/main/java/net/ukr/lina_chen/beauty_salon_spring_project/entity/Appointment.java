@@ -42,7 +42,7 @@ public class Appointment {
     @Column(name = "date")
     private LocalDate date;
 
-    @Column(name = "is_provided")
+    @Column(name = "provided")
     private boolean provided;
 
 }

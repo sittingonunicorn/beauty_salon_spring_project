@@ -2,6 +2,7 @@ package net.ukr.lina_chen.beauty_salon_spring_project.service;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import net.ukr.lina_chen.beauty_salon_spring_project.dto.UsersDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.Role;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.User;
 import net.ukr.lina_chen.beauty_salon_spring_project.repository.UserRepository;
@@ -52,4 +53,10 @@ public class UserService implements UserDetailsService {
     public Optional<User> findById(@NonNull Long id) {
         return userRepository.findById(id);
     }
+
+        public Optional<User> findByEmail(User user) {
+        //TODO check for user availability. password check
+        return userRepository.findByEmail(user.getUsername());
+    }
+
 }

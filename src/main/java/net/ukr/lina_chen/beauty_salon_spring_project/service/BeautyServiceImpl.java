@@ -24,7 +24,8 @@ public class BeautyServiceImpl {
     }
 
     public List<BeautyService> findAllByProfessionId(@NonNull Long professionId, HttpServletRequest request) {
-        return beautyServiceRepository.findAllByProfessionIdAndLanguageCode(professionId, RequestContextUtils.getLocale(request).toString());
+        return beautyServiceRepository.findAllByProfessionIdAndLanguageCodeOrderByNameAsc(
+                professionId, RequestContextUtils.getLocale(request).toString());
     }
 
     public BeautyService findBeautyServiceById(@NonNull Long beautyserviceId) throws BeautyServiceNotFoundException {

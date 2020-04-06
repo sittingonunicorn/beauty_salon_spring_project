@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @Repository
 public interface ArchiveAppointmentRepository extends JpaRepository<ArchiveAppointment, Long> {
+
     Page<ArchiveAppointment> findArchiveAppointmentsByUserId(@NonNull Long userId, Pageable pageable);
 
     Optional <ArchiveAppointment> findById(@NonNull Long appointmentId);

@@ -15,10 +15,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -110,6 +112,7 @@ public class UserPagesController {
         model.addAttribute("error", error != null);
         Master master = appointment.getMaster();
         model.addAttribute("master", master);
+        model.addAttribute("busyTime", appointmentService.busyTime(master.getId()));
         model.addAttribute("days", Stream.iterate(LocalDate.now(), curr -> curr.plusDays(1))
                 .limit(ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.now().plusDays(7)))
                 .collect(Collectors.toList()));
@@ -117,6 +120,11 @@ public class UserPagesController {
                 Stream.iterate(master.getTimeBegin(), curr -> curr.plusHours(1)).
                         limit(ChronoUnit.HOURS.between(master.getTimeBegin(), master.getTimeEnd())).
                         collect(Collectors.toList()));
+//        model.addAttribute("dateTime", Stream.iterate(LocalDateTime.from(LocalTime.now())
+//                .truncatedTo(ChronoUnit.HOURS), curr -> curr.plusHours(1))
+//                .limit(ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.now().plusDays(7)))
+//                .filter());
+
         return "user/time.html";
     }
 
@@ -124,12 +132,15 @@ public class UserPagesController {
     public String saveAppointment(@RequestParam(required = false) String day,
                                   @RequestParam(required = false) String seanceTime,
                                   @ModelAttribute("appointment") Appointment appointment,
-                                  Model model, Locale locale) throws DoubleTimeRequestException {
+                                  SessionStatus sessionStatus)
+            throws DoubleTimeRequestException {
         appointment.setDate(LocalDate.parse(day));
         log.info("Date is added to appointment: " + appointment.getDate());
         appointment.setTime(LocalTime.parse(seanceTime));
         log.info("Time is added to appointment: " + appointment.getTime());
         appointmentService.createAppointment(appointment);
+        sessionStatus.setComplete();
+        createAppointment();
         return "user/appointment.html";
     }
 
@@ -139,17 +150,6 @@ public class UserPagesController {
         return "user/appointment.html";
     }
 
-    @ExceptionHandler(DoubleTimeRequestException.class)
-    String handleDoubleTimeRequestException(DoubleTimeRequestException e, Model model) {
-        model.addAttribute("error", true);
-        return "redirect:approve/time?error";
-    }
-
-    @ExceptionHandler(AppointmentNotFoundException.class)
-    String handleAppointmentNotFoundException(AppointmentNotFoundException e, Model model) {
-        model.addAttribute("error", true);
-        return "redirect:archiveappointments?error";
-    }
 
     @RequestMapping("archiveappointments")
     public String appointmentsPage(Model model, @AuthenticationPrincipal User user, HttpServletRequest request,
@@ -188,5 +188,17 @@ public class UserPagesController {
                     .collect(Collectors.toList());
         }
         return pageNumbers;
+    }
+
+    @ExceptionHandler(DoubleTimeRequestException.class)
+    String handleDoubleTimeRequestException(DoubleTimeRequestException e, Model model) {
+        model.addAttribute("error", true);
+        return "redirect:approve/time?error";
+    }
+
+    @ExceptionHandler(AppointmentNotFoundException.class)
+    String handleAppointmentNotFoundException(AppointmentNotFoundException e, Model model) {
+        model.addAttribute("error", true);
+        return "redirect:archiveappointments?error";
     }
 }

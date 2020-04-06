@@ -1,0 +1,119 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    overflow: hidden;
+    height: 100px;
+
+}
+
+.box {
+    white-space: nowrap;
+
+    /*top: 10px;*/
+}
+
+.box div {
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.box div h2 {
+    position: fixed;
+    left: 36%;
+    font-size: 48px;
+    text-shadow: 2px 2px 3px #20B2AA;
+}
+
+.box div button {
+    position: relative;
+    left: 0;
+}
+
+
+
+/*ul.hr li {*/
+/*    display: inline; !* Отображать как строчный элемент *!*/
+/*    margin-right: 5px; !* Отступ слева *!*/
+/*    border: 1px solid #000; !* Рамка вокруг текста *!*/
+/*    padding: 3px; !* Поля вокруг текста *!*/
+/*}*/
+
+.logout {
+    position: relative;
+    left: 86%;
+}
+
+/*nav .menu {*/
+/*    margin: 0;*/
+/*    position: absolute;*/
+/*    left: 80%;*/
+/*    top: 20px;*/
+/*}*/
+
+/*ul .hr {*/
+/*    margin: 0;*/
+/*    position: absolute;*/
+/*    left: 80%;*/
+/*    top: 50px;*/
+
+/*}*/
+
+.menu{
+    position: relative;
+    left: 0;
+    top: 30px;
+}
+
+/*ul .hr {*/
+/*    margin: 0;*/
+/*    position: absolute;*/
+/*    left: 6%;*/
+/*    top: 20px;*/
+/*}*/
+
+
+
+.treeHTML {
+    line-height: normal;
+}
+
+.treeHTML details {
+    display: block;
+}
+
+.treeHTML div {
+    position: relative;
+    margin: 0 0 0 .5em;
+    padding: 0 0 0 1.2em;
+}
+
+.treeHTML summary {
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+}
+
+.treeHTML details[open] summary {
+    outline: none;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    padding: 10px;
+    background: #20B2AA;
+    color: #fff;
+    width: 100%;
+}
+
+footer .rights {
+    text-align: center;
+}
+

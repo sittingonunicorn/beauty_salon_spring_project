@@ -1,21 +1,11 @@
 <!DOCTYPE html>
 <!--suppress ALL -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<head th:replace="parts/head :: head">
     <title>Beauty Salon Schedule</title>
 </head>
 <body>
-<div class="col-4 buttons">
-    <button type="submit" class="btn btn-light" onclick="location.href='?lang=en_US'" th:text="#{language.en}"></button>
-    <button type="submit" class="btn btn-light" onclick="location.href='?lang=ua_UA'" th:text="#{language.ua}"></button>
-</div>
+<div th:replace="parts/userheader :: userheader"></div>
 <p th:utext="#{message.chosen.master(${master.getUser().getName()})}">Chosen master</p>
 <p th:utext="#{output.master.schedule(${master.getTimeBegin()},${master.getTimeEnd()})}">Worktime</p>
 <div class="info" th:if="${error}">
@@ -23,24 +13,37 @@
 </div>
 <form action="/user/saveappointment" th:each="day : ${days}">
     <div class="panel-body">
-     <ul class="media-list">
-        <li class="media">
-            <div class="media-body">
-                <div class="medi-heading">
-                    <div class="autor"><h4 th:text="${day}"></h4></div>
-                </div>
-                <label class="radio-label" th:each="seance : ${time}">
-                    <div class="radio1">
-                        <input class="btn btn-link" type="submit" pattern="HH:mm"
-                               th:value="${seance}" name="seanceTime"/>
+<!--        <ul class="media-list">-->
+<!--            <li class="media">-->
+                <div class="treeHTML">
+                    <div><h6 th:text="${day}"></h6>
+                        <details th:each="busy: ${busyTime}">
+                            <summary></summary>
+
+                            <label class="radio-label" th:each="seance : ${time}"
+                                   th:if="(${seance}!=${busy.time})and(${day}!=${busy.date})">
+                                    <input class="btn btn-outline-info" type="submit" pattern="HH:mm"
+                                           th:value="${seance}" name="seanceTime"/>
+                            </label>
+                        </details>
                     </div>
-                </label>
-            </div>
-        </li>
-    </ul>
-    <input type="hidden" th:value="${day}" name="day"/>
+                </div>
+<!--            </li>-->
+<!--        </ul>-->
+        <input type="hidden" th:value="${day}" name="day"/>
     </div>
 </form>
+<div th:replace="parts/footer :: footer"></div>
 </body>
 </html>
 
+<!--<div class="treeHTML">Сайт-->
+<!--    <div>Блог-->
+<!--        <details>-->
+<!--            <summary></summary>-->
+<!--            <div>HTML</div>-->
+<!--            <div>CSS</div>-->
+<!--            <div>JavaScript</div>-->
+<!--        </details>-->
+<!--    </div>-->
+<!--</div>-->

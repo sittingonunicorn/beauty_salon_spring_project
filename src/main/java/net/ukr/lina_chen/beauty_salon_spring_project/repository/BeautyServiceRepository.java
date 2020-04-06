@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface BeautyServiceRepository extends JpaRepository<BeautyService, Long> {
     Optional<BeautyService> findById(@NonNull Long id);
 
-    List<BeautyService> findAllByProfessionIdAndLanguageCode(@NonNull Long professionId, @NonNull String languageCode);
+    List<BeautyService> findAllByProfessionIdAndLanguageCodeOrderByNameAsc(@NonNull Long professionId, @NonNull String languageCode);
 
     List<BeautyService> findAllByLanguageCode(@NonNull String languageCode);
 }

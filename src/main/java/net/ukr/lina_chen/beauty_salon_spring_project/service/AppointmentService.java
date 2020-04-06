@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 
 @Slf4j
@@ -37,6 +38,10 @@ public class AppointmentService {
 
     public Page<Appointment> findAllUpcomingAppointments(Pageable pageable) {
         return appointmentRepository.findAppointmentsByProvidedFalse(pageable);
+    }
+
+    public List<Appointment> busyTime(Long masterId){
+        return appointmentRepository.findAppointmentsByMasterId(masterId);
     }
 
     private boolean isTimeBusy(Long master_id, LocalTime time, LocalDate date) {

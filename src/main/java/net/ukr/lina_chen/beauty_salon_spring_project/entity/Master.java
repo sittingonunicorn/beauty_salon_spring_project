@@ -22,7 +22,7 @@ public class Master {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JoinColumn(name = "profession_id", nullable = false)
     private Profession profession;
 

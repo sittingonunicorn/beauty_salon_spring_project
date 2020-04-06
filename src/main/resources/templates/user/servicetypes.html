@@ -1,24 +1,11 @@
 <!DOCTYPE html>
 <!--suppress ALL -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<head th:replace="parts/head :: head">
     <title>Beauty Salon Choose Service type</title>
 </head>
 <body>
-<div class="col-2 buttons">
-    <button type="submit" class="btn btn-light" onclick="location.href='?lang=en_US'" th:text="#{language.en}"></button>
-    <button type="submit" class="btn btn-light" onclick="location.href='?lang=ua_UA'" th:text="#{language.ua}"></button>
-</div>
-<div>
-    <button type="button" class="btn btn-outline-secondary" onclick="location.href='/logout'" th:text="logout"></button>
-</div>
+<div th:replace="parts/userheader :: userheader"></div>
 <table class="table table-hover">
     <thead>
     <tr>
@@ -39,6 +26,7 @@
     </tr>
     </tbody>
 </table>
+<div th:replace="parts/footer :: footer"></div>
 </body>
 </html>
 
