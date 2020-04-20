@@ -7,7 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.Base64;
 
 @SpringBootTest
-class BeautySalonSpringProjectApplicationTests {
+class BeautySalonApplicationTests {
 
     @Test
     void contextLoads() {

@@ -13,23 +13,19 @@
 </div>
 <form action="/user/saveappointment" th:each="day : ${days}">
     <div class="panel-body">
-<!--        <ul class="media-list">-->
-<!--            <li class="media">-->
-                <div class="treeHTML">
-                    <div><h6 th:text="${day}"></h6>
-                        <details th:each="busy: ${busyTime}">
-                            <summary></summary>
+        <div class="treeHTML">
+            <div><h6 th:text="${day}"></h6>
+                <details th:each="busy: ${busyTime}">
+                    <summary></summary>
 
-                            <label class="radio-label" th:each="seance : ${time}"
-                                   th:if="(${seance}!=${busy.time})and(${day}!=${busy.date})">
-                                    <input class="btn btn-outline-info" type="submit" pattern="HH:mm"
-                                           th:value="${seance}" name="seanceTime"/>
-                            </label>
-                        </details>
-                    </div>
-                </div>
-<!--            </li>-->
-<!--        </ul>-->
+                    <label class="radio-label" th:each="seance : ${time}">
+                    <!--                                  th:if="(${seance}!=${busy.time})and(${day}!=${busy.date})"-->
+                    <input class="btn btn-outline-info" type="submit" pattern="HH:mm"
+                           th:value="${seance}" name="seanceTime"/>
+                    </label>
+                </details>
+            </div>
+        </div>
         <input type="hidden" th:value="${day}" name="day"/>
     </div>
 </form>

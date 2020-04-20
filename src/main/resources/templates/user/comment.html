@@ -46,8 +46,9 @@
                 <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden">
                 <div class="form-group" >
 <!--                    <label for="comment" th:text="#{var.comment}">Comment</label>-->
-                    <input type="text" class="form-control" id="comment" th:placeholder="#{var.comment}"
+                    <textarea type="text" class="form-control" id="comment" th:placeholder="#{var.comment}"
                            name="comment">
+                    </textarea>
                     <input type="hidden" th:value="${appointment.id}" name="appointmentId"/>
                 </div>
                 <button type="submit" class="btn btn-default" th:text="#{var.comment}">Comment</button>

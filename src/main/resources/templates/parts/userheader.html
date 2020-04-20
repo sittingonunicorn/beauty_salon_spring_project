@@ -3,7 +3,7 @@
     <div class="container">
         <div class="box">
             <div><h2>Beauty Salon</h2></div>
-            <div>
+            <nav>
 
                 <button type="submit" class="btn btn-outline-info" onclick="location.href='?lang=en_US'"
                         th:text="#{language.en}"></button>
@@ -11,17 +11,17 @@
                         th:text="#{language.ua}"></button>
                 <button type="button" class="btn btn-info" onclick="location.href='/logout'"
                         th:text="#{logout}"></button>
-            </div>
+            </nav>
 
     </div>
-        <div class="menu">
+        <nav class="menu">
             <ul class="hr">
                 <li><a href="/user/servicetypes" th:text="#{link.create.new.appointment}"></a></li>
                 <li><a href="/user/archiveappointments" th:text="#{link.archive.appointments}"></a></li>
                 <!--                <li><a href="/registration" th:text="#{link.signup}"></a></li>-->
             </ul>
 
-        </div>
+        </nav>
 
     </div>
 </header>
