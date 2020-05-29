@@ -1,3 +1,4 @@
+<!--suppress ALL -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -23,7 +24,10 @@
                     <div class="alert" th:if="${emailError}">
                         <div class="alert alert-danger" role="alert" th:text="#{email.not.unique}"></div>
                     </div>
-                    <form method="post" action="/registration">
+                    <div class="alert" th:if="${errors!=null}" th:each="error: ${errors}">
+                        <div class="alert alert-danger" role="alert" th:text="${error}"></div>
+                    </div>
+                    <form method="post" th:action="@{/registration}" th:object="${userRegistrationDTO}">
                         <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden">
                         <div class="form-group">
                             <label for="e-mail" th:text="#{email}">E-mail</label>
@@ -36,9 +40,20 @@
                                    name="password">
                         </div>
                         <div class="form-group">
+                            <label for="confirmPassword" th:text="#{password.confirm}">Password</label>
+                            <input type="password" class="form-control" id="confirmPassword"
+                                   th:placeholder="#{password.confirm}"
+                                   name="confirmPassword">
+                        </div>
+                        <div class="form-group">
                             <label for="name" th:text="#{name}">Name</label>
                             <input type="text" class="form-control" id="name" th:placeholder="#{name}"
                                    name="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="name" th:text="#{nameUkr}">Name</label>
+                            <input type="text" class="form-control" id="nameUkr" th:placeholder="#{nameUkr}"
+                                   name="nameUkr">
                         </div>
                         <button type="submit" class="btn btn-default" th:text="#{register}">Register</button>
                     </form>

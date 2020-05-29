@@ -19,9 +19,8 @@ import java.time.LocalTime;
 public class Appointment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue
     @Column(name = "appointment_id")
-
     private Long id;
 
     @ManyToOne(cascade = CascadeType.MERGE)

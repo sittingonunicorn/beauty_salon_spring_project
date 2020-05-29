@@ -19,19 +19,13 @@
     </tr>
     <!--/*@thymesVar id="masters" type="java.util.List"*/-->
     <tr th:each="master : ${masters}">
-
         <td>
-            <!--/*@thymesVar id="getId" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Master"*/-->
-            <!--/*@thymesVar id="getUser" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Master"*/-->
-            <!--/*@thymesVar id="getName" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.User"*/-->
-            <a th:href="@{'/user/approve/' + ${master.getId()}}" th:text="${master.user.getName()}">
+            <a th:href="@{'/user/approve/' + ${master.getId()}}" th:text="${master.getName()}">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                <!--/*@thymesVar id="id" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Master"*/-->
                 <input type="hidden" th:value="${master.id}" th:name="masterId">
             </a>
-        <td>
-        <td>
-            <p th:utext="#{message.master.work.time(${master.getTimeBegin()},${master.getTimeEnd()})}"> Working hours </p>
+        </td>
+        <td th:utext="#{message.master.work.time(${master.getTimeBegin()},${master.getTimeEnd()})}"> Working hours
         </td>
     </tr>
     </tbody>

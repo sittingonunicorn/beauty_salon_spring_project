@@ -5,16 +5,12 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
-import org.springframework.format.support.DefaultFormattingConversionService;
-import org.springframework.format.support.FormattingConversionService;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
-import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 @Slf4j
@@ -48,19 +44,8 @@ public class MvcConfig implements WebMvcConfigurer {
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }
-
-    @Bean
-    public FormattingConversionService conversionService() {
-        DefaultFormattingConversionService conversionService =
-                new DefaultFormattingConversionService(false);
-
-        DateTimeFormatterRegistrar registrar = new DateTimeFormatterRegistrar();
-        registrar.setDateFormatter(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        registrar.setDateTimeFormatter(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
-        registrar.registerFormatters(conversionService);
-        return conversionService;
-    }
 }
+
 
 
 

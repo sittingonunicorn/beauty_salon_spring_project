@@ -21,24 +21,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserService userService;
 
     @Bean
-    public PasswordEncoder bcryptPasswordEncoder(){
+    public PasswordEncoder bcryptPasswordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-         auth.userDetailsService(userService)
-                .passwordEncoder(bcryptPasswordEncoder());;
+        auth.userDetailsService(userService)
+                .passwordEncoder(bcryptPasswordEncoder());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/registration", "/login", "/index", "/").anonymous()
+                .antMatchers("/", "/static/css/**").permitAll()
+                .antMatchers("/registration", "/login", "/index").anonymous()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("/login").permitAll().successForwardUrl("/main")
+                .formLogin().loginPage("/login").permitAll()
+                .defaultSuccessUrl("/main", true)
+                .failureUrl("/login?error")
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll();
     }

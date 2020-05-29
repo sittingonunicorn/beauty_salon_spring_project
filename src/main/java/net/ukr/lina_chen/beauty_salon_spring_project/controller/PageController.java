@@ -3,8 +3,7 @@ package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 import lombok.extern.slf4j.Slf4j;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.User;
 import org.springframework.context.MessageSource;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +22,8 @@ public class PageController {
     private MessageSource messageSource;
 
     @GetMapping({"/index", "/"})
-    public String indexPage(Model model, HttpServletRequest request) {
+    public String indexPage(Model model, HttpServletRequest request,
+                            @AuthenticationPrincipal User user) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
                 ResourceBundle.getBundle("messages",RequestContextUtils.getLocale(request)).
                         getString("date.format"));
@@ -32,12 +32,9 @@ public class PageController {
     }
 
     @RequestMapping("/main")
-    public String mainPage(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-        model.addAttribute("email", user.getEmail());
-        model.addAttribute("name", user.getName());
-        // model.addAttribute("roles", user.getAuthorities().stream().map(Role::getAuthority).collect(joining(",")));
+    public String mainPage(Model model,
+                           @AuthenticationPrincipal User user) {
+        model.addAttribute("user", user);
         return "main.html";
     }
 

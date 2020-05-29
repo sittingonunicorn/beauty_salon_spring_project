@@ -24,6 +24,10 @@ public class ArchiveAppointmentService {
         return archiveAppointmentRepository.findArchiveAppointmentsByUserId(userId, pageable);
     }
 
+    public Page<ArchiveAppointment> findCommentsForMaster(@NonNull Long masterId, Pageable pageable) {
+        return archiveAppointmentRepository.findArchiveAppointmentsByMasterIdAndCommentIsNotNull(masterId, pageable);
+    }
+
     public void addComment(Long appointmentId, String comment) {
         archiveAppointmentRepository.addCommentById(appointmentId, comment);
     }

@@ -24,10 +24,12 @@ public class Profession {
     @OneToMany( mappedBy = "profession",  cascade = CascadeType.MERGE)
     private Set<Master> masters;
 
-    @Column(name = "language_code", nullable = false)
-    private String languageCode;
-
     @Column(name = "beautyservices_type", nullable = false)
     private String beautyservicesType;
 
+    @Column(name = "profession_name_ukr", nullable = false)
+    private String nameUkr;
+
+    @Column(name = "beautyservices_type_ukr", nullable = false)
+    private String beautyservicesTypeUkr;
 }

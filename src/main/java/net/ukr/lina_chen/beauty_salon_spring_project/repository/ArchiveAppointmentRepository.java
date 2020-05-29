@@ -20,6 +20,8 @@ public interface ArchiveAppointmentRepository extends JpaRepository<ArchiveAppoi
 
     Page<ArchiveAppointment> findArchiveAppointmentsByUserId(@NonNull Long userId, Pageable pageable);
 
+    Page<ArchiveAppointment> findArchiveAppointmentsByMasterIdAndCommentIsNotNull(@NonNull Long masterId,
+                                                                                  Pageable pageable);
     Optional <ArchiveAppointment> findById(@NonNull Long appointmentId);
 
     @Transactional

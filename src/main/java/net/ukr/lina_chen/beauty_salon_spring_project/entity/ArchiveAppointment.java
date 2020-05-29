@@ -21,7 +21,7 @@ public class ArchiveAppointment extends Appointment {
 
     public ArchiveAppointment(Appointment appointment, String comment) {
         super(appointment.getId(), appointment.getMaster(), appointment.getUser(), appointment.getBeautyService(),
-                appointment.getTime(), appointment.getDate(), appointment.isProvided());
+                appointment.getTime(), appointment.getDate(), true);
         this.comment = comment;
     }
 }

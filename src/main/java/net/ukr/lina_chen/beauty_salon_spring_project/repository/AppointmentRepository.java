@@ -18,9 +18,9 @@ import java.util.Optional;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
-    Page<Appointment> findAppointmentsByMasterIdAndProvidedFalse(@NonNull Long masterId, Pageable pageable);
+    Page<Appointment> findAppointmentsByMasterIdAndProvidedFalseOrderByDate(@NonNull Long masterId, Pageable pageable);
 
-    Page<Appointment> findAppointmentsByUserId(@NonNull Long userId, Pageable pageable);
+    Page<Appointment> findAppointmentsByUserIdOrderByDate(@NonNull Long userId, Pageable pageable);
 
     Optional<Appointment> findAppointmentByMasterIdAndTimeAndDate(@NonNull Long masterId, LocalTime time, LocalDate date);
 
@@ -28,7 +28,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     Optional<Appointment> findAppointmentById(@NonNull Long id);
 
-    Page<Appointment> findAppointmentsByProvidedFalse(Pageable pageable);
+    Page<Appointment> findAppointmentsByProvidedFalseOrderByDate(Pageable pageable);
 
 
     @Transactional

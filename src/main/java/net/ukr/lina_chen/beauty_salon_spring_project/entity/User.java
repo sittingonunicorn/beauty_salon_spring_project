@@ -31,15 +31,14 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
     @Column(name = "password", nullable = false)
-    @Size(min = 8, message = "Password should be from 8 to 32 symbols.")
     private String password;
     @Column(name = "email", nullable = false)
-    @Size(min = 8, max = 32, message = "E-mail should be from 8 to 32 symbols.")
     @Email
     private String email;
     @Column(name = "name", nullable = false)
-    @Size(min = 2, max = 32, message = "Username should be from 2 to 32 symbols.")
     private String name;
+    @Column(name = "name_ukr", nullable = false)
+    private String nameUkr;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

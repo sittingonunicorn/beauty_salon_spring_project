@@ -28,7 +28,7 @@ public class BeautyService {
     @JoinColumn(name = "profession_id", nullable = false)
     private Profession profession;
 
-    @Column(name = "language_code", nullable = false)
-    private String languageCode;
+    @Column(name = "beautyservice_name_ukr", nullable = false)
+    private String nameUkr;
 
 }

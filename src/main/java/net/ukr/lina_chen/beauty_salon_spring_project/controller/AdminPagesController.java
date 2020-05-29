@@ -1,7 +1,7 @@
 package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import net.ukr.lina_chen.beauty_salon_spring_project.entity.Appointment;
+import net.ukr.lina_chen.beauty_salon_spring_project.dto.AppointmentDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.ArchiveAppointment;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.AppointmentService;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.ArchiveAppointmentService;
@@ -19,9 +19,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -32,8 +35,8 @@ import java.util.stream.IntStream;
 @Controller
 public class AdminPagesController {
 
-    private AppointmentService appointmentService;
-    private ArchiveAppointmentService archiveAppointmentService;
+    private final AppointmentService appointmentService;
+    private final ArchiveAppointmentService archiveAppointmentService;
 
     @Autowired
     public AdminPagesController(AppointmentService appointmentService,
@@ -45,7 +48,7 @@ public class AdminPagesController {
 
     @GetMapping("archiveappointments")
     public String archiveAppointmentsPage(Model model, @PageableDefault(sort = {"date", "time"},
-            direction = Sort.Direction.ASC, size = 3) Pageable pageable) {
+            direction = Sort.Direction.ASC, size = 6) Pageable pageable) {
         Page<ArchiveAppointment> archiveAppointments = archiveAppointmentService.findAllProvidedAppointments(pageable);
         model.addAttribute("archiveAppointments", archiveAppointments);
         model.addAttribute("pageNumbers", this.getPageNumbers(archiveAppointments.getTotalPages()));
@@ -54,8 +57,10 @@ public class AdminPagesController {
 
     @GetMapping("appointments")
     public String appointmentsPage(Model model, @PageableDefault(sort = {"date", "time"},
-            direction = Sort.Direction.ASC, size = 3) Pageable pageable) {
-        Page<Appointment> appointments = appointmentService.findAllUpcomingAppointments(pageable);
+            direction = Sort.Direction.ASC, size = 7) Pageable pageable,
+                                   HttpServletRequest request) {
+        Page<AppointmentDTO> appointments = appointmentService.findAllUpcomingAppointments(pageable,
+                isLocaleEn(request));
         model.addAttribute("appointments", appointments);
         model.addAttribute("pageNumbers", this.getPageNumbers(appointments.getTotalPages()));
         return "admin/appointments.html";
@@ -74,9 +79,17 @@ public class AdminPagesController {
     @PostMapping("appointments")
     public String appointmentsOfMasterPage(Model model, @RequestParam Long masterId,
                                            @PageableDefault(sort = {"date", "time"},
-                                                   direction = Sort.Direction.ASC, size = 3) Pageable pageable) {
+                                                   direction = Sort.Direction.ASC, size = 6) Pageable pageable,
+                                           HttpServletRequest request) {
 
-        model.addAttribute("appointments", appointmentService.findAppointmentsForMaster(masterId, pageable));
+        model.addAttribute("appointments", appointmentService.findAppointmentsForMaster(masterId, pageable,
+                isLocaleEn(request)));
+
         return "admin/appointments.html";
+    }
+
+
+    private boolean isLocaleEn(HttpServletRequest request) {
+        return RequestContextUtils.getLocale(request).equals(Locale.US);
     }
 }

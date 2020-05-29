@@ -4,39 +4,42 @@
     box-sizing: border-box;
 }
 
-.container {
-    overflow: hidden;
-    height: 100px;
+/*.container-low {*/
+/*    overflow: hidden;*/
+/*    height: 100px;*/
 
+/*}*/
+
+.nav {
+    padding-left: 70%;
 }
 
-.box {
-    white-space: nowrap;
-
-    /*top: 10px;*/
-}
-
-.box div {
-    display: inline-block;
-    position: absolute;
-    left: 0;
-    top: 0;
-}
-
-.box div h2 {
-    position: fixed;
-    left: 36%;
-    font-size: 48px;
+.h2 {
     text-shadow: 2px 2px 3px #20B2AA;
+    margin-bottom: 5px;
+    font-family: 'Montserrat', sans-serif;
+    padding-left: 40%;
+    font-size: 50px;
+    font-weight: 400;
+}
+
+.menu {
+    margin-top: 10px;
+    /* display: inline; /* Отображать как строчный элемент *!*/
+}
+
+
+.hr li {
+    display: inline; /* Отображать как строчный элемент */
+    margin-right: 5px; /* Отступ слева */
+    border: 1px solid #20B2AA; /* Рамка вокруг текста */
+    padding: 3px; /* Поля вокруг текста */
 }
 
 .box div button {
     position: relative;
     left: 0;
 }
-
-
-
 /*ul.hr li {*/
 /*    display: inline; !* Отображать как строчный элемент *!*/
 /*    margin-right: 5px; !* Отступ слева *!*/
@@ -47,27 +50,6 @@
 .logout {
     position: relative;
     left: 86%;
-}
-
-/*nav .menu {*/
-/*    margin: 0;*/
-/*    position: absolute;*/
-/*    left: 80%;*/
-/*    top: 20px;*/
-/*}*/
-
-/*ul .hr {*/
-/*    margin: 0;*/
-/*    position: absolute;*/
-/*    left: 80%;*/
-/*    top: 50px;*/
-
-/*}*/
-
-.menu{
-    position: relative;
-    left: 0;
-    top: 30px;
 }
 
 /*ul .hr {*/
@@ -104,16 +86,15 @@
     outline: none;
 }
 
-footer {
+.footer  {
     position: fixed;
     bottom: 0;
     padding: 10px;
     background: #20B2AA;
     color: #fff;
     width: 100%;
-}
-
-footer .rights {
+    float: left;
     text-align: center;
 }
+
 

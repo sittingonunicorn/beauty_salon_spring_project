@@ -6,27 +6,34 @@
 </head>
 <body>
 <div th:replace="parts/userheader :: userheader"></div>
-<p th:utext="#{message.chosen.master(${master.getUser().getName()})}">Chosen master</p>
+<p th:utext="#{message.chosen.master(${master.getName()})}">Chosen master</p>
 <p th:utext="#{output.master.schedule(${master.getTimeBegin()},${master.getTimeEnd()})}">Worktime</p>
 <div class="info" th:if="${error}">
     <div class="alert alert-danger" role="alert" th:text="#{message.master.busy}">The master is busy at that time</div>
 </div>
-<form action="/user/saveappointment" th:each="day : ${days}">
+<form action="/user/saveappointment" th:each="entry : ${dateTime}">
     <div class="panel-body">
         <div class="treeHTML">
-            <div><h6 th:text="${day}"></h6>
-                <details th:each="busy: ${busyTime}">
+            <div><h6 th:text="${entry.key}"></h6>
+                <details>
                     <summary></summary>
-
-                    <label class="radio-label" th:each="seance : ${time}">
-                    <!--                                  th:if="(${seance}!=${busy.time})and(${day}!=${busy.date})"-->
-                    <input class="btn btn-outline-info" type="submit" pattern="HH:mm"
-                           th:value="${seance}" name="seanceTime"/>
-                    </label>
+                    <div th:each="seance: ${workingHours}">
+                        <label class="radio-label"
+                               th:if="${entry.value.contains(seance)}">
+                            <input class="btn btn-outline-info" type="submit" pattern="HH:mm"
+                                   style = "display: inline-block;"
+                                   th:value="${seance}" name="seanceTime"/>
+                        </label>
+                        <label class="radio-label"
+                               th:if="${!entry.value.contains(seance)}">
+                            <input class="btn btn-outline-info" type="submit" pattern="HH:mm"
+                                   style = "display: inline-block;"
+                                   th:value="${seance}" name="seanceTime" disabled/>
+                        </label></div>
                 </details>
             </div>
         </div>
-        <input type="hidden" th:value="${day}" name="day"/>
+        <input type="hidden" th:value="${entry.key}" name="day"/>
     </div>
 </form>
 <div th:replace="parts/footer :: footer"></div>

@@ -1,10 +1,8 @@
 <!--suppress ALL -->
 <header th:fragment="userheader" xmlns:th="http://www.thymeleaf.org">
-    <div class="container">
-        <div class="box">
-            <div><h2>Beauty Salon</h2></div>
+    <div>
+        <div class="nav">
             <nav>
-
                 <button type="submit" class="btn btn-outline-info" onclick="location.href='?lang=en_US'"
                         th:text="#{language.en}"></button>
                 <button type="submit" class="btn btn-outline-info" onclick="location.href='?lang=ua_UA'"
@@ -12,16 +10,15 @@
                 <button type="button" class="btn btn-info" onclick="location.href='/logout'"
                         th:text="#{logout}"></button>
             </nav>
-
-    </div>
-        <nav class="menu">
+        </div>
+        <div>
+            <h2 class="h2">Beauty Salon</h2>
+        </div>
+        <div class="menu">
             <ul class="hr">
                 <li><a href="/user/servicetypes" th:text="#{link.create.new.appointment}"></a></li>
                 <li><a href="/user/archiveappointments" th:text="#{link.archive.appointments}"></a></li>
-                <!--                <li><a href="/registration" th:text="#{link.signup}"></a></li>-->
             </ul>
-
-        </nav>
-
+        </div>
     </div>
 </header>
