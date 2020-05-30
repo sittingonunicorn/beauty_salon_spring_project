@@ -56,12 +56,11 @@ public class RegistrationController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BindException.class)
-    public String handleValidationExceptions(BindException ex,
+    public String handleValidationExceptions(BindException ex, Locale locale,
                                              Model model) {
-        System.out.println("method");
         Set<String> errors = new HashSet<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
-            errors.add(error.getDefaultMessage());
+            errors.add(messageSource.getMessage(error.getDefaultMessage(), null, locale));
         });
         model.addAttribute("errors", errors);
         return "registration.html";

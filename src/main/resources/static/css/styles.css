@@ -9,6 +9,16 @@
 /*    height: 100px;*/
 
 /*}*/
+html, body {
+    height: 100%;
+    margin: 0;
+}
+.content {
+    min-height: 100%;
+}
+.content-inside {
+    padding: 20px 20px 70px;
+}
 
 .nav {
     padding-left: 70%;

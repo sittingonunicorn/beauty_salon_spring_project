@@ -48,8 +48,9 @@ public class AdminPagesController {
 
     @GetMapping("archiveappointments")
     public String archiveAppointmentsPage(Model model, @PageableDefault(sort = {"date", "time"},
-            direction = Sort.Direction.ASC, size = 6) Pageable pageable) {
-        Page<ArchiveAppointment> archiveAppointments = archiveAppointmentService.findAllProvidedAppointments(pageable);
+            direction = Sort.Direction.ASC, size = 7) Pageable pageable) {
+        Page<ArchiveAppointment> archiveAppointments = archiveAppointmentService.findAllProvidedAppointments(
+                pageable);
         model.addAttribute("archiveAppointments", archiveAppointments);
         model.addAttribute("pageNumbers", this.getPageNumbers(archiveAppointments.getTotalPages()));
         return "admin/archiveappointments.html";
