@@ -55,21 +55,19 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(@NonNull String email) throws UsernameNotFoundException {
         Optional<User> optional = userRepository.findByEmail(email);
         User user = optional.orElseGet(User::new);/*.orElseThrow(() -> new UsernameNotFoundException("User " + email + " not found."))*/
-        ;
         return user;
     }
 
-    public Optional<User> findById(@NonNull Long id) {
-        return userRepository.findById(id);
-    }
-
-    public Optional<User> findByEmail(User user) {
-        //TODO check for user availability. password check
-        return userRepository.findByEmail(user.getUsername());
-    }
-
-    private boolean isLocaleUa() {
-        return LocaleContextHolder.getLocale().equals(new Locale("ua_UA"));
-    }
+//    public Optional<User> findById(@NonNull Long id) {
+//        return userRepository.findById(id);
+//    }
+//
+//    public Optional<User> findByEmail(User user) {
+//        return userRepository.findByEmail(user.getUsername());
+//    }
+//
+//    private boolean isLocaleUa() {
+//        return LocaleContextHolder.getLocale().equals(new Locale("ua_UA"));
+//    }
 
 }

@@ -18,18 +18,18 @@ public class Profession {
     @Column(name = "profession_id")
     private Long id;
 
-    @Column(name = "profession_name", nullable = false)
+    @Column(name = "profession_name_en", nullable = false)
     private String name;
 
     @OneToMany( mappedBy = "profession",  cascade = CascadeType.MERGE)
     private Set<Master> masters;
 
-    @Column(name = "beautyservices_type", nullable = false)
+    @Column(name = "beautyservices_type_en", nullable = false)
     private String beautyservicesType;
 
-    @Column(name = "profession_name_ukr", nullable = false)
+    @Column(name = "profession_name_ua", nullable = false)
     private String nameUkr;
 
-    @Column(name = "beautyservices_type_ukr", nullable = false)
+    @Column(name = "beautyservices_type_ua", nullable = false)
     private String beautyservicesTypeUkr;
 }

@@ -8,8 +8,8 @@
 <div th:replace="parts/userheader :: userheader"></div>
 <div>
     <p th:text="#{message.appointment.created}"></p>
-    <p th:utext="#{message.master(${appointment.getMaster().getUser().getName()})}">Master</p>
-    <p th:utext="#{message.beautyservice(${appointment.getBeautyService().getName()})}">BeautyService</p>
+    <p th:utext="#{message.master(${appointment.getMasterName()})}">Master</p>
+    <p th:utext="#{message.beautyservice(${appointment.getBeautyService()})}">BeautyService</p>
     <p th:utext="#{message.date(${appointment.getDate()})}">Date</p>
     <p th:utext="#{message.time(${appointment.getTime()})}">Time</p>
 

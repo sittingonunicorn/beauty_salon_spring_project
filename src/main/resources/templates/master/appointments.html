@@ -12,6 +12,11 @@
     </div>
     <p th:utext="#{message.master.schedule(${master.getName()})}">Master</p>
 </div>
+<table class="table table-hover">
+<tr class="table-info">
+<th th:each="date : ${dates}"> <a th:href="@{'/master/appointments?date='+${date}}" th:text="${date}"></a></th>
+</tr>
+</table>
 
 <form th:action="@{/master/makeprovided}">
     <table class="table table-hover">

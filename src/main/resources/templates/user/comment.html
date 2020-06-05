@@ -27,7 +27,7 @@
     <!--    /*@thymesVar id="servicetypes" type="List"*/-->
     <tr>
         <td>
-            <span th:text="${appointment.getBeautyService().getName()}">Service</span>
+            <span th:text="${appointment.getBeautyService()}">Service</span>
         </td>
         <td>
             <span th:text="${appointment.getDate()}">Date</span>
@@ -36,7 +36,7 @@
             <span th:text="${appointment.getTime()}">Time</span>
         </td>
         <td>
-            <span th:text="${appointment.getUser().getName()}">User's name</span>
+            <span th:text="${appointment.getUserName()}">User's name</span>
         </td>
         <td>
             <span th:text="#{|bool.${appointment.isProvided()}|}">Provided</span>

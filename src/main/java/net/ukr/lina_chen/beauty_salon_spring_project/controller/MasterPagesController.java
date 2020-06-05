@@ -3,6 +3,7 @@ package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 import lombok.extern.slf4j.Slf4j;
 import net.ukr.lina_chen.beauty_salon_spring_project.controller.utility.MailSender;
 import net.ukr.lina_chen.beauty_salon_spring_project.dto.AppointmentDTO;
+import net.ukr.lina_chen.beauty_salon_spring_project.dto.ArchiveAppointmentDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.dto.MasterDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.Appointment;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.ArchiveAppointment;
@@ -29,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -57,19 +60,23 @@ public class MasterPagesController {
         this.mailSender = mailSender;
     }
 
-    @RequestMapping("appointments")
+    @GetMapping("appointments")
     public String appointmentsPage(Model model, @AuthenticationPrincipal User user, HttpServletRequest request,
                                    @PageableDefault(sort = {"date", "time"},
                                            direction = Sort.Direction.ASC, size = 6) Pageable pageable,
-                                   @RequestParam(value = "error", required = false) String error)
+                                   @RequestParam(value = "error", required = false) String error,
+                                   @RequestParam(value = "date", required = false) String date)
             throws MasterNotFoundException {
         MasterDTO master = masterService.findMasterByUser(user, isLocaleEn(request));
-        Page<AppointmentDTO> appointments = appointmentService.findAppointmentsForMaster(
+        Page<AppointmentDTO> appointments = date!=null? appointmentService.getMastersDailyAppointments(
+                master.getId(), LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")), pageable,
+                isLocaleEn(request)) : appointmentService.findAppointmentsForMaster(
                 master.getId(), pageable, isLocaleEn(request));
         model.addAttribute("pageNumbers", this.getPageNumbers(appointments.getTotalPages()));
         model.addAttribute("master", master);
         model.addAttribute("appointments", appointments);
         model.addAttribute("error", error != null);
+        model.addAttribute("dates", appointmentService.getMastersAppointmentDates(master.getId()));
         return "master/appointments.html";
     }
 
@@ -90,8 +97,8 @@ public class MasterPagesController {
                                                   direction = Sort.Direction.DESC, size = 6) Pageable pageable,
                                           HttpServletRequest request) throws MasterNotFoundException {
         MasterDTO master = masterService.findMasterByUser(user, isLocaleEn(request));
-        Page<ArchiveAppointment> archiveAppointments =
-                archiveAppointmentService.findCommentsForMaster(master.getId(), pageable);
+        Page<ArchiveAppointmentDTO> archiveAppointments =
+                archiveAppointmentService.findCommentsForMaster(master.getId(), pageable, isLocaleEn(request));
         model.addAttribute("archiveAppointments", archiveAppointments);
         model.addAttribute("pageNumbers", this.getPageNumbers(archiveAppointments.getTotalPages()));
         return "master/comments.html";

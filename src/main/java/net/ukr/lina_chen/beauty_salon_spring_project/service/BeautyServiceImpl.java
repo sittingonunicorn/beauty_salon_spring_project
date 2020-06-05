@@ -36,16 +36,16 @@ public class BeautyServiceImpl {
                 .sorted(Comparator.comparing(BeautyServiceDTO::getName))
                 .collect(Collectors.toList());
     }
-
-    public BeautyService findBeautyServiceById(@NonNull Long beautyserviceId) throws BeautyServiceNotFoundException {
-        return beautyServiceRepository.findById(beautyserviceId)
-                .orElseThrow(()-> new BeautyServiceNotFoundException(
-                        "beauty service with id " + beautyserviceId + " not found"));
-    }
-
-    public List<BeautyService> findAll(HttpServletRequest request) {
-        return beautyServiceRepository.findAll();
-    }
+//
+//    public BeautyService findBeautyServiceById(@NonNull Long beautyserviceId) throws BeautyServiceNotFoundException {
+//        return beautyServiceRepository.findById(beautyserviceId)
+//                .orElseThrow(()-> new BeautyServiceNotFoundException(
+//                        "beauty service with id " + beautyserviceId + " not found"));
+//    }
+//
+//    public List<BeautyService> findAll(HttpServletRequest request) {
+//        return beautyServiceRepository.findAll();
+//    }
 
     private BeautyServiceDTO getLocalizedDTO (boolean isLocaleEn, BeautyService beautyService){
         return BeautyServiceDTO.builder()

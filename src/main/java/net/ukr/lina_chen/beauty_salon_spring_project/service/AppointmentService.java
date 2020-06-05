@@ -13,12 +13,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.DATE_FORMAT;
 
@@ -52,6 +54,16 @@ public class AppointmentService {
                 .map(a -> getLocalizedDto(isLocaleEn, a));
     }
 
+    public List<LocalDate> getMastersAppointmentDates (Long masterId){
+        return appointmentRepository.findMastersAppointmentDates(masterId);
+    }
+
+    public Page<AppointmentDTO> getMastersDailyAppointments(Long masterId, LocalDate date, Pageable pageable,
+                                                            boolean isLocaleEn){
+        return appointmentRepository.findAppointmentsByMasterIdAndDate(masterId,date,pageable)
+                .map(a->getLocalizedDto(isLocaleEn, a));
+    }
+
     public List<Appointment> busyTime(Long masterId) {
         return appointmentRepository.findAppointmentsByMasterId(masterId);
     }
@@ -61,22 +73,24 @@ public class AppointmentService {
     }
 
     @Transactional
-    public void createAppointment(Appointment appointment) throws DoubleTimeRequestException {
+    public Appointment createAppointment(Appointment appointment) throws DoubleTimeRequestException {
         if (isTimeBusy(appointment.getMaster().getId(),
                 appointment.getTime(), appointment.getDate())) {
             log.warn("The master is busy at this time");
             throw new DoubleTimeRequestException(appointment.getMaster().getUser().getName() + " is busy at this time");
         } else {
-            appointmentRepository.save(appointment);
-            log.info("The appointment is successfully added to Master's " +
-                    appointment.getMaster().getUser().getName() + " schedule");
+            return appointmentRepository.save(appointment);
         }
-
     }
 
     public Appointment findAppointmentById(Long id) throws AppointmentNotFoundException {
         return appointmentRepository.findAppointmentById(id)
                 .orElseThrow(() -> new AppointmentNotFoundException("appointment with id " + id + " not found"));
+    }
+
+    public AppointmentDTO getLocalizedAppointmentById(Long id, boolean isLocaleEn) throws AppointmentNotFoundException {
+        return getLocalizedDto(isLocaleEn, appointmentRepository.findAppointmentById(id)
+                .orElseThrow(() -> new AppointmentNotFoundException("appointment with id " + id + " not found")));
     }
 
     public void setAppointmentProvided(Long appointmentId) {
@@ -87,7 +101,7 @@ public class AppointmentService {
         appointmentRepository.delete(appointment);
     }
 
-    public AppointmentDTO getLocalizedDto(boolean isLocaleEn, Appointment appointment) {
+    private AppointmentDTO getLocalizedDto(boolean isLocaleEn, Appointment appointment) {
         return AppointmentDTO.builder()
                 .beautyService(isLocaleEn ? appointment.getBeautyService().getName()
                         : appointment.getBeautyService().getNameUkr())

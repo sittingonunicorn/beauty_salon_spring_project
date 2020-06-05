@@ -7,61 +7,64 @@
 <body>
 <div th:replace="parts/adminheader :: adminheader"></div>
 <div class="content">
-<div class="content-inside">
-<table class="table table-hover">
-    <thead>
-    <tr>
-        <th th:text="#{var.beautyservice}">Service</th>
-        <th th:text="#{var.date}">Date</th>
-        <th th:text="#{var.time}">Time</th>
-        <th th:text="#{var.username}">User's name</th>
-        <th th:text="#{var.provided}">Provided</th>
-        <th>Set Provided</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:if="${#lists.isEmpty(archiveAppointments)}">
-        <td colspan="2"> No appointments available</td>
-    </tr>
-    <!--    /*@thymesVar id="servicetypes" type="List"*/-->
-    <tr th:each="appointment : ${archiveAppointments}">
-        <td>
-            <span th:text="${appointment.getBeautyService().getName()}">Service</span>
-        </td>
-        <td>
-            <span th:text="${appointment.getDate()}">Date</span>
-        </td>
-        <td>
-            <span th:text="${appointment.getTime()}">Time</span>
-        </td>
-        <td>
-            <span th:text="${appointment.getUser().getName()}">User's name</span>
-        </td>
-        <td>
-            <span th:text="#{|bool.${appointment.isProvided()}|}">Provided</span>
-        </td>
-        <!--            <td>-->
-        <!--                <form th:action="@{/user/comment}">-->
-        <!--                <div class="row-fluid practice" style="width: 99%; height: 100%;">-->
-        <!--                    <button type="submit" name="appointmentId" th:value="${appointment.id}"-->
-        <!--                    th:text="#{message.leave.comment}">-->
-        <!--                        Leave a comment</button>-->
-        <!--                </div>-->
-        <!--                </form>-->
-        <!--            </td>-->
-    </tr>
-    </tbody>
-</table>
-<nav aria-label="Page navigation example">
-    <ul class="pagination" th:if="${archiveAppointments.totalPages > 0}">
-        <li class="page-item" th:each="pageNumber : ${pageNumbers}">
-            <a class="page-link"
-               th:href="@{/admin/archiveappointments(size=${archiveAppointments.size}, page=${pageNumber})}"
-               th:text="${pageNumber+1}"></a></li>
-    </ul>
-</nav>
-<div th:replace="parts/footer :: footer"></div>
-</div>
+    <div class="content-inside">
+        <table class="table table-hover">
+            <tr class="table-info">
+                <th th:each="master : ${masters}">
+                    <a th:href="@{'/admin/archiveappointments?master='+${master.id}}" th:text="${master.name}"></a></th>
+            </tr>
+        </table>
+        <div th:if="${archiveAppointments.isEmpty()}" th:text="#{no.comments.master}"></div>
+        <table class="table table-hover" th:unless="${archiveAppointments.isEmpty()}">
+            <thead>
+            <tr>
+                <th th:text="#{var.beautyservice}">Service</th>
+                <th th:text="#{var.date}">Date</th>
+                <th th:text="#{var.time}">Time</th>
+                <th th:text="#{var.username}">User's name</th>
+                <th th:text="#{var.comment}">Comment</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--    /*@thymesVar id="servicetypes" type="List"*/-->
+            <tr th:each="appointment : ${archiveAppointments}">
+                <td>
+                    <span th:text="${appointment.getBeautyService()}">Service</span>
+                </td>
+                <td>
+                    <span th:text="${appointment.getDate()}">Date</span>
+                </td>
+                <td>
+                    <span th:text="${appointment.getTime()}">Time</span>
+                </td>
+                <td>
+                    <span th:text="${appointment.getUserName()}">User's name</span>
+                </td>
+                <td>
+                    <span th:text="${appointment.getComment()}">Comment</span>
+                </td>
+                <!--            <td>-->
+                <!--                <form th:action="@{/user/comment}">-->
+                <!--                <div class="row-fluid practice" style="width: 99%; height: 100%;">-->
+                <!--                    <button type="submit" name="appointmentId" th:value="${appointment.id}"-->
+                <!--                    th:text="#{message.leave.comment}">-->
+                <!--                        Leave a comment</button>-->
+                <!--                </div>-->
+                <!--                </form>-->
+                <!--            </td>-->
+            </tr>
+            </tbody>
+        </table>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination" th:if="${archiveAppointments.totalPages > 0}">
+                <li class="page-item" th:each="pageNumber : ${pageNumbers}">
+                    <a class="page-link"
+                       th:href="@{/admin/archiveappointments(size=${archiveAppointments.size}, page=${pageNumber})}"
+                       th:text="${pageNumber+1}"></a></li>
+            </ul>
+        </nav>
+        <div th:replace="parts/footer :: footer"></div>
+    </div>
 </div>
 </body>
 </html>

@@ -18,7 +18,7 @@ public class BeautyService {
     @Column(name = "beautyservice_id")
     private Long id;
 
-    @Column(name = "beautyservice_name", nullable = false)
+    @Column(name = "beautyservice_name_en", nullable = false)
     private String name;
 
     @Column(name = "price", nullable = false)
@@ -28,7 +28,7 @@ public class BeautyService {
     @JoinColumn(name = "profession_id", nullable = false)
     private Profession profession;
 
-    @Column(name = "beautyservice_name_ukr", nullable = false)
+    @Column(name = "beautyservice_name_ua", nullable = false)
     private String nameUkr;
 
 }

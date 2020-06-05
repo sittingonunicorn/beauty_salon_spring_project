@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -30,6 +31,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     Page<Appointment> findAppointmentsByProvidedFalseOrderByDate(Pageable pageable);
 
+    @Query("select distinct a.date from Appointment a where a.master.id = :masterId and a.provided=false order by a.date")
+    List<LocalDate> findMastersAppointmentDates(@NonNull Long masterId);
+
+    Page<Appointment> findAppointmentsByMasterIdAndDate(Long masterId, LocalDate date, Pageable pageable);
 
     @Transactional
     @Modifying

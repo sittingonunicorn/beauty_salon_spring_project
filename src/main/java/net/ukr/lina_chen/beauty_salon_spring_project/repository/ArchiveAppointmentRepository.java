@@ -24,6 +24,8 @@ public interface ArchiveAppointmentRepository extends JpaRepository<ArchiveAppoi
                                                                                   Pageable pageable);
     Optional <ArchiveAppointment> findById(@NonNull Long appointmentId);
 
+    Page<ArchiveAppointment> findArchiveAppointmentsByCommentNotNull(Pageable pageable);
+
     @Transactional
     @Modifying
     @Query("update ArchiveAppointment a set a.comment=:comment where a.id=:appointmentId")

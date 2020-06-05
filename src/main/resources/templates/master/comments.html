@@ -24,7 +24,7 @@
     <!--    /*@thymesVar id="servicetypes" type="List"*/-->
     <tr th:each="appointment : ${archiveAppointments}">
         <td>
-            <span th:text="${appointment.getBeautyService().getName()}">Service</span>
+            <span th:text="${appointment.getBeautyService()}">Service</span>
         </td>
         <td>
             <span th:text="${appointment.getDate()}">Date</span>
@@ -33,7 +33,7 @@
             <span th:text="${appointment.getTime()}">Time</span>
         </td>
         <td>
-            <span th:text="${appointment.getUser().getName()}">User's name</span>
+            <span th:text="${appointment.getUserName()}">User's name</span>
         </td>
         <td>
             <span th:text="${appointment.getComment()}">Comment</span>

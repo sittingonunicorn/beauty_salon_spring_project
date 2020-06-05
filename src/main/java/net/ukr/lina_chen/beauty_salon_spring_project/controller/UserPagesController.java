@@ -1,6 +1,8 @@
 package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import net.ukr.lina_chen.beauty_salon_spring_project.dto.AppointmentDTO;
+import net.ukr.lina_chen.beauty_salon_spring_project.dto.ArchiveAppointmentDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.*;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.AppointmentNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.DoubleTimeRequestException;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -47,7 +48,9 @@ public class UserPagesController {
     @Autowired
     private MessageSource messageSource;
 
-    public UserPagesController(ProfessionService professionService, BeautyServiceImpl beautyServiceImpl, MasterService masterService, AppointmentService appointmentService, ArchiveAppointmentService archiveAppointmentService) {
+    public UserPagesController(ProfessionService professionService, BeautyServiceImpl beautyServiceImpl,
+                               MasterService masterService, AppointmentService appointmentService,
+                               ArchiveAppointmentService archiveAppointmentService) {
         this.professionService = professionService;
         this.beautyServiceImpl = beautyServiceImpl;
         this.masterService = masterService;
@@ -109,7 +112,7 @@ public class UserPagesController {
         model.addAttribute(ERROR, error != null);
         Master master = appointment.getMaster();
         model.addAttribute("master", masterService.getLocalizedDTO(appointment.getMaster(), isLocaleEn(request)));
-        Map<LocalDate, List<LocalTime>> dateTime =getDateTime(request, master);
+        Map<LocalDate, List<LocalTime>> dateTime = getDateTime(request, master);
         model.addAttribute("workingHours",
                 Stream.iterate(master.getTimeBegin(), curr -> curr.plusHours(ITERATE_UNIT)).
                         limit(ChronoUnit.HOURS.between(master.getTimeBegin(), master.getTimeEnd())).
@@ -122,21 +125,25 @@ public class UserPagesController {
     public String saveAppointment(@RequestParam(required = false) String day,
                                   @RequestParam(required = false) String seanceTime,
                                   @ModelAttribute(APPOINTMENT) Appointment appointment,
-                                  SessionStatus sessionStatus)
-            throws DoubleTimeRequestException {
+                                  SessionStatus sessionStatus, HttpServletRequest request,
+                                  Model model)
+            throws DoubleTimeRequestException, AppointmentNotFoundException {
         appointment.setDate(LocalDate.parse(day));
         log.info("Date is added to appointment: " + appointment.getDate());
         appointment.setTime(LocalTime.parse(seanceTime));
         log.info("Time is added to appointment: " + appointment.getTime());
-        appointmentService.createAppointment(appointment);
+        model.addAttribute(APPOINTMENT, appointmentService.getLocalizedAppointmentById(
+                appointmentService.createAppointment(appointment).getId(),
+                isLocaleEn(request)));
         sessionStatus.setComplete();
         createAppointment();
+
         return "user/appointment.html";
     }
 
-    @GetMapping("appointment")
-    public String appointment(@ModelAttribute(APPOINTMENT) Appointment appointment, Model model) {
-        model.addAttribute("appointment", appointment);
+    @GetMapping(APPOINTMENT)
+    public String appointment(@ModelAttribute(APPOINTMENT) AppointmentDTO appointment, Model model) {
+        model.addAttribute(APPOINTMENT, appointment);
         return "user/appointment.html";
     }
 
@@ -146,8 +153,8 @@ public class UserPagesController {
                                    @PageableDefault(sort = {"date", "time"},
                                            direction = Sort.Direction.ASC, size = 6) Pageable pageable,
                                    @RequestParam(value = ERROR, required = false) String error) {
-        Page<ArchiveAppointment> archiveAppointments = archiveAppointmentService.findArchiveAppointmentsForUser(
-                user.getId(), pageable);
+        Page<ArchiveAppointmentDTO> archiveAppointments = archiveAppointmentService.findArchiveAppointmentsForUser(
+                user.getId(), pageable, isLocaleEn(request));
         model.addAttribute("pageNumbers", this.getPageNumbers(archiveAppointments.getTotalPages()));
         model.addAttribute("user", user);
         model.addAttribute(ERROR, error != null);
@@ -156,17 +163,18 @@ public class UserPagesController {
     }
 
     @GetMapping("comment")
-    public String leaveComment(@RequestParam Long appointmentId, Model model)
+    public String leaveComment(@RequestParam Long appointmentId, Model model, HttpServletRequest request)
             throws AppointmentNotFoundException {
-        model.addAttribute("appointment", archiveAppointmentService.findById(appointmentId));
+        model.addAttribute(APPOINTMENT, archiveAppointmentService.findById(appointmentId, isLocaleEn(request)));
         return "user/comment.html";
     }
 
     @PostMapping("comment")
-    public String submitComment(@RequestParam Long appointmentId, Model model, @RequestParam String comment)
+    public String submitComment(@RequestParam Long appointmentId, Model model, @RequestParam String comment,
+                                HttpServletRequest request)
             throws AppointmentNotFoundException {
         archiveAppointmentService.addComment(appointmentId, comment);
-        model.addAttribute("appointment", archiveAppointmentService.findById(appointmentId));
+        model.addAttribute("appointment", archiveAppointmentService.findById(appointmentId, isLocaleEn(request)));
         return "redirect:archiveappointments";
     }
 

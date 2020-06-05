@@ -2,11 +2,13 @@ package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import net.ukr.lina_chen.beauty_salon_spring_project.dto.AppointmentDTO;
-import net.ukr.lina_chen.beauty_salon_spring_project.entity.ArchiveAppointment;
+import net.ukr.lina_chen.beauty_salon_spring_project.dto.ArchiveAppointmentDTO;
+import net.ukr.lina_chen.beauty_salon_spring_project.dto.MasterDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.AppointmentService;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.ArchiveAppointmentService;
 import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.*;
 
+import net.ukr.lina_chen.beauty_salon_spring_project.service.MasterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,20 +39,26 @@ public class AdminPagesController {
 
     private final AppointmentService appointmentService;
     private final ArchiveAppointmentService archiveAppointmentService;
+    private final MasterService masterService;
 
     @Autowired
     public AdminPagesController(AppointmentService appointmentService,
-                                ArchiveAppointmentService archiveAppointmentService) {
+                                ArchiveAppointmentService archiveAppointmentService, MasterService masterService) {
         this.appointmentService = appointmentService;
         this.archiveAppointmentService = archiveAppointmentService;
+        this.masterService = masterService;
     }
 
 
     @GetMapping("archiveappointments")
     public String archiveAppointmentsPage(Model model, @PageableDefault(sort = {"date", "time"},
-            direction = Sort.Direction.ASC, size = 7) Pageable pageable) {
-        Page<ArchiveAppointment> archiveAppointments = archiveAppointmentService.findAllProvidedAppointments(
-                pageable);
+            direction = Sort.Direction.ASC, size = 7) Pageable pageable, HttpServletRequest request,
+                                          @RequestParam(value = "master", required = false) String masterId) {
+
+        Page<ArchiveAppointmentDTO> archiveAppointments = masterId!=null?
+                archiveAppointmentService.findCommentsForMaster(Long.valueOf(masterId), pageable, isLocaleEn(request))
+                :archiveAppointmentService.findAllComments(pageable, isLocaleEn(request));
+        model.addAttribute("masters", masterService.findAll(isLocaleEn(request)));
         model.addAttribute("archiveAppointments", archiveAppointments);
         model.addAttribute("pageNumbers", this.getPageNumbers(archiveAppointments.getTotalPages()));
         return "admin/archiveappointments.html";

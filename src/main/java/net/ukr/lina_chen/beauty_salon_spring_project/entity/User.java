@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,9 +34,9 @@ public class User implements UserDetails {
     @Column(name = "email", nullable = false)
     @Email
     private String email;
-    @Column(name = "name", nullable = false)
+    @Column(name = "name_en", nullable = false)
     private String name;
-    @Column(name = "name_ukr", nullable = false)
+    @Column(name = "name_ua", nullable = false)
     private String nameUkr;
 
     @Override
