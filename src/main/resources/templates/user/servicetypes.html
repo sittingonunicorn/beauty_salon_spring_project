@@ -5,7 +5,11 @@
     <title>Beauty Salon Choose Service type</title>
 </head>
 <body>
-<div th:replace="parts/userheader :: userheader"></div>
+<div th:replace="parts/header :: header"></div>
+<div class="alert" th:if="${error}">
+    <div class="alert alert-danger" role="alert" th:text="#{message.error.servicetypes}">Please, create another appointment
+    </div>
+</div>
 <table class="table table-hover">
     <thead>
     <tr>
@@ -13,9 +17,6 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:if="${#lists.isEmpty(servicetypes)}">
-        <td colspan="2"> No Masters Available</td>
-    </tr>
     <tr th:each="servicetype : ${servicetypes}">
         <td>
             <a th:href="@{'/user/beautyservices/' + ${servicetype.getId()}}"

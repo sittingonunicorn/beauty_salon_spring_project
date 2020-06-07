@@ -3,11 +3,8 @@ package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 import lombok.extern.slf4j.Slf4j;
 import net.ukr.lina_chen.beauty_salon_spring_project.dto.AppointmentDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.dto.ArchiveAppointmentDTO;
-import net.ukr.lina_chen.beauty_salon_spring_project.dto.MasterDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.AppointmentService;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.ArchiveAppointmentService;
-import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.*;
-
 import net.ukr.lina_chen.beauty_salon_spring_project.service.MasterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,6 +26,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.ADJUSTMENT_FOR_PAGES;
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.MIN_QUANTITY_PAGES;
 
 
 @Slf4j

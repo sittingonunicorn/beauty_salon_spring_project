@@ -16,7 +16,7 @@ import java.time.LocalTime;
 public class Appointment {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name = "appointment_id")
     private Long id;
 

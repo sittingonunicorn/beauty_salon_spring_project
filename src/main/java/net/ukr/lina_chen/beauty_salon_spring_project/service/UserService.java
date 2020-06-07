@@ -7,16 +7,12 @@ import net.ukr.lina_chen.beauty_salon_spring_project.entity.Role;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.User;
 import net.ukr.lina_chen.beauty_salon_spring_project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.util.Locale;
 import java.util.Optional;
 
 @Slf4j
@@ -52,10 +48,9 @@ public class UserService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(@NonNull String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(@NonNull String email){
         Optional<User> optional = userRepository.findByEmail(email);
-        User user = optional.orElseGet(User::new);/*.orElseThrow(() -> new UsernameNotFoundException("User " + email + " not found."))*/
-        return user;
+        return optional.orElseGet(User::new);
     }
 
 //    public Optional<User> findById(@NonNull Long id) {

@@ -22,19 +22,12 @@ public class PageController {
     private MessageSource messageSource;
 
     @GetMapping({"/index", "/"})
-    public String indexPage(Model model, HttpServletRequest request,
-                            @AuthenticationPrincipal User user) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
-                ResourceBundle.getBundle("messages",RequestContextUtils.getLocale(request)).
-                        getString("date.format"));
-        model.addAttribute("date", formatter.format(LocalDate.now()));
+    public String indexPage() {
         return "index.html";
     }
 
     @RequestMapping("/main")
-    public String mainPage(Model model,
-                           @AuthenticationPrincipal User user) {
-        model.addAttribute("user", user);
+    public String mainPage() {
         return "main.html";
     }
 

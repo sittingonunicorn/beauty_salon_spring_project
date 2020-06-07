@@ -14,4 +14,5 @@ public interface MasterRepository extends JpaRepository<Master, Long> {
     List<Master> findAllByProfessionId(Long professionId);
     Optional<Master> findById(Long id);
     Optional <Master> findMasterByUser(@NonNull User user);
+    Optional<Master> findByIdAndAndProfessionId(Long masterId, Long professionId);
 }

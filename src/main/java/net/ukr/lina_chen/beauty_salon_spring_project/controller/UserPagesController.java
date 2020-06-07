@@ -6,6 +6,7 @@ import net.ukr.lina_chen.beauty_salon_spring_project.dto.ArchiveAppointmentDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.*;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.AppointmentNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.DoubleTimeRequestException;
+import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.MasterNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -97,9 +98,13 @@ public class UserPagesController {
         return "user/masters.html";
     }
 
-    @GetMapping("approve/{master}")
-    public String approvePage(@PathVariable Master master,
-                              @ModelAttribute("appointment") Appointment appointment) {
+    @GetMapping("approve/{masterId}")
+    public String approvePage(@PathVariable Long masterId,
+                              @ModelAttribute("appointment") Appointment appointment) throws MasterNotFoundException {
+        Master master = masterService.getMasterAccordingBeautyService(
+                masterId, appointment.getBeautyService().getId())
+                .orElseThrow(() -> new MasterNotFoundException("Master id=" + masterId +
+                        " doesn't provide this kind of services:" + appointment.getBeautyService().getName()));
         appointment.setMaster(master);
         log.info("Master is added to appointment: id " + appointment.getMaster().getId());
         return "redirect:time";
@@ -202,6 +207,13 @@ public class UserPagesController {
     String handleAppointmentNotFoundException(AppointmentNotFoundException e, Model model) {
         model.addAttribute(ERROR, true);
         return "redirect:archiveappointments?error";
+    }
+
+    @ExceptionHandler(MasterNotFoundException.class)
+    public String handleMasterNotFoundException(MasterNotFoundException e, Model model) {
+        log.warn(e.getLocalizedMessage());
+        model.addAttribute("error", true);
+        return "redirect:servicetypes?error";
     }
 
     private Map<LocalDate, List<LocalTime>> getDateTime(HttpServletRequest request, Master master) {

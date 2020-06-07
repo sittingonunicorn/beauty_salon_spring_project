@@ -11,13 +11,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Controller
@@ -59,9 +61,8 @@ public class RegistrationController {
     public String handleValidationExceptions(BindException ex, Locale locale,
                                              Model model) {
         Set<String> errors = new HashSet<>();
-        ex.getBindingResult().getAllErrors().forEach(error -> {
-            errors.add(messageSource.getMessage(error.getDefaultMessage(), null, locale));
-        });
+        ex.getBindingResult().getAllErrors().forEach(error ->
+                errors.add(messageSource.getMessage(error.getDefaultMessage(), null, locale)));
         model.addAttribute("errors", errors);
         return "registration.html";
     }

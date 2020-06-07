@@ -1,4 +1,5 @@
-<header th:fragment="mainmenu" xmlns:th="http://www.thymeleaf.org">
+<!--suppress ALL -->
+<header th:fragment="adminheader" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <div>
         <div class="nav">
             <nav>
@@ -13,20 +14,21 @@
         <div>
             <h2 class="h2">Beauty Salon</h2>
         </div>
-        <!--/*@thymesVar id="user" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.User"*/-->
-        <div class="menu" th:if="${user.isAdmin()}">
+        <div class="menu"  sec:authorize="hasAuthority('ADMIN')">
             <ul class="hr">
                 <li><a href="/admin/archiveappointments" th:text="#{link.comments}"></a></li>
                 <li><a href="/admin/appointments" th:text="#{link.appointments}"></a></li>
+                <li><a href="/user/servicetypes" th:text="#{link.create.new.appointment}"></a></li>
             </ul>
         </div>
-        <div class="menu" th:if="${user.isMaster()}">
+        <div class="menu" sec:authorize="hasAuthority('MASTER')">
             <ul class="hr">
                 <li><a href="/master/comments" th:text="#{link.comments}"></a></li>
                 <li><a href="/master/appointments" th:text="#{link.appointments}"></a></li>
+                <li><a href="/user/servicetypes" th:text="#{link.create.new.appointment}"></a></li>
             </ul>
         </div>
-        <div class="menu" th:if="${!user.isMaster() and !user.isAdmin()}">
+        <div class="menu" sec:authorize="hasAuthority('USER')">
             <ul class="hr">
                 <li><a href="/user/servicetypes" th:text="#{link.create.new.appointment}"></a></li>
                 <li><a href="/user/archiveappointments" th:text="#{link.archive.appointments}"></a></li>

@@ -115,7 +115,8 @@ public class MasterPagesController {
     }
 
     @ExceptionHandler(MasterNotFoundException.class)
-    public String handleDoubleTimeRequestException(MasterNotFoundException e, Model model) {
+    public String handleMasterNotFoundException(MasterNotFoundException e, Model model) {
+        log.warn(e.getLocalizedMessage());
         model.addAttribute("error", true);
         return "redirect:master/appointments?error";
     }
