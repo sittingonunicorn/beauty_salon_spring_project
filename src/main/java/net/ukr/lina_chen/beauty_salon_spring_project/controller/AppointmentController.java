@@ -6,7 +6,10 @@ import net.ukr.lina_chen.beauty_salon_spring_project.entity.*;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.AppointmentNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.DoubleTimeRequestException;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.MasterNotFoundException;
-import net.ukr.lina_chen.beauty_salon_spring_project.service.*;
+import net.ukr.lina_chen.beauty_salon_spring_project.service.AppointmentService;
+import net.ukr.lina_chen.beauty_salon_spring_project.service.BeautyServiceImpl;
+import net.ukr.lina_chen.beauty_salon_spring_project.service.MasterService;
+import net.ukr.lina_chen.beauty_salon_spring_project.service.ProfessionService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,16 +18,12 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -147,9 +146,9 @@ public class AppointmentController {
     }
 
     private List<LocalDateTime> getMastersBusySchedule(HttpServletRequest request, Long masterId) {
-//        ResourceBundle bundle = ResourceBundle.getBundle("messages",
-//                RequestContextUtils.getLocale(request));
-        List<Appointment> appointments = appointmentService.busyTime(masterId);
+        ResourceBundle bundle = ResourceBundle.getBundle("messages",
+                RequestContextUtils.getLocale(request));
+        List<Appointment> appointments = appointmentService.getMastersBusyTime(masterId);
         return appointments.stream()
                 .map(app -> LocalDateTime.of(LocalDate.parse(app.getDate().toString(),
                         DateTimeFormatter.ofPattern("yyyy-MM-dd")),

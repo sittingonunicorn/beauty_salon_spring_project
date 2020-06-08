@@ -30,15 +30,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.*;
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.ADJUSTMENT_FOR_PAGES;
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.MIN_QUANTITY_PAGES;
 
 @Slf4j
 @PreAuthorize("hasAuthority('MASTER')")
@@ -68,22 +67,21 @@ public class MasterPagesController {
                                    @RequestParam(value = "date", required = false) String date)
             throws MasterNotFoundException {
         MasterDTO master = masterService.findMasterByUser(user, isLocaleEn(request));
-        Page<AppointmentDTO> appointments = date!=null? appointmentService.getMastersDailyAppointments(
-                master.getId(), LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")), pageable,
-                isLocaleEn(request)) : appointmentService.findAppointmentsForMaster(
-                master.getId(), pageable, isLocaleEn(request));
+        Page<AppointmentDTO> appointments = date!=null?
+                appointmentService.getMastersDailyAppointments(master.getId(), date, pageable, isLocaleEn(request))
+                : appointmentService.findAppointmentsForMaster(master.getId(), pageable, isLocaleEn(request));
         model.addAttribute("pageNumbers", this.getPageNumbers(appointments.getTotalPages()));
         model.addAttribute("master", master);
         model.addAttribute("appointments", appointments);
         model.addAttribute("error", error != null);
-        model.addAttribute("dates", appointmentService.getMastersAppointmentDates(master.getId()));
+        model.addAttribute("dates", appointmentService.getMastersAppointmentDates(master.getId(), isLocaleEn(request)));
         return "master/appointments.html";
     }
 
     @Transactional(rollbackFor = Exception.class)
     @GetMapping("makeprovided")
     public String makeProvided(@RequestParam Long appointmentId) throws AppointmentNotFoundException {
-        Appointment appointment = appointmentService.findAppointmentById(appointmentId);
+        Appointment appointment = appointmentService.setAppointmentProvided(appointmentId);
         ArchiveAppointment archiveAppointment = new ArchiveAppointment(appointment, null);
         archiveAppointmentService.save(archiveAppointment);
         appointmentService.deleteAppointment(appointment);
@@ -114,15 +112,14 @@ public class MasterPagesController {
         return pageNumbers;
     }
 
+    private boolean isLocaleEn(HttpServletRequest request) {
+        return RequestContextUtils.getLocale(request).equals(Locale.US);
+    }
+
     @ExceptionHandler(MasterNotFoundException.class)
     public String handleMasterNotFoundException(MasterNotFoundException e, Model model) {
         log.warn(e.getLocalizedMessage());
         model.addAttribute("error", true);
         return "redirect:master/appointments?error";
     }
-
-    private boolean isLocaleEn(HttpServletRequest request) {
-        return RequestContextUtils.getLocale(request).equals(Locale.US);
-    }
-
 }

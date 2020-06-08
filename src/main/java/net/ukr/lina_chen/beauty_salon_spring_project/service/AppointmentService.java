@@ -19,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.DATE_FORMAT;
 
@@ -52,17 +53,21 @@ public class AppointmentService {
                 .map(a -> getLocalizedDto(isLocaleEn, a));
     }
 
-    public List<LocalDate> getMastersAppointmentDates (Long masterId){
-        return appointmentRepository.findMastersAppointmentDates(masterId);
+    public List<String> getMastersAppointmentDates(Long masterId,
+                                                   boolean isLocaleEn) {
+        return appointmentRepository.findMastersAppointmentDates(masterId)
+                .stream().map(a -> getLocalizedDate(a, isLocaleEn))
+                .collect(Collectors.toList());
     }
 
-    public Page<AppointmentDTO> getMastersDailyAppointments(Long masterId, LocalDate date, Pageable pageable,
-                                                            boolean isLocaleEn){
-        return appointmentRepository.findAppointmentsByMasterIdAndDate(masterId,date,pageable)
-                .map(a->getLocalizedDto(isLocaleEn, a));
+    public Page<AppointmentDTO> getMastersDailyAppointments(Long masterId, String date, Pageable pageable,
+                                                            boolean isLocaleEn) {
+        return appointmentRepository.findAppointmentsByMasterIdAndDate(masterId,
+                getLocalizedDate(date, isLocaleEn), pageable)
+                .map(a -> getLocalizedDto(isLocaleEn, a));
     }
 
-    public List<Appointment> busyTime(Long masterId) {
+    public List<Appointment> getMastersBusyTime(Long masterId) {
         return appointmentRepository.findAppointmentsByMasterId(masterId);
     }
 
@@ -81,18 +86,22 @@ public class AppointmentService {
         }
     }
 
-    public Appointment findAppointmentById(Long id) throws AppointmentNotFoundException {
-        return appointmentRepository.findAppointmentById(id)
-                .orElseThrow(() -> new AppointmentNotFoundException("appointment with id " + id + " not found"));
+    public Appointment findAppointmentById(Long appointmentId) throws AppointmentNotFoundException {
+        return appointmentRepository.findAppointmentById(appointmentId)
+                .orElseThrow(() -> new AppointmentNotFoundException("appointment with id " + appointmentId + " not found"));
     }
 
-    public AppointmentDTO getLocalizedAppointmentById(Long id, boolean isLocaleEn) throws AppointmentNotFoundException {
-        return getLocalizedDto(isLocaleEn, appointmentRepository.findAppointmentById(id)
-                .orElseThrow(() -> new AppointmentNotFoundException("appointment with id " + id + " not found")));
+    public AppointmentDTO getLocalizedAppointmentById(Long appointmentId, boolean isLocaleEn)
+            throws AppointmentNotFoundException {
+        return getLocalizedDto(isLocaleEn, appointmentRepository.findAppointmentById(appointmentId)
+                .orElseThrow(() -> new AppointmentNotFoundException("appointment with id " + appointmentId + " not found")));
     }
 
-    public void setAppointmentProvided(Long appointmentId) {
+    @Transactional
+    public Appointment setAppointmentProvided(Long appointmentId) throws AppointmentNotFoundException {
         appointmentRepository.setProvidedById(appointmentId, true);
+        return appointmentRepository.findAppointmentById(appointmentId)
+                .orElseThrow(() -> new AppointmentNotFoundException("appointment with id " + appointmentId + " not found"));
     }
 
     public void deleteAppointment(Appointment appointment) {
@@ -120,4 +129,16 @@ public class AppointmentService {
                 isLocaleEn ? Locale.US : new Locale("ua", "UA"));
         return date.format(DateTimeFormatter.ofPattern(bundle.getString(DATE_FORMAT)));
     }
+
+    private LocalDate getLocalizedDate(String date, boolean isLocaleEn) {
+        ResourceBundle bundle = ResourceBundle.getBundle("messages",
+                isLocaleEn ? Locale.US : new Locale("ua", "UA"));
+        return LocalDate.parse(date, DateTimeFormatter.ofPattern(bundle.getString(DATE_FORMAT)));
+    }
+
+//    public void setLocalizedDate (Appointment appointment, String date, boolean isLocaleEn){
+//        ResourceBundle bundle = ResourceBundle.getBundle("messages",
+//                isLocaleEn ? Locale.US : new Locale("ua", "UA"));
+//        appointment.setDate(LocalDate.parse(date, DateTimeFormatter.ofPattern(bundle.getString(DATE_FORMAT))));
+//    }
 }
