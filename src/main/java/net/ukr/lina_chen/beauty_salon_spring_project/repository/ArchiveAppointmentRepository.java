@@ -1,8 +1,6 @@
 package net.ukr.lina_chen.beauty_salon_spring_project.repository;
 
-import javafx.scene.shape.Arc;
 import lombok.NonNull;
-import net.ukr.lina_chen.beauty_salon_spring_project.entity.Appointment;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.ArchiveAppointment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,8 +32,9 @@ public class MasterService {
     //    public MasterDTO findMasterById(Long id, boolean isLocaleEn){
 //        return getLocalizedDTO(masterRepository.findById(id).get(), isLocaleEn);
 //    }
-    public Optional<Master> getMasterAccordingBeautyService(Long masterId, Long professionId) {
-        return masterRepository.findByIdAndAndProfessionId(masterId, professionId);
+    public Master getMasterAccordingBeautyService(Long masterId, Long professionId) throws MasterNotFoundException {
+        return masterRepository.findByIdAndAndProfessionId(masterId, professionId).orElseThrow(() -> new MasterNotFoundException("Master id=" + masterId +
+                " doesn't accord this profession " + professionId));
     }
 
     public MasterDTO findMasterByUser(User user, boolean isLocaleEn) throws MasterNotFoundException {

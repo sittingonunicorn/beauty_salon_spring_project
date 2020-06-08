@@ -4,13 +4,10 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.ukr.lina_chen.beauty_salon_spring_project.dto.BeautyServiceDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService;
-import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.BeautyServiceNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.repository.BeautyServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -36,16 +33,6 @@ public class BeautyServiceImpl {
                 .sorted(Comparator.comparing(BeautyServiceDTO::getName))
                 .collect(Collectors.toList());
     }
-//
-//    public BeautyService findBeautyServiceById(@NonNull Long beautyserviceId) throws BeautyServiceNotFoundException {
-//        return beautyServiceRepository.findById(beautyserviceId)
-//                .orElseThrow(()-> new BeautyServiceNotFoundException(
-//                        "beauty service with id " + beautyserviceId + " not found"));
-//    }
-//
-//    public List<BeautyService> findAll(HttpServletRequest request) {
-//        return beautyServiceRepository.findAll();
-//    }
 
     private BeautyServiceDTO getLocalizedDTO (boolean isLocaleEn, BeautyService beautyService){
         return BeautyServiceDTO.builder()

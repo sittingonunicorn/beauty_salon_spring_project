@@ -37,36 +37,16 @@ public class UserArchiveController {
 
     @GetMapping("archiveappointments")
     public String appointmentsPage(Model model, @AuthenticationPrincipal User user, HttpServletRequest request,
-                                   @PageableDefault(sort = {"date", "time"},
-                                           direction = Sort.Direction.ASC, size = 6) Pageable pageable,
+                                   @PageableDefault(sort = {"date", "time"}, direction = Sort.Direction.DESC,
+                                           size = 6) Pageable pageable,
                                    @RequestParam(value = ERROR, required = false) String error) {
         Page<ArchiveAppointmentDTO> archiveAppointments = archiveAppointmentService.findArchiveAppointmentsForUser(
                 user.getId(), pageable, isLocaleEn(request));
         model.addAttribute("pageNumbers", this.getPageNumbers(archiveAppointments.getTotalPages()));
+        model.addAttribute("archiveAppointments", archiveAppointments);
         model.addAttribute("user", user);
         model.addAttribute(ERROR, error != null);
-        model.addAttribute("archiveAppointments", archiveAppointments);
         return "user/archiveappointments.html";
-    }
-
-    @GetMapping("comment")
-    public String leaveComment(@RequestParam Long appointmentId, Model model, HttpServletRequest request)
-            throws AppointmentNotFoundException {
-        model.addAttribute(APPOINTMENT, archiveAppointmentService.findById(appointmentId, isLocaleEn(request)));
-        return "user/comment.html";
-    }
-
-    @PostMapping("comment")
-    public String submitComment(@RequestParam Long appointmentId, Model model, @RequestParam String comment,
-                                HttpServletRequest request)
-            throws AppointmentNotFoundException {
-        archiveAppointmentService.addComment(appointmentId, comment);
-        model.addAttribute("appointment", archiveAppointmentService.findById(appointmentId, isLocaleEn(request)));
-        return "redirect:archiveappointments";
-    }
-
-    private boolean isLocaleEn(HttpServletRequest request) {
-        return RequestContextUtils.getLocale(request).equals(Locale.US);
     }
 
     private List<Integer> getPageNumbers(int totalPages) {
@@ -77,6 +57,25 @@ public class UserArchiveController {
                     .collect(Collectors.toList());
         }
         return pageNumbers;
+    }
+
+    @GetMapping("comment")
+    public String leaveComment(@RequestParam Long appointmentId, Model model, HttpServletRequest request)
+            throws AppointmentNotFoundException {
+        model.addAttribute(APPOINTMENT, archiveAppointmentService.findById(appointmentId, isLocaleEn(request)));
+        return "user/comment.html";
+    }
+
+    private boolean isLocaleEn(HttpServletRequest request) {
+        return RequestContextUtils.getLocale(request).equals(Locale.US);
+    }
+    @PostMapping("comment")
+    public String submitComment(@RequestParam Long appointmentId, @RequestParam String comment, Model model,
+                                HttpServletRequest request)
+            throws AppointmentNotFoundException {
+        archiveAppointmentService.addComment(appointmentId, comment);
+        model.addAttribute(APPOINTMENT, archiveAppointmentService.findById(appointmentId, isLocaleEn(request)));
+        return "redirect:archiveappointments";
     }
 
     @ExceptionHandler(AppointmentNotFoundException.class)

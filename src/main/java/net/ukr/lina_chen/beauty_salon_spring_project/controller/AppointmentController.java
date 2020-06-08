@@ -92,11 +92,8 @@ public class AppointmentController {
     @GetMapping("approve/{masterId}")
     public String approvePage(@PathVariable Long masterId,
                               @ModelAttribute("appointment") Appointment appointment) throws MasterNotFoundException {
-        Master master = masterService.getMasterAccordingBeautyService(
-                masterId, appointment.getBeautyService().getProfession().getId())
-                .orElseThrow(() -> new MasterNotFoundException("Master id=" + masterId +
-                        " doesn't provide this kind of services:" + appointment.getBeautyService().getName()));
-        appointment.setMaster(master);
+        appointment.setMaster(masterService.getMasterAccordingBeautyService(
+                masterId, appointment.getBeautyService().getProfession().getId()));
         log.info("Master is added to appointment: id " + appointment.getMaster().getId());
         return "redirect:time";
     }
