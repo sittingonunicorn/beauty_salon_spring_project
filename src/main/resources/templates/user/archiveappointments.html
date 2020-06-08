@@ -8,7 +8,8 @@
 <div th:replace="parts/header :: header"></div>
 <div class="panel-body">
     <div class="alert" th:if="${error}">
-        <div class="alert alert-danger" role="alert">This appointment doesn't exist!</div>
+        <div class="alert alert-danger" role="alert" th:text="#{error.appointment.not.exist}">
+            This appointment doesn't exist!</div>
     </div>
 </div>
 <p th:utext="#{message.user.appointments}">Upcoming appointments</p>

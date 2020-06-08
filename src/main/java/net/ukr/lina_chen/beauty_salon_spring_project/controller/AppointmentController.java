@@ -2,18 +2,11 @@ package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import net.ukr.lina_chen.beauty_salon_spring_project.dto.AppointmentDTO;
-import net.ukr.lina_chen.beauty_salon_spring_project.dto.ArchiveAppointmentDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.*;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.AppointmentNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.DoubleTimeRequestException;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.MasterNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,41 +15,37 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.*;
-
 
 @Slf4j
 @RequestMapping("/user/")
 @Controller
 @SessionAttributes({"appointment"})
-public class UserPagesController {
+public class AppointmentController {
     private final ProfessionService professionService;
     private final BeautyServiceImpl beautyServiceImpl;
     private final MasterService masterService;
     private final AppointmentService appointmentService;
-    private final ArchiveAppointmentService archiveAppointmentService;
 
-    @Autowired
-    private MessageSource messageSource;
-
-    public UserPagesController(ProfessionService professionService, BeautyServiceImpl beautyServiceImpl,
-                               MasterService masterService, AppointmentService appointmentService,
-                               ArchiveAppointmentService archiveAppointmentService) {
+    public AppointmentController(ProfessionService professionService, BeautyServiceImpl beautyServiceImpl,
+                                 MasterService masterService, AppointmentService appointmentService) {
         this.professionService = professionService;
         this.beautyServiceImpl = beautyServiceImpl;
         this.masterService = masterService;
         this.appointmentService = appointmentService;
-        this.archiveAppointmentService = archiveAppointmentService;
     }
 
     @ModelAttribute("appointment")
@@ -66,12 +55,13 @@ public class UserPagesController {
 
     @GetMapping("servicetypes")
     public String mastertypesPage(Model model,
-                                  HttpServletRequest request) {
+                                  HttpServletRequest request,
+                                  @RequestParam(value = ERROR, required = false) String error) {
+        model.addAttribute(ERROR, error != null);
         model.addAttribute("servicetypes", professionService.findAll(
                 isLocaleEn(request)));
         return "user/servicetypes.html";
     }
-
 
     @GetMapping("beautyservices/{profession}")
     public String beautyservicesPage(Model model,
@@ -82,6 +72,7 @@ public class UserPagesController {
                 isLocaleEn(request)));
         return "user/beautyservices.html";
     }
+
 
     @GetMapping("masters/{beautyService}")
     public String mastersPage(Model model,
@@ -102,7 +93,7 @@ public class UserPagesController {
     public String approvePage(@PathVariable Long masterId,
                               @ModelAttribute("appointment") Appointment appointment) throws MasterNotFoundException {
         Master master = masterService.getMasterAccordingBeautyService(
-                masterId, appointment.getBeautyService().getId())
+                masterId, appointment.getBeautyService().getProfession().getId())
                 .orElseThrow(() -> new MasterNotFoundException("Master id=" + masterId +
                         " doesn't provide this kind of services:" + appointment.getBeautyService().getName()));
         appointment.setMaster(master);
@@ -126,95 +117,6 @@ public class UserPagesController {
         return "user/time.html";
     }
 
-    @GetMapping("saveappointment")
-    public String saveAppointment(@RequestParam(required = false) String day,
-                                  @RequestParam(required = false) String seanceTime,
-                                  @ModelAttribute(APPOINTMENT) Appointment appointment,
-                                  SessionStatus sessionStatus, HttpServletRequest request,
-                                  Model model)
-            throws DoubleTimeRequestException, AppointmentNotFoundException {
-        appointment.setDate(LocalDate.parse(day));
-        log.info("Date is added to appointment: " + appointment.getDate());
-        appointment.setTime(LocalTime.parse(seanceTime));
-        log.info("Time is added to appointment: " + appointment.getTime());
-        model.addAttribute(APPOINTMENT, appointmentService.getLocalizedAppointmentById(
-                appointmentService.createAppointment(appointment).getId(),
-                isLocaleEn(request)));
-        sessionStatus.setComplete();
-        createAppointment();
-
-        return "user/appointment.html";
-    }
-
-    @GetMapping(APPOINTMENT)
-    public String appointment(@ModelAttribute(APPOINTMENT) AppointmentDTO appointment, Model model) {
-        model.addAttribute(APPOINTMENT, appointment);
-        return "user/appointment.html";
-    }
-
-
-    @GetMapping("archiveappointments")
-    public String appointmentsPage(Model model, @AuthenticationPrincipal User user, HttpServletRequest request,
-                                   @PageableDefault(sort = {"date", "time"},
-                                           direction = Sort.Direction.ASC, size = 6) Pageable pageable,
-                                   @RequestParam(value = ERROR, required = false) String error) {
-        Page<ArchiveAppointmentDTO> archiveAppointments = archiveAppointmentService.findArchiveAppointmentsForUser(
-                user.getId(), pageable, isLocaleEn(request));
-        model.addAttribute("pageNumbers", this.getPageNumbers(archiveAppointments.getTotalPages()));
-        model.addAttribute("user", user);
-        model.addAttribute(ERROR, error != null);
-        model.addAttribute("archiveAppointments", archiveAppointments);
-        return "user/archiveappointments.html";
-    }
-
-    @GetMapping("comment")
-    public String leaveComment(@RequestParam Long appointmentId, Model model, HttpServletRequest request)
-            throws AppointmentNotFoundException {
-        model.addAttribute(APPOINTMENT, archiveAppointmentService.findById(appointmentId, isLocaleEn(request)));
-        return "user/comment.html";
-    }
-
-    @PostMapping("comment")
-    public String submitComment(@RequestParam Long appointmentId, Model model, @RequestParam String comment,
-                                HttpServletRequest request)
-            throws AppointmentNotFoundException {
-        archiveAppointmentService.addComment(appointmentId, comment);
-        model.addAttribute("appointment", archiveAppointmentService.findById(appointmentId, isLocaleEn(request)));
-        return "redirect:archiveappointments";
-    }
-
-    private boolean isLocaleEn(HttpServletRequest request) {
-        return RequestContextUtils.getLocale(request).equals(Locale.US);
-    }
-
-    private List<Integer> getPageNumbers(int totalPages) {
-        List<Integer> pageNumbers = new ArrayList<>();
-        if (totalPages > MIN_QUANTITY_PAGES) {
-            pageNumbers = IntStream.rangeClosed(MIN_QUANTITY_PAGES, totalPages - ADJUSTMENT_FOR_PAGES)
-                    .boxed()
-                    .collect(Collectors.toList());
-        }
-        return pageNumbers;
-    }
-
-    @ExceptionHandler(DoubleTimeRequestException.class)
-    String handleDoubleTimeRequestException(DoubleTimeRequestException e, Model model) {
-        model.addAttribute(ERROR, true);
-        return "redirect:approve/time?error";
-    }
-
-    @ExceptionHandler(AppointmentNotFoundException.class)
-    String handleAppointmentNotFoundException(AppointmentNotFoundException e, Model model) {
-        model.addAttribute(ERROR, true);
-        return "redirect:archiveappointments?error";
-    }
-
-    @ExceptionHandler(MasterNotFoundException.class)
-    public String handleMasterNotFoundException(MasterNotFoundException e, Model model) {
-        log.warn(e.getLocalizedMessage());
-        model.addAttribute("error", true);
-        return "redirect:servicetypes?error";
-    }
 
     private Map<LocalDate, List<LocalTime>> getDateTime(HttpServletRequest request, Master master) {
         Long masterId = master.getId();
@@ -256,5 +158,49 @@ public class UserPagesController {
                         DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                         app.getTime()))
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("saveappointment")
+    public String saveAppointment(@RequestParam(required = false) String day,
+                                  @RequestParam(required = false) String seanceTime,
+                                  @ModelAttribute(APPOINTMENT) Appointment appointment,
+                                  SessionStatus sessionStatus, HttpServletRequest request,
+                                  Model model)
+            throws DoubleTimeRequestException, AppointmentNotFoundException {
+        appointment.setDate(LocalDate.parse(day));
+        log.info("Date is added to appointment: " + appointment.getDate());
+        appointment.setTime(LocalTime.parse(seanceTime));
+        log.info("Time is added to appointment: " + appointment.getTime());
+        model.addAttribute(APPOINTMENT, appointmentService.getLocalizedAppointmentById(
+                appointmentService.createAppointment(appointment).getId(),
+                isLocaleEn(request)));
+        sessionStatus.setComplete();
+        createAppointment();
+
+        return "user/appointment.html";
+    }
+
+    @GetMapping(APPOINTMENT)
+    public String appointment(@ModelAttribute(APPOINTMENT) AppointmentDTO appointment, Model model) {
+        model.addAttribute(APPOINTMENT, appointment);
+        return "user/appointment.html";
+    }
+
+    private boolean isLocaleEn(HttpServletRequest request) {
+        return RequestContextUtils.getLocale(request).equals(Locale.US);
+    }
+
+
+    @ExceptionHandler(DoubleTimeRequestException.class)
+    String handleDoubleTimeRequestException(DoubleTimeRequestException e, Model model) {
+        model.addAttribute(ERROR, true);
+        return "redirect:/user/approve/time?error";
+    }
+
+    @ExceptionHandler(MasterNotFoundException.class)
+    public String handleMasterNotFoundException(MasterNotFoundException e, Model model) {
+        log.warn(e.getLocalizedMessage());
+        model.addAttribute(ERROR, true);
+        return "redirect:/user/servicetypes";
     }
 }

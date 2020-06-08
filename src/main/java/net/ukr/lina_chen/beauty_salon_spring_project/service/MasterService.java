@@ -30,10 +30,10 @@ public class MasterService {
                 .collect(Collectors.toList());
     }
 
-//    public MasterDTO findMasterById(Long id, boolean isLocaleEn){
+    //    public MasterDTO findMasterById(Long id, boolean isLocaleEn){
 //        return getLocalizedDTO(masterRepository.findById(id).get(), isLocaleEn);
 //    }
-    public Optional<Master> getMasterAccordingBeautyService(Long masterId, Long professionId){
+    public Optional<Master> getMasterAccordingBeautyService(Long masterId, Long professionId) {
         return masterRepository.findByIdAndAndProfessionId(masterId, professionId);
     }
 
@@ -43,9 +43,9 @@ public class MasterService {
                         "master with user id " + user.getId() + " not found")), isLocaleEn);
     }
 
-    public List<MasterDTO> findAll(boolean isLocaleEn){
+    public List<MasterDTO> findAll(boolean isLocaleEn) {
         return masterRepository.findAll().stream()
-                .map(m->getLocalizedDTO(m, isLocaleEn))
+                .map(m -> getLocalizedDTO(m, isLocaleEn))
                 .collect(Collectors.toList());
     }
 

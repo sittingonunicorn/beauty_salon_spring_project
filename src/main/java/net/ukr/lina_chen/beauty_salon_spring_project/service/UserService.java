@@ -9,6 +9,7 @@ import net.ukr.lina_chen.beauty_salon_spring_project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,6 @@ public class UserService implements UserDetailsService {
         User newUser = extractUserFromDto(user);
         log.info(user.getEmail());
         userRepository.save(newUser);
-        log.info("User " + user.getEmail() + " is successfully registered.");
     }
 
     private User extractUserFromDto(UserRegistrationDTO user) {
@@ -48,21 +48,8 @@ public class UserService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(@NonNull String email){
+    public UserDetails loadUserByUsername(@NonNull String email) {
         Optional<User> optional = userRepository.findByEmail(email);
-        return optional.orElseGet(User::new);
+        return optional.orElseThrow(()-> new UsernameNotFoundException("User with email " + email + " not found"));
     }
-
-//    public Optional<User> findById(@NonNull Long id) {
-//        return userRepository.findById(id);
-//    }
-//
-//    public Optional<User> findByEmail(User user) {
-//        return userRepository.findByEmail(user.getUsername());
-//    }
-//
-//    private boolean isLocaleUa() {
-//        return LocaleContextHolder.getLocale().equals(new Locale("ua_UA"));
-//    }
-
 }

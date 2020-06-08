@@ -1,10 +1,11 @@
 HELP.md
 target/
-.mvn/*
+.mvn/
 !**/src/main/**
 !**/src/test/**
 mvnw
 mvnw.cmd
+.gitignore
 
 
 ### STS ###

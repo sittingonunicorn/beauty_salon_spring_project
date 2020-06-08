@@ -2,7 +2,6 @@ package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import net.ukr.lina_chen.beauty_salon_spring_project.dto.UserRegistrationDTO;
-import net.ukr.lina_chen.beauty_salon_spring_project.entity.User;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -13,12 +12,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -42,16 +40,19 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(@Valid @ModelAttribute UserRegistrationDTO userRegistrationDTO, Model model,
-                          Locale locale, HttpServletRequest request) throws BindException {
-        User user = (User) userService.loadUserByUsername(userRegistrationDTO.getEmail());
-        if (Optional.ofNullable(user.getEmail()).isPresent()) {
-            model.addAttribute("emailError", messageSource.getMessage("email.not.unique", null, locale));
-            return "registration.html";
-        }
+                          Locale locale) {
+//        User user = (User) userService.loadUserByUsername(userRegistrationDTO.getEmail());
+//        if (Optional.ofNullable(user.getEmail()).isPresent()) {
+//            model.addAttribute("emailError", messageSource.getMessage("email.not.unique", null, locale));
+//            return "registration.html";
+//        }
         try {
             userService.saveNewUser(userRegistrationDTO);
-        } catch (DataAccessException| SQLException e) {
+            log.info("User " + userRegistrationDTO.getEmail() + " is successfully registered.");
+        } catch (DataAccessException| SQLException | ValidationException e) {
             log.info(e.getLocalizedMessage());
+            model.addAttribute("emailError", messageSource.getMessage("email.not.unique", null, locale));
+            return "registration.html";
         }
         return "redirect:/login";
     }
