@@ -8,4 +8,5 @@ public interface IConstants {
     String DATE_FORMAT = "date.format";
     String ERROR = "error";
     String APPOINTMENT = "appointment";
+    String REGISTRATION_PAGE = "registration.html";
 }

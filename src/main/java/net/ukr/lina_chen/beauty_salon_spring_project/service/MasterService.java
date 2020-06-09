@@ -29,12 +29,10 @@ public class MasterService {
                 .collect(Collectors.toList());
     }
 
-    //    public MasterDTO findMasterById(Long id, boolean isLocaleEn){
-//        return getLocalizedDTO(masterRepository.findById(id).get(), isLocaleEn);
-//    }
     public Master getMasterAccordingBeautyService(Long masterId, Long professionId) throws MasterNotFoundException {
-        return masterRepository.findByIdAndAndProfessionId(masterId, professionId).orElseThrow(() -> new MasterNotFoundException("Master id=" + masterId +
-                " doesn't accord this profession " + professionId));
+        return masterRepository.findByIdAndAndProfessionId(masterId, professionId)
+                .orElseThrow(() -> new MasterNotFoundException("Master id=" + masterId +
+                        " doesn't accord this profession " + professionId));
     }
 
     public MasterDTO findMasterByUser(User user, boolean isLocaleEn) throws MasterNotFoundException {

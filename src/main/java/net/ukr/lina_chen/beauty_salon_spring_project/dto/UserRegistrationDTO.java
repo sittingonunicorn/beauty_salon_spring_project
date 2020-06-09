@@ -3,7 +3,6 @@ package net.ukr.lina_chen.beauty_salon_spring_project.dto;
 import lombok.Data;
 import net.ukr.lina_chen.beauty_salon_spring_project.controller.utility.PasswordMatches;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 
 import static net.ukr.lina_chen.beauty_salon_spring_project.controller.utility.RegexContainer.*;
@@ -12,7 +11,7 @@ import static net.ukr.lina_chen.beauty_salon_spring_project.controller.utility.R
 @PasswordMatches
 public class UserRegistrationDTO {
 
-    @Email(message = "wrongEmailFormat")
+    @Pattern(regexp = EMAIL_REGEX, message = "wrongEmailFormat")
     private String email;
 
     @Pattern(regexp = PASSWORD_REGEX, message = "wrongPasswordFormat")

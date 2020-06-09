@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @PropertySource("classpath:mail.properties")
-public class MailSender {
+public class MailService {
 
     @Value("${spring.mail.username}")
     private String username;
@@ -24,7 +24,7 @@ public class MailSender {
 
     private final JavaMailSender mailSender;
 
-    public MailSender(JavaMailSender mailSender) {
+    public MailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
 

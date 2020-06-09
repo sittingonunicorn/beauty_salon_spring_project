@@ -51,8 +51,7 @@ public class ArchiveAppointmentService {
 
     public ArchiveAppointmentDTO findById(Long appointmentId, boolean isLocaleEn) throws AppointmentNotFoundException {
         return getLocalizedDto(archiveAppointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new AppointmentNotFoundException(
-                        "archive appointment with id " + appointmentId + " not found")), isLocaleEn);
+                .orElseThrow(() -> new AppointmentNotFoundException(appointmentId)), isLocaleEn);
     }
 
     public Page<ArchiveAppointmentDTO> findAllComments(Pageable pageable, boolean isLocaleEn) {

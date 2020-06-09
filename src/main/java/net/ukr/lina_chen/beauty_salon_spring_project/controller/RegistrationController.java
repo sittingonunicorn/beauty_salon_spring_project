@@ -19,6 +19,8 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.REGISTRATION_PAGE;
+
 @Slf4j
 @Controller
 public class RegistrationController {
@@ -35,24 +37,19 @@ public class RegistrationController {
     @GetMapping("/registration")
     public String registration(Model model) {
         model.addAttribute("userRegistrationDTO", new UserRegistrationDTO());
-        return "registration.html";
+        return REGISTRATION_PAGE;
     }
 
     @PostMapping("/registration")
     public String addUser(@Valid @ModelAttribute UserRegistrationDTO userRegistrationDTO, Model model,
                           Locale locale) {
-//        User user = (User) userService.loadUserByUsername(userRegistrationDTO.getEmail());
-//        if (Optional.ofNullable(user.getEmail()).isPresent()) {
-//            model.addAttribute("emailError", messageSource.getMessage("email.not.unique", null, locale));
-//            return "registration.html";
-//        }
         try {
             userService.saveNewUser(userRegistrationDTO);
             log.info("User " + userRegistrationDTO.getEmail() + " is successfully registered.");
         } catch (DataAccessException| SQLException | ValidationException e) {
             log.info(e.getLocalizedMessage());
             model.addAttribute("emailError", messageSource.getMessage("email.not.unique", null, locale));
-            return "registration.html";
+            return REGISTRATION_PAGE;
         }
         return "redirect:/login";
     }
@@ -65,6 +62,6 @@ public class RegistrationController {
         ex.getBindingResult().getAllErrors().forEach(error ->
                 errors.add(messageSource.getMessage(error.getDefaultMessage(), null, locale)));
         model.addAttribute("errors", errors);
-        return "registration.html";
+        return REGISTRATION_PAGE;
     }
 }

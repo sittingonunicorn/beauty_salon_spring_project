@@ -1,7 +1,7 @@
 package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import net.ukr.lina_chen.beauty_salon_spring_project.controller.utility.MailSender;
+import net.ukr.lina_chen.beauty_salon_spring_project.controller.utility.MailService;
 import net.ukr.lina_chen.beauty_salon_spring_project.dto.AppointmentDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.dto.ArchiveAppointmentDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.dto.MasterDTO;
@@ -48,15 +48,15 @@ public class MasterPagesController {
     private final MasterService masterService;
     private final AppointmentService appointmentService;
     private final ArchiveAppointmentService archiveAppointmentService;
-    private final MailSender mailSender;
+    private final MailService mailService;
 
     @Autowired
     public MasterPagesController(MasterService masterService, AppointmentService appointmentService,
-                                 ArchiveAppointmentService archiveAppointmentService, MailSender mailSender) {
+                                 ArchiveAppointmentService archiveAppointmentService, MailService mailService) {
         this.masterService = masterService;
         this.appointmentService = appointmentService;
         this.archiveAppointmentService = archiveAppointmentService;
-        this.mailSender = mailSender;
+        this.mailService = mailService;
     }
 
     @GetMapping("appointments")
@@ -85,7 +85,7 @@ public class MasterPagesController {
         ArchiveAppointment archiveAppointment = new ArchiveAppointment(appointment, null);
         archiveAppointmentService.save(archiveAppointment);
         appointmentService.deleteAppointment(appointment);
-        mailSender.send(archiveAppointment.getUser().getEmail(), archiveAppointment.getMaster().getId());
+        mailService.send(archiveAppointment.getUser().getEmail(), archiveAppointment.getMaster().getId());
         return "redirect:/master/appointments";
     }
 

@@ -79,10 +79,8 @@ public class AppointmentService {
     public Long createAppointment(Appointment appointment) throws DoubleTimeRequestException {
         if (isTimeBusy(appointment.getMaster().getId(),
                 appointment.getTime(), appointment.getDate())) {
-            log.warn("The master is busy at this time");
-            throw new DoubleTimeRequestException(appointment.getMaster().getUser().getName() + " is busy at this time");
+            throw new DoubleTimeRequestException(appointment.getMaster().getUser().getName());
         } else {
-
             Appointment created= appointmentRepository.save(appointment);
             log.info("Appointment's added to the schedule of master " + created.getMaster().getUser().getName());
             return created.getId();
@@ -91,20 +89,20 @@ public class AppointmentService {
 
     public Appointment findAppointmentById(Long appointmentId) throws AppointmentNotFoundException {
         return appointmentRepository.findAppointmentById(appointmentId)
-                .orElseThrow(() -> new AppointmentNotFoundException("appointment with id " + appointmentId + " not found"));
+                .orElseThrow(() -> new AppointmentNotFoundException(appointmentId));
     }
 
     public AppointmentDTO getLocalizedAppointmentById(Long appointmentId, boolean isLocaleEn)
             throws AppointmentNotFoundException {
         return getLocalizedDto(isLocaleEn, appointmentRepository.findAppointmentById(appointmentId)
-                .orElseThrow(() -> new AppointmentNotFoundException("appointment with id " + appointmentId + " not found")));
+                .orElseThrow(() -> new AppointmentNotFoundException(appointmentId)));
     }
 
     @Transactional
     public Appointment setAppointmentProvided(Long appointmentId) throws AppointmentNotFoundException {
         appointmentRepository.setProvidedById(appointmentId, true);
         return appointmentRepository.findAppointmentById(appointmentId)
-                .orElseThrow(() -> new AppointmentNotFoundException("appointment with id " + appointmentId + " not found"));
+                .orElseThrow(() -> new AppointmentNotFoundException(appointmentId));
     }
 
     public void deleteAppointment(Appointment appointment) {
@@ -138,10 +136,4 @@ public class AppointmentService {
                 isLocaleEn ? Locale.US : new Locale("ua", "UA"));
         return LocalDate.parse(date, DateTimeFormatter.ofPattern(bundle.getString(DATE_FORMAT)));
     }
-
-//    public void setLocalizedDate (Appointment appointment, String date, boolean isLocaleEn){
-//        ResourceBundle bundle = ResourceBundle.getBundle("messages",
-//                isLocaleEn ? Locale.US : new Locale("ua", "UA"));
-//        appointment.setDate(LocalDate.parse(date, DateTimeFormatter.ofPattern(bundle.getString(DATE_FORMAT))));
-//    }
 }
