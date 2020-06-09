@@ -1,7 +1,6 @@
 package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import net.ukr.lina_chen.beauty_salon_spring_project.dto.AppointmentDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.entity.*;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.AppointmentNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.DoubleTimeRequestException;
@@ -104,7 +103,7 @@ public class AppointmentController {
         model.addAttribute(ERROR, error != null);
         Master master = appointment.getMaster();
         model.addAttribute("master", masterService.getLocalizedDTO(appointment.getMaster(), isLocaleEn(request)));
-        Map<LocalDate, List<LocalTime>> dateTime = getDateTime(request, master);
+        Map<String, List<LocalTime>> dateTime = getDateTime(request, master);
         model.addAttribute("workingHours",
                 Stream.iterate(master.getTimeBegin(), curr -> curr.plusHours(ITERATE_UNIT)).
                         limit(ChronoUnit.HOURS.between(master.getTimeBegin(), master.getTimeEnd())).
@@ -114,16 +113,16 @@ public class AppointmentController {
     }
 
 
-    private Map<LocalDate, List<LocalTime>> getDateTime(HttpServletRequest request, Master master) {
-        Long masterId = master.getId();
-        List<LocalDate> dates = getDates(master);
-        List<LocalDateTime> busyTime = getMastersBusySchedule(request, masterId);
-        return getScheduleMap(master, dates, busyTime);
+    private Map<String, List<LocalTime>> getDateTime(HttpServletRequest request, Master master) {
+        return getScheduleMap(request, master, getDates(master), getMastersBusySchedule(master.getId()));
     }
 
-    private Map<LocalDate, List<LocalTime>> getScheduleMap(Master master, List<LocalDate> dates,
-                                                           List<LocalDateTime> busyTime) {
-        Map<LocalDate, List<LocalTime>> dateTime = new LinkedHashMap<>();
+    private Map<String, List<LocalTime>> getScheduleMap(HttpServletRequest request, Master master,
+                                                        List<LocalDate> dates,
+                                                        List<LocalDateTime> busyTime) {
+        ResourceBundle bundle = ResourceBundle.getBundle("messages",
+                RequestContextUtils.getLocale(request));
+        Map<String, List<LocalTime>> dateTime = new LinkedHashMap<>();
         LocalDateTime now = LocalDateTime.now();
         for (LocalDate date : dates) {
             List<LocalTime> timeList = Stream.iterate(master.getTimeBegin(), time -> time.plusHours(ITERATE_UNIT))
@@ -131,7 +130,7 @@ public class AppointmentController {
                     .filter(time -> !busyTime.contains(LocalDateTime.of(date, time)))
                     .filter(time -> now.isBefore(LocalDateTime.of(date, time)))
                     .collect(Collectors.toList());
-            dateTime.put(date, timeList);
+            dateTime.put(date.format(DateTimeFormatter.ofPattern(bundle.getString("date.format"))), timeList);
         }
         return dateTime;
     }
@@ -145,9 +144,7 @@ public class AppointmentController {
                 .collect(Collectors.toList());
     }
 
-    private List<LocalDateTime> getMastersBusySchedule(HttpServletRequest request, Long masterId) {
-        ResourceBundle bundle = ResourceBundle.getBundle("messages",
-                RequestContextUtils.getLocale(request));
+    private List<LocalDateTime> getMastersBusySchedule(Long masterId) {
         List<Appointment> appointments = appointmentService.getMastersBusyTime(masterId);
         return appointments.stream()
                 .map(app -> LocalDateTime.of(LocalDate.parse(app.getDate().toString(),
@@ -160,25 +157,25 @@ public class AppointmentController {
     public String saveAppointment(@RequestParam(required = false) String day,
                                   @RequestParam(required = false) String seanceTime,
                                   @ModelAttribute(APPOINTMENT) Appointment appointment,
-                                  SessionStatus sessionStatus, HttpServletRequest request,
-                                  Model model)
-            throws DoubleTimeRequestException, AppointmentNotFoundException {
-        appointment.setDate(LocalDate.parse(day));
+                                  SessionStatus sessionStatus, HttpServletRequest request)
+            throws DoubleTimeRequestException {
+        ResourceBundle bundle = ResourceBundle.getBundle("messages",
+                RequestContextUtils.getLocale(request));
+        appointment.setDate(LocalDate.parse(day, DateTimeFormatter.ofPattern(bundle.getString("date.format"))));
         log.info("Date is added to appointment: " + appointment.getDate());
         appointment.setTime(LocalTime.parse(seanceTime));
         log.info("Time is added to appointment: " + appointment.getTime());
-        model.addAttribute(APPOINTMENT, appointmentService.getLocalizedAppointmentById(
-                appointmentService.createAppointment(appointment).getId(),
-                isLocaleEn(request)));
+        Long id = appointmentService.createAppointment(appointment);
         sessionStatus.setComplete();
         createAppointment();
-
-        return "user/appointment.html";
+        return "redirect:appointment/"+id;
     }
 
-    @GetMapping(APPOINTMENT)
-    public String appointment(@ModelAttribute(APPOINTMENT) AppointmentDTO appointment, Model model) {
-        model.addAttribute(APPOINTMENT, appointment);
+    @GetMapping(APPOINTMENT+"/{appointmentId}")
+    public String appointment(@PathVariable Long appointmentId, Model model,
+                              HttpServletRequest request) throws AppointmentNotFoundException {
+        model.addAttribute(APPOINTMENT, appointmentService.getLocalizedAppointmentById(appointmentId,
+                isLocaleEn(request)));
         return "user/appointment.html";
     }
 

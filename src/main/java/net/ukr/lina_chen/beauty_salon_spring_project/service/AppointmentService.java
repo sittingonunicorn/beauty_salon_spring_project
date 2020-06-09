@@ -76,13 +76,16 @@ public class AppointmentService {
     }
 
     @Transactional
-    public Appointment createAppointment(Appointment appointment) throws DoubleTimeRequestException {
+    public Long createAppointment(Appointment appointment) throws DoubleTimeRequestException {
         if (isTimeBusy(appointment.getMaster().getId(),
                 appointment.getTime(), appointment.getDate())) {
             log.warn("The master is busy at this time");
             throw new DoubleTimeRequestException(appointment.getMaster().getUser().getName() + " is busy at this time");
         } else {
-            return appointmentRepository.save(appointment);
+
+            Appointment created= appointmentRepository.save(appointment);
+            log.info("Appointment's added to the schedule of master " + created.getMaster().getUser().getName());
+            return created.getId();
         }
     }
 
