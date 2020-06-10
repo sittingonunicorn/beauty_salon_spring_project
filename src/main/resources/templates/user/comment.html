@@ -21,10 +21,6 @@
     </tr>
     </thead>
     <tbody>
-    <!--    <tr th:if="${#lists.isEmpty(archiveAppointments)}">-->
-    <!--        <td colspan="2"> No appointments available</td>-->
-    <!--    </tr>-->
-    <!--    /*@thymesVar id="servicetypes" type="List"*/-->
     <tr>
         <td>
             <span th:text="${appointment.getBeautyService()}">Service</span>
@@ -45,7 +41,6 @@
             <form method="post" th:action="@{comment}">
                 <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden">
                 <div class="form-group">
-                    <!--<label for="comment" th:text="#{var.comment}">Comment</label>-->
                     <textarea type="text" class="form-control" id="comment" th:placeholder="#{var.comment}"
                               name="comment">
                     </textarea>

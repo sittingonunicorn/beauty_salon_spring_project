@@ -34,7 +34,6 @@
         <tr th:if="${#lists.isEmpty(appointments)}">
             <td colspan="2"> No appointments available</td>
         </tr>
-        <!--    /*@thymesVar id="servicetypes" type="List"*/-->
         <tr th:each="appointment : ${appointments}">
             <td>
                 <span th:text="${appointment.getBeautyService()}">Service</span>

@@ -8,7 +8,7 @@ import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.MasterNotFoundEx
 import net.ukr.lina_chen.beauty_salon_spring_project.service.AppointmentService;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.BeautyServiceImpl;
 import net.ukr.lina_chen.beauty_salon_spring_project.service.MasterService;
-import net.ukr.lina_chen.beauty_salon_spring_project.service.ProfessionService;
+import net.ukr.lina_chen.beauty_salon_spring_project.service.ServiceTypeService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,14 +33,14 @@ import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstant
 @Controller
 @SessionAttributes({"appointment"})
 public class AppointmentController {
-    private final ProfessionService professionService;
+    private final ServiceTypeService serviceTypeService;
     private final BeautyServiceImpl beautyServiceImpl;
     private final MasterService masterService;
     private final AppointmentService appointmentService;
 
-    public AppointmentController(ProfessionService professionService, BeautyServiceImpl beautyServiceImpl,
+    public AppointmentController(ServiceTypeService serviceTypeService, BeautyServiceImpl beautyServiceImpl,
                                  MasterService masterService, AppointmentService appointmentService) {
-        this.professionService = professionService;
+        this.serviceTypeService = serviceTypeService;
         this.beautyServiceImpl = beautyServiceImpl;
         this.masterService = masterService;
         this.appointmentService = appointmentService;
@@ -56,17 +56,17 @@ public class AppointmentController {
                                   HttpServletRequest request,
                                   @RequestParam(value = ERROR, required = false) String error) {
         model.addAttribute(ERROR, error != null);
-        model.addAttribute("servicetypes", professionService.findAll(
+        model.addAttribute("servicetypes", serviceTypeService.findAll(
                 isLocaleEn(request)));
         return "user/servicetypes.html";
     }
 
-    @GetMapping("beautyservices/{profession}")
+    @GetMapping("beautyservices/{serviceType}")
     public String beautyservicesPage(Model model,
-                                     @PathVariable Profession profession,
+                                     @PathVariable ServiceType serviceType,
                                      HttpServletRequest request) {
 
-        model.addAttribute("beautyservices", beautyServiceImpl.findAllByProfessionId(profession.getId(),
+        model.addAttribute("beautyservices", beautyServiceImpl.findAllByProfessionId(serviceType.getId(),
                 isLocaleEn(request)));
         return "user/beautyservices.html";
     }
@@ -83,7 +83,7 @@ public class AppointmentController {
         appointment.setUser(user);
         log.info("User is added to appointment: " + appointment.getUser().getName());
         model.addAttribute("masters", masterService.findAllByProfessionId(
-                beautyService.getProfession().getId(), isLocaleEn(request)));
+                beautyService.getServiceType().getId(), isLocaleEn(request)));
         return "user/masters.html";
     }
 
@@ -91,7 +91,7 @@ public class AppointmentController {
     public String approvePage(@PathVariable Long masterId,
                               @ModelAttribute("appointment") Appointment appointment) throws MasterNotFoundException {
         appointment.setMaster(masterService.getMasterAccordingBeautyService(
-                masterId, appointment.getBeautyService().getProfession().getId()));
+                masterId, appointment.getBeautyService().getServiceType().getId()));
         log.info("Master is added to appointment: id " + appointment.getMaster().getId());
         return "redirect:time";
     }

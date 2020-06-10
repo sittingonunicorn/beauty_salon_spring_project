@@ -1,6 +1,6 @@
 <!--suppress ALL -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
@@ -27,7 +27,6 @@
                     <h4 style="font-weight: bold; text-align: center;" th:text="#{form.registration}">Registration form</h4>
                 </div>
                 <div class="card-body">
-                    <!--/*@thymesVar id="emailError" type="String"*/-->
                     <div th:if="${emailError}">
                         <div class="alert alert-danger" role="alert" th:text="#{email.not.unique}"></div>
                     </div>

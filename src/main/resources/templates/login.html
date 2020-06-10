@@ -27,11 +27,9 @@
                     <h3 class="panel-title" th:text="#{form.login}">Login with e-mail</h3>
                 </div>
                 <div class="panel-body">
-                    <!--/*@thymesVar id="logout" type="java.lang.String"*/-->
                     <div class="info" th:if="${logout}">
                         <div class="alert alert-info" role="alert">You've been logged out successfully.</div>
                     </div>
-                    <!--/*@thymesVar id="error" type="java.lang.String"*/-->
                     <div class="alert" th:if="${error}">
                         <div class="alert alert-danger" role="alert">Invalid E-mail or Password!</div>
                     </div>

@@ -26,8 +26,8 @@ public class BeautyServiceImpl {
         this.beautyServiceRepository = beautyServiceRepository;
     }
 
-    public List<BeautyServiceDTO> findAllByProfessionId(@NonNull Long professionId, boolean isLocaleEn) {
-        return beautyServiceRepository.findAllByProfessionIdOrderByNameAsc(professionId)
+    public List<BeautyServiceDTO> findAllByProfessionId(@NonNull Long serviceTypeId, boolean isLocaleEn) {
+        return beautyServiceRepository.findAllByServiceTypeIdOrderByNameAsc(serviceTypeId)
                 .stream()
                 .map(b -> getLocalizedDTO(isLocaleEn, b))
                 .sorted(Comparator.comparing(BeautyServiceDTO::getName))
@@ -39,7 +39,7 @@ public class BeautyServiceImpl {
                 .id(beautyService.getId())
                 .name(isLocaleEn? beautyService.getName():beautyService.getNameUkr())
                 .price(isLocaleEn? getPriceEn(beautyService.getPrice()):getPriceUa(beautyService.getPrice()))
-                .professionId(beautyService.getProfession().getId())
+                .professionId(beautyService.getServiceType().getId())
                 .build();
     }
 

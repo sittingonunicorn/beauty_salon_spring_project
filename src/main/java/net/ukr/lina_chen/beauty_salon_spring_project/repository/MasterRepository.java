@@ -11,8 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface MasterRepository extends JpaRepository<Master, Long> {
-    List<Master> findAllByProfessionId(Long professionId);
+    List<Master> findAllByServiceTypeId(Long serviceTypeId);
     Optional<Master> findById(Long id);
     Optional <Master> findMasterByUser(@NonNull User user);
-    Optional<Master> findByIdAndAndProfessionId(Long masterId, Long professionId);
+    Optional<Master> findByIdAndAndServiceTypeId(Long masterId, Long serviceTypeId);
 }

@@ -9,29 +9,20 @@
 <table class="table table-hover">
     <thead>
     <tr>
-        <th> Name</th>
-        <th> Price</th>
+        <th th:text="#{var.beautyservice}"> Name</th>
+        <th th:text="#{var.price}"> Price</th>
     </tr>
     </thead>
     <tbody>
     <tr th:if="${#lists.isEmpty(beautyservices)}">
         <td colspan="2"> No services available</td>
     </tr>
-    <!--/*@thymesVar id="beautyservices" type="List"*/-->
     <tr th:each="beautyservice : ${beautyservices}">
         <td>
-            <!--/*@thymesVar id="getProfession" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService"*/-->
-            <!--/*@thymesVar id="getId" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Profession"*/-->
-            <!--/*@thymesVar id="name" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService"*/-->
             <a th:href="@{'/user/masters/' + ${beautyservice.getId()}}" th:text="${beautyservice.name}">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                <!--/*@thymesVar id="getProfession" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService"*/-->
-                <!--/*@thymesVar id="id" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.Profession"*/-->
-                <!--                <input type="hidden" th:value="${beautyservice.getProfession().id}" th:name="masterId">-->
-                <!--/*@thymesVar id="id" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService"*/-->
                 <input type="hidden" th:value="${beautyservice.id}" th:name="beautyserviceId">
             </a></td>
-        <!--/*@thymesVar id="price" type="net.ukr.lina_chen.beauty_salon_spring_project.entity.BeautyService"*/-->
         <td><span th:text="${beautyservice.price}"> Price </span></td>
     </tr>
     </tbody>

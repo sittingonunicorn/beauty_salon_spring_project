@@ -11,24 +11,21 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name = "professions")
-public class Profession {
+@Table(name = "service_type")
+public class ServiceType {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "profession_id")
+    @Column(name = "service_type_id")
     private Long id;
 
-    @Column(name = "profession_name_en", nullable = false)
-    private String name;
-
-    @OneToMany( mappedBy = "profession",  cascade = CascadeType.MERGE)
+    @OneToMany( mappedBy = "serviceType",  cascade = CascadeType.MERGE)
     private Set<Master> masters;
+
+    @OneToMany( mappedBy = "serviceType",  cascade = CascadeType.MERGE)
+    private Set<BeautyService> beautyServices;
 
     @Column(name = "beautyservices_type_en", nullable = false)
     private String beautyservicesType;
-
-    @Column(name = "profession_name_ua", nullable = false)
-    private String nameUkr;
 
     @Column(name = "beautyservices_type_ua", nullable = false)
     private String beautyservicesTypeUkr;

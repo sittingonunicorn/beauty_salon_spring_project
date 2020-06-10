@@ -22,17 +22,17 @@ public class MasterService {
     }
 
 
-    public List<MasterDTO> findAllByProfessionId(Long professionId, boolean isLocaleEn) {
-        return masterRepository.findAllByProfessionId(professionId)
+    public List<MasterDTO> findAllByProfessionId(Long serviceTypeId, boolean isLocaleEn) {
+        return masterRepository.findAllByServiceTypeId(serviceTypeId)
                 .stream()
                 .map(m -> getLocalizedDTO(m, isLocaleEn))
                 .collect(Collectors.toList());
     }
 
-    public Master getMasterAccordingBeautyService(Long masterId, Long professionId) throws MasterNotFoundException {
-        return masterRepository.findByIdAndAndProfessionId(masterId, professionId)
+    public Master getMasterAccordingBeautyService(Long masterId, Long serviceTypeId) throws MasterNotFoundException {
+        return masterRepository.findByIdAndAndServiceTypeId(masterId, serviceTypeId)
                 .orElseThrow(() -> new MasterNotFoundException("Master id=" + masterId +
-                        " doesn't accord this profession " + professionId));
+                        " doesn't accord this serviceType " + serviceTypeId));
     }
 
     public MasterDTO findMasterByUser(User user, boolean isLocaleEn) throws MasterNotFoundException {

@@ -21,7 +21,6 @@
     <tr th:if="${#lists.isEmpty(appointments)}">
         <td colspan="2"> No appointments available</td>
     </tr>
-    <!--    /*@thymesVar id="servicetypes" type="List"*/-->
     <tr th:each="appointment : ${appointments}">
         <td>
             <span th:text="${appointment.getMasterName()}">Master's name</span>
@@ -44,12 +43,6 @@
     </tr>
     </tbody>
 </table>
-<!--    <div th:if="${appointments.totalPages > 0}" class="pagination"-->
-<!--         th:each="pageNumber : ${pageNumbers}">-->
-<!--        <a th:href="@{/admin/appointments(size=${appointments.size}, page=${pageNumber})}"-->
-<!--           th:text="${pageNumber+1}"-->
-<!--           th:class="${pageNumber==appointments.number+1} ? active"></a>-->
-<!--    </div>-->
 <nav aria-label="Page navigation example">
     <ul class="pagination" th:if="${appointments.totalPages > 0}">
         <li class="page-item" th:each="pageNumber : ${pageNumbers}">
@@ -61,4 +54,3 @@
 <div th:replace="parts/footer :: footer"></div>
 </body>
 </html>
-<!--th:class="${pageNumber==appointments.number+1} ? active"-->

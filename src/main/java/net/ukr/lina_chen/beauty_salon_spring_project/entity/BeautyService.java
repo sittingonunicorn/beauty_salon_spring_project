@@ -25,8 +25,8 @@ public class BeautyService {
     private BigDecimal price;
 
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "profession_id", nullable = false)
-    private Profession profession;
+    @JoinColumn(name = "service_type_id", nullable = false)
+    private ServiceType serviceType;
 
     @Column(name = "beautyservice_name_ua", nullable = false)
     private String nameUkr;

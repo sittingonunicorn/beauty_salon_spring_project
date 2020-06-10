@@ -23,8 +23,8 @@ public class Master {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "profession_id", nullable = false)
-    private Profession profession;
+    @JoinColumn(name = "service_type_id", nullable = false)
+    private ServiceType serviceType;
 
     @Column(name = "time_begin", nullable = false)
     private LocalTime timeBegin;

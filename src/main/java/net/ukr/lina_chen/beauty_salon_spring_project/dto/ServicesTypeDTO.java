@@ -8,8 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @ToString
-public class ProfessionDTO {
+public class ServicesTypeDTO {
     private Long id;
-    private String name;
     private String beautyservicesType;
 }
