@@ -66,7 +66,7 @@ public class AppointmentController {
                                      @PathVariable ServiceType serviceType,
                                      HttpServletRequest request) {
 
-        model.addAttribute("beautyservices", beautyServiceImpl.findAllByProfessionId(serviceType.getId(),
+        model.addAttribute("beautyservices", beautyServiceImpl.findAllByServiceTypeId(serviceType.getId(),
                 isLocaleEn(request)));
         return "user/beautyservices.html";
     }
@@ -77,12 +77,13 @@ public class AppointmentController {
                               @PathVariable BeautyService beautyService,
                               @ModelAttribute("appointment") Appointment appointment,
                               @AuthenticationPrincipal User user,
-                              HttpServletRequest request) {
+                              HttpServletRequest request) throws MasterNotFoundException {
         appointment.setBeautyService(beautyService);
         log.info("Beautyservice is added to appointment: " + appointment.getBeautyService().getName());
         appointment.setUser(user);
         log.info("User is added to appointment: " + appointment.getUser().getName());
-        model.addAttribute("masters", masterService.findAllByProfessionId(
+        System.out.println(beautyService.getServiceType().getId());
+        model.addAttribute("masters", masterService.findAllByServiceType(
                 beautyService.getServiceType().getId(), isLocaleEn(request)));
         return "user/masters.html";
     }

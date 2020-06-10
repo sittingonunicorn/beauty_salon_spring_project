@@ -18,7 +18,7 @@ public class ServiceType {
     @Column(name = "service_type_id")
     private Long id;
 
-    @OneToMany( mappedBy = "serviceType",  cascade = CascadeType.MERGE)
+    @ManyToMany(mappedBy = "serviceTypes")
     private Set<Master> masters;
 
     @OneToMany( mappedBy = "serviceType",  cascade = CascadeType.MERGE)

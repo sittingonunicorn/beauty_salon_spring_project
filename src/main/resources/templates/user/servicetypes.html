@@ -22,7 +22,6 @@
             <a th:href="@{'/user/beautyservices/' + ${servicetype.getId()}}"
                th:text="${servicetype.beautyservicesType}">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                <input type="hidden" th:value="${servicetype.id}" th:name="professionId">
             </a>
         </td>
     </tr>

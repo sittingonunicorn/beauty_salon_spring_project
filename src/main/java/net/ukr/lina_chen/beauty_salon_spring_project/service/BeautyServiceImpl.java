@@ -26,7 +26,7 @@ public class BeautyServiceImpl {
         this.beautyServiceRepository = beautyServiceRepository;
     }
 
-    public List<BeautyServiceDTO> findAllByProfessionId(@NonNull Long serviceTypeId, boolean isLocaleEn) {
+    public List<BeautyServiceDTO> findAllByServiceTypeId(@NonNull Long serviceTypeId, boolean isLocaleEn) {
         return beautyServiceRepository.findAllByServiceTypeIdOrderByNameAsc(serviceTypeId)
                 .stream()
                 .map(b -> getLocalizedDTO(isLocaleEn, b))

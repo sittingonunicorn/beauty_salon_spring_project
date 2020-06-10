@@ -1,8 +1,10 @@
 package net.ukr.lina_chen.beauty_salon_spring_project.entity;
 
 import lombok.*;
+
 import javax.persistence.*;
 import java.time.LocalTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,9 +24,11 @@ public class Master {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "service_type_id", nullable = false)
-    private ServiceType serviceType;
+    @ManyToMany
+    @JoinTable(name = "master_service_type",
+            joinColumns = @JoinColumn(name = "master_id"),
+            inverseJoinColumns = @JoinColumn(name = "service_type_id"))
+    private Set<ServiceType> serviceTypes;
 
     @Column(name = "time_begin", nullable = false)
     private LocalTime timeBegin;

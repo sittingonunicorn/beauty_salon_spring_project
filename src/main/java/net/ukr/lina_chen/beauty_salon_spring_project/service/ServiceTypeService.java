@@ -1,9 +1,13 @@
 package net.ukr.lina_chen.beauty_salon_spring_project.service;
 
 import net.ukr.lina_chen.beauty_salon_spring_project.dto.ServicesTypeDTO;
+import net.ukr.lina_chen.beauty_salon_spring_project.entity.Master;
+import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.MasterNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.repository.ServiceTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,5 +31,9 @@ public class ServiceTypeService {
                 .collect(Collectors.toList());
     }
 
+    public List <Master> findServiceTypesMasters (Long serviceTypeId) throws MasterNotFoundException {
+        return new ArrayList<>(serviceTypeRepository.findById(serviceTypeId).orElseThrow(() -> new MasterNotFoundException(
+                "masters with serviceType id " + serviceTypeId + " not found")).getMasters());
+    }
 
 }
