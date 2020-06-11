@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -46,7 +45,7 @@ public class RegistrationController {
         try {
             userService.saveNewUser(userRegistrationDTO);
             log.info("User " + userRegistrationDTO.getEmail() + " is successfully registered.");
-        } catch (DataAccessException| SQLException | ValidationException e) {
+        } catch (DataAccessException| ValidationException e) {
             log.info(e.getLocalizedMessage());
             model.addAttribute("emailError", messageSource.getMessage("email.not.unique", null, locale));
             return REGISTRATION_PAGE;

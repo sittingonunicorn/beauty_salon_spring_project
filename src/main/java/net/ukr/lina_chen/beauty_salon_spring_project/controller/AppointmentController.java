@@ -65,7 +65,6 @@ public class AppointmentController {
     public String beautyservicesPage(Model model,
                                      @PathVariable ServiceType serviceType,
                                      HttpServletRequest request) {
-
         model.addAttribute("beautyservices", beautyServiceImpl.findAllByServiceTypeId(serviceType.getId(),
                 isLocaleEn(request)));
         return "user/beautyservices.html";
@@ -82,7 +81,6 @@ public class AppointmentController {
         log.info("Beautyservice is added to appointment: " + appointment.getBeautyService().getName());
         appointment.setUser(user);
         log.info("User is added to appointment: " + appointment.getUser().getName());
-        System.out.println(beautyService.getServiceType().getId());
         model.addAttribute("masters", masterService.findAllByServiceType(
                 beautyService.getServiceType().getId(), isLocaleEn(request)));
         return "user/masters.html";
