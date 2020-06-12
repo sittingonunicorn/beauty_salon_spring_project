@@ -18,3 +18,15 @@ MySQL;<br>
 JDK 1.8<br>
 MySQL<br>
 Apache Maven<br>
+
+<h4>Требования для запуска проекта:</h4>
+JDK 1.8<br>
+Apache Maven<br>
+Apache Tomcat<br>
+MySQL<br>
+<br>
+
+<h4>Установка</h4>
+В корневом каталоге проекта выполнить команду mvn package
+<h4>Запуск</h4>
+В корневом каталоге проекта выполнить команду mvn spring-boot:run<br>
