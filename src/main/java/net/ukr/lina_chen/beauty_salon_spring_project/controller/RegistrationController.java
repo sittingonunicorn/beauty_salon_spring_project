@@ -1,8 +1,8 @@
 package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import net.ukr.lina_chen.beauty_salon_spring_project.dto.UserRegistrationDTO;
-import net.ukr.lina_chen.beauty_salon_spring_project.service.UserService;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.dto.UserRegistrationDTO;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataAccessException;

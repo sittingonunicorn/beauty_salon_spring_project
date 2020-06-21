@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="parts/head :: head">
+    <title>Beauty Salon Appointments</title>
+</head>
+<body>
+<div th:replace="parts/header :: header"></div>
+<p th:utext="#{message.user.appointments}">Upcoming appointments</p>
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th th:text="#{var.beautyservice}">Service</th>
+        <th th:text="#{var.date}">Date</th>
+        <th th:text="#{var.time}">Time</th>
+        <th th:text="#{var.mastername}">Master's name</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="appointment : ${appointments}">
+        <td>
+            <span th:text="${appointment.getBeautyService()}">Service</span>
+        </td>
+        <td>
+            <span th:text="${appointment.getDate()}">Date</span>
+        </td>
+        <td>
+            <span th:text="${appointment.getTime()}">Time</span>
+        </td>
+        <td>
+            <span th:text="${appointment.getMasterName()}">User's name</span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<nav aria-label="Page navigation example">
+    <ul class="pagination" th:if="${appointments.totalPages > 0}">
+        <li class="page-item" th:each="pageNumber : ${pageNumbers}">
+            <a class="page-link"
+               th:href="@{/user/appointments(size=${appointments.size}, page=${pageNumber})}"
+               th:text="${pageNumber+1}"></a></li>
+    </ul>
+</nav>
+<div th:replace="parts/footer :: footer"></div>
+</body>
+</html>

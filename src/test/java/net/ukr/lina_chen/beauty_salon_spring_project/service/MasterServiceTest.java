@@ -1,11 +1,12 @@
 package net.ukr.lina_chen.beauty_salon_spring_project.service;
 
-import net.ukr.lina_chen.beauty_salon_spring_project.dto.MasterDTO;
-import net.ukr.lina_chen.beauty_salon_spring_project.entity.Master;
-import net.ukr.lina_chen.beauty_salon_spring_project.entity.Role;
-import net.ukr.lina_chen.beauty_salon_spring_project.entity.User;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.dto.MasterDTO;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.entity.Master;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.entity.Role;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.entity.User;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.MasterNotFoundException;
-import net.ukr.lina_chen.beauty_salon_spring_project.repository.MasterRepository;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.repository.MasterRepository;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.service.MasterService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,7 +61,7 @@ public class MasterServiceTest {
 
     @Test
     public void findAllByServiceType() {
-        masterService.findAllByServiceType(1L, true);
+        masterService.findAllByServiceType(1L);
         verify(masterRepository, times(1)).findAllByServiceTypesId(1L);
     }
 
@@ -79,7 +80,7 @@ public class MasterServiceTest {
     @Test
     public void findMasterByUser() throws MasterNotFoundException {
         when(masterRepository.findMasterByUser(user)).thenReturn(Optional.ofNullable(master));
-        MasterDTO masterDTO = masterService.findMasterByUser(user, false);
+        MasterDTO masterDTO = masterService.findMasterByUser(user);
         assertEquals(Optional.of("Інна"), Optional.of(masterDTO.getName()));
     }
 
@@ -88,7 +89,7 @@ public class MasterServiceTest {
         List<Master> masters = new ArrayList<Master>();
         masters.add(master);
         when(masterRepository.findAll()).thenReturn(masters);
-        List<MasterDTO> mastersDTO = masterService.findAll(true);
+        List<MasterDTO> mastersDTO = masterService.findAll();
         verify(masterRepository, times(1)).findAll();
         assertEquals("Inna", mastersDTO.get(0).getName());
     }

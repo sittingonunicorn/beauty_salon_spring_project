@@ -1,14 +1,19 @@
 package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import net.ukr.lina_chen.beauty_salon_spring_project.entity.*;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.AppointmentNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.DoubleTimeRequestException;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.MasterNotFoundException;
-import net.ukr.lina_chen.beauty_salon_spring_project.service.AppointmentService;
-import net.ukr.lina_chen.beauty_salon_spring_project.service.BeautyServiceImpl;
-import net.ukr.lina_chen.beauty_salon_spring_project.service.MasterService;
-import net.ukr.lina_chen.beauty_salon_spring_project.service.ServiceTypeService;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.dto.AppointmentDTO;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.entity.*;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.service.AppointmentService;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.service.BeautyServiceImpl;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.service.MasterService;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.service.ServiceTypeService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +29,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.*;
@@ -53,20 +59,16 @@ public class AppointmentController {
 
     @GetMapping("servicetypes")
     public String mastertypesPage(Model model,
-                                  HttpServletRequest request,
                                   @RequestParam(value = ERROR, required = false) String error) {
         model.addAttribute(ERROR, error != null);
-        model.addAttribute("servicetypes", serviceTypeService.findAll(
-                isLocaleEn(request)));
+        model.addAttribute("servicetypes", serviceTypeService.findAll());
         return "user/servicetypes.html";
     }
 
     @GetMapping("beautyservices/{serviceType}")
     public String beautyservicesPage(Model model,
-                                     @PathVariable ServiceType serviceType,
-                                     HttpServletRequest request) {
-        model.addAttribute("beautyservices", beautyServiceImpl.findAllByServiceTypeId(serviceType.getId(),
-                isLocaleEn(request)));
+                                     @PathVariable ServiceType serviceType) {
+        model.addAttribute("beautyservices", beautyServiceImpl.findAllByServiceTypeId(serviceType.getId()));
         return "user/beautyservices.html";
     }
 
@@ -81,8 +83,7 @@ public class AppointmentController {
         log.info("Beautyservice is added to appointment: " + appointment.getBeautyService().getName());
         appointment.setUser(user);
         log.info("User is added to appointment: " + appointment.getUser().getName());
-        model.addAttribute("masters", masterService.findAllByServiceType(
-                beautyService.getServiceType().getId(), isLocaleEn(request)));
+        model.addAttribute("masters", masterService.findAllByServiceType(beautyService.getServiceType().getId()));
         return "user/masters.html";
     }
 
@@ -101,7 +102,7 @@ public class AppointmentController {
                                @RequestParam(value = ERROR, required = false) String error) {
         model.addAttribute(ERROR, error != null);
         Master master = appointment.getMaster();
-        model.addAttribute("master", masterService.getLocalizedDTO(appointment.getMaster(), isLocaleEn(request)));
+        model.addAttribute("master", masterService.getLocalizedDTO().map(appointment.getMaster()));
         Map<String, List<LocalTime>> dateTime = getDateTime(request, master);
         model.addAttribute("workingHours",
                 Stream.iterate(master.getTimeBegin(), curr -> curr.plusHours(ITERATE_UNIT)).
@@ -171,17 +172,34 @@ public class AppointmentController {
     }
 
     @GetMapping(APPOINTMENT+"/{appointmentId}")
-    public String appointment(@PathVariable Long appointmentId, Model model,
-                              HttpServletRequest request) throws AppointmentNotFoundException {
-        model.addAttribute(APPOINTMENT, appointmentService.getLocalizedAppointmentById(appointmentId,
-                isLocaleEn(request)));
+    public String appointment(@PathVariable Long appointmentId, Model model) throws AppointmentNotFoundException {
+        model.addAttribute(APPOINTMENT, appointmentService.getLocalizedAppointmentById(appointmentId));
         return "user/appointment.html";
     }
 
-    private boolean isLocaleEn(HttpServletRequest request) {
-        return RequestContextUtils.getLocale(request).equals(Locale.US);
+    @GetMapping("appointments")
+    public String appointmentsPage(Model model, @AuthenticationPrincipal User user,
+                                   @PageableDefault(sort = {"date", "time"}, direction = Sort.Direction.DESC,
+                                           size = 6) Pageable pageable,
+                                   @RequestParam(value = ERROR, required = false) String error) {
+        Page<AppointmentDTO> appointments = appointmentService.findAppointmentsForUser(
+                user.getId(), pageable);
+        model.addAttribute("pageNumbers", this.getPageNumbers(appointments.getTotalPages()));
+        model.addAttribute("appointments", appointments);
+        model.addAttribute("user", user);
+        model.addAttribute(ERROR, error != null);
+        return "user/appointments.html";
     }
 
+    private List<Integer> getPageNumbers(int totalPages) {
+        List<Integer> pageNumbers = new ArrayList<>();
+        if (totalPages > MIN_QUANTITY_PAGES) {
+            pageNumbers = IntStream.rangeClosed(MIN_QUANTITY_PAGES, totalPages - ADJUSTMENT_FOR_PAGES)
+                    .boxed()
+                    .collect(Collectors.toList());
+        }
+        return pageNumbers;
+    }
 
     @ExceptionHandler(DoubleTimeRequestException.class)
     String handleDoubleTimeRequestException(DoubleTimeRequestException e, Model model) {

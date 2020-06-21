@@ -12,7 +12,7 @@
             This appointment doesn't exist!</div>
     </div>
 </div>
-<p th:utext="#{message.user.appointments}">Upcoming appointments</p>
+<p th:utext="#{message.user.archive.appointments}">Last appointments</p>
 
 <table class="table table-hover">
     <thead>
@@ -20,7 +20,7 @@
         <th th:text="#{var.beautyservice}">Service</th>
         <th th:text="#{var.date}">Date</th>
         <th th:text="#{var.time}">Time</th>
-        <th th:text="#{var.username}">User's name</th>
+        <th th:text="#{var.mastername}">Master's name</th>
         <th th:text="#{var.provided}">Provided</th>
         <th th:text="#{var.comment}">Comment</th>
         <th></th>
@@ -41,7 +41,7 @@
             <span th:text="${appointment.getTime()}">Time</span>
         </td>
         <td>
-            <span th:text="${appointment.getUserName()}">User's name</span>
+            <span th:text="${appointment.getMasterName()}">User's name</span>
         </td>
         <td>
             <span th:text="#{|bool.${appointment.isProvided()}|}">Provided</span>

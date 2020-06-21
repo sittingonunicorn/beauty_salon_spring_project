@@ -1,10 +1,10 @@
 package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import net.ukr.lina_chen.beauty_salon_spring_project.dto.ArchiveAppointmentDTO;
-import net.ukr.lina_chen.beauty_salon_spring_project.entity.User;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.AppointmentNotFoundException;
-import net.ukr.lina_chen.beauty_salon_spring_project.service.ArchiveAppointmentService;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.dto.ArchiveAppointmentDTO;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.entity.User;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.service.ArchiveAppointmentService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -13,12 +13,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -40,8 +38,8 @@ public class UserArchiveController {
                                    @PageableDefault(sort = {"date", "time"}, direction = Sort.Direction.DESC,
                                            size = 6) Pageable pageable,
                                    @RequestParam(value = ERROR, required = false) String error) {
-        Page<ArchiveAppointmentDTO> archiveAppointments = archiveAppointmentService.findArchiveAppointmentsForUser(
-                user.getId(), pageable, isLocaleEn(request));
+        Page<ArchiveAppointmentDTO> archiveAppointments =
+                archiveAppointmentService.findArchiveAppointmentsForUser(user.getId(), pageable);
         model.addAttribute("pageNumbers", this.getPageNumbers(archiveAppointments.getTotalPages()));
         model.addAttribute("archiveAppointments", archiveAppointments);
         model.addAttribute("user", user);
@@ -62,19 +60,16 @@ public class UserArchiveController {
     @GetMapping("comment")
     public String leaveComment(@RequestParam Long appointmentId, Model model, HttpServletRequest request)
             throws AppointmentNotFoundException {
-        model.addAttribute(APPOINTMENT, archiveAppointmentService.findById(appointmentId, isLocaleEn(request)));
+        model.addAttribute(APPOINTMENT, archiveAppointmentService.findById(appointmentId));
         return "user/comment.html";
     }
 
-    private boolean isLocaleEn(HttpServletRequest request) {
-        return RequestContextUtils.getLocale(request).equals(Locale.US);
-    }
     @PostMapping("comment")
     public String submitComment(@RequestParam Long appointmentId, @RequestParam String comment, Model model,
                                 HttpServletRequest request)
             throws AppointmentNotFoundException {
         archiveAppointmentService.addComment(appointmentId, comment);
-        model.addAttribute(APPOINTMENT, archiveAppointmentService.findById(appointmentId, isLocaleEn(request)));
+        model.addAttribute(APPOINTMENT, archiveAppointmentService.findById(appointmentId));
         return "redirect:archiveappointments";
     }
 

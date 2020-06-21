@@ -1,6 +1,6 @@
 package net.ukr.lina_chen.beauty_salon_spring_project.controller.utility;
 
-import net.ukr.lina_chen.beauty_salon_spring_project.dto.UserRegistrationDTO;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.dto.UserRegistrationDTO;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

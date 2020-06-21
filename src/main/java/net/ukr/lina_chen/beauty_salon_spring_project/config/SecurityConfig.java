@@ -1,6 +1,6 @@
 package net.ukr.lina_chen.beauty_salon_spring_project.config;
 
-import net.ukr.lina_chen.beauty_salon_spring_project.service.UserService;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
