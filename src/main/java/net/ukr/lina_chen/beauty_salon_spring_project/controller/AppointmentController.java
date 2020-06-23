@@ -203,6 +203,7 @@ public class AppointmentController {
 
     @ExceptionHandler(DoubleTimeRequestException.class)
     String handleDoubleTimeRequestException(DoubleTimeRequestException e, Model model) {
+        log.warn(e.getLocalizedMessage());
         model.addAttribute(ERROR, true);
         return "redirect:/user/approve/time?error";
     }
