@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +33,7 @@ public class UserArchiveController {
     }
 
     @GetMapping("archiveappointments")
-    public String appointmentsPage(Model model, @AuthenticationPrincipal User user, HttpServletRequest request,
+    public String appointmentsPage(Model model, @AuthenticationPrincipal User user,
                                    @PageableDefault(sort = {"date", "time"}, direction = Sort.Direction.DESC,
                                            size = 6) Pageable pageable,
                                    @RequestParam(value = ERROR, required = false) String error) {
@@ -58,15 +57,14 @@ public class UserArchiveController {
     }
 
     @GetMapping("comment")
-    public String leaveComment(@RequestParam Long appointmentId, Model model, HttpServletRequest request)
+    public String leaveComment(@RequestParam Long appointmentId, Model model)
             throws AppointmentNotFoundException {
         model.addAttribute(APPOINTMENT, archiveAppointmentService.findById(appointmentId));
         return "user/comment.html";
     }
 
     @PostMapping("comment")
-    public String submitComment(@RequestParam Long appointmentId, @RequestParam String comment, Model model,
-                                HttpServletRequest request)
+    public String submitComment(@RequestParam Long appointmentId, @RequestParam String comment, Model model)
             throws AppointmentNotFoundException {
         archiveAppointmentService.addComment(appointmentId, comment);
         model.addAttribute(APPOINTMENT, archiveAppointmentService.findById(appointmentId));
@@ -75,6 +73,7 @@ public class UserArchiveController {
 
     @ExceptionHandler(AppointmentNotFoundException.class)
     String handleAppointmentNotFoundException(AppointmentNotFoundException e, Model model) {
+        log.warn(e.getLocalizedMessage());
         model.addAttribute(ERROR, true);
         return "redirect:/user/archiveappointments?error";
     }

@@ -16,11 +16,7 @@ import java.time.LocalTime;
 public class CreateAppointmentDTO {
 
     private Master master;
-
     private BeautyService beautyService;
-
     private LocalTime time;
-
     private LocalDate date;
-
 }

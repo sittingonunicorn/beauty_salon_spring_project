@@ -10,9 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.ITERATE_UNIT;
 
 @Service
 public class MasterService {
@@ -60,5 +65,11 @@ public class MasterService {
                 .timeBegin(master.getTimeBegin())
                 .timeEnd(master.getTimeEnd())
                 .build();
+    }
+
+    public List<LocalTime> getMastersWorkingHours(Master master) {
+        return Stream.iterate(master.getTimeBegin(), curr -> curr.plusHours(ITERATE_UNIT)).
+                limit(ChronoUnit.HOURS.between(master.getTimeBegin(), master.getTimeEnd())).
+                collect(Collectors.toList());
     }
 }

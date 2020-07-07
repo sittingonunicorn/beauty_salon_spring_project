@@ -8,10 +8,10 @@
 <div th:replace="parts/header :: header"></div>
 <div>
     <p th:text="#{message.appointment.created}"></p>
-    <p th:utext="#{message.master(${appointment.getMasterName()})}">Master</p>
-    <p th:utext="#{message.beautyservice(${appointment.getBeautyService()})}">BeautyService</p>
-    <p th:utext="#{message.date(${appointment.getDate()})}">Date</p>
-    <p th:utext="#{message.time(${appointment.getTime()})}">Time</p>
+    <p th:utext="#{message.master(${appointmentDTO.getMasterName()})}">Master</p>
+    <p th:utext="#{message.beautyservice(${appointmentDTO.getBeautyService()})}">BeautyService</p>
+    <p th:utext="#{message.date(${appointmentDTO.getDate()})}">Date</p>
+    <p th:utext="#{message.time(${appointmentDTO.getTime()})}">Time</p>
     <p th:text="#{message.waiting.for.you}">We are waiting for you</p>
 </div>
 <div th:replace="parts/footer :: footer"></div>

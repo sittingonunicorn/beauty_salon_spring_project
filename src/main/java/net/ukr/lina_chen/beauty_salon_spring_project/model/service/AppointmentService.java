@@ -7,6 +7,7 @@ import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.DoubleTimeReques
 import net.ukr.lina_chen.beauty_salon_spring_project.model.dto.AppointmentDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.model.dto.CreateAppointmentDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.model.entity.Appointment;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.entity.Master;
 import net.ukr.lina_chen.beauty_salon_spring_project.model.entity.User;
 import net.ukr.lina_chen.beauty_salon_spring_project.model.mapper.LocalizedDtoMapper;
 import net.ukr.lina_chen.beauty_salon_spring_project.model.repository.AppointmentRepository;
@@ -15,17 +16,20 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.DATE_FORMAT;
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.*;
 
 
 @Slf4j
@@ -86,7 +90,7 @@ public class AppointmentService {
         }
     }
 
-    public Appointment createAppointment (CreateAppointmentDTO appointment, User user){
+    public Appointment createAppointment(CreateAppointmentDTO appointment, User user) {
         return Appointment.builder()
                 .beautyService(appointment.getBeautyService())
                 .date(appointment.getDate())
@@ -147,5 +151,39 @@ public class AppointmentService {
         ResourceBundle bundle = ResourceBundle.getBundle("messages",
                 isLocaleEn ? Locale.US : new Locale("ua", "UA"));
         return LocalDate.parse(date, DateTimeFormatter.ofPattern(bundle.getString(DATE_FORMAT)));
+    }
+
+    public Map<String, List<LocalTime>> getScheduleMap(HttpServletRequest request, Master master) {
+        ResourceBundle bundle = ResourceBundle.getBundle("messages",
+                RequestContextUtils.getLocale(request));
+        List<LocalDateTime> busyTime = getMastersBusySchedule(master.getId());
+        Map<String, List<LocalTime>> dateTime = new LinkedHashMap<>();
+        LocalDateTime now = LocalDateTime.now();
+        for (LocalDate date : getScheduleDates(master)) {
+            List<LocalTime> timeList = Stream.iterate(master.getTimeBegin(), time -> time.plusHours(ITERATE_UNIT))
+                    .limit(ChronoUnit.HOURS.between(master.getTimeBegin(), master.getTimeEnd()))
+                    .filter(time -> !busyTime.contains(LocalDateTime.of(date, time)))
+                    .filter(time -> now.isBefore(LocalDateTime.of(date, time)))
+                    .collect(Collectors.toList());
+            dateTime.put(date.format(DateTimeFormatter.ofPattern(bundle.getString("date.format"))), timeList);
+        }
+        return dateTime;
+    }
+
+    private List<LocalDate> getScheduleDates(Master master) {
+        LocalDate startDate = LocalDateTime.now().isBefore(
+                LocalDateTime.of(LocalDate.now(), master.getTimeEnd())) ?
+                LocalDate.now() : LocalDate.now().plusDays(ITERATE_UNIT);
+        return Stream.iterate(startDate, date -> date.plusDays(ITERATE_UNIT))
+                .limit(ChronoUnit.DAYS.between(startDate, startDate.plusDays(SCHEDULE_DAYS)))
+                .collect(Collectors.toList());
+    }
+
+    private List<LocalDateTime> getMastersBusySchedule(Long masterId) {
+        List<Appointment> appointments = getMastersBusyTime(masterId);
+        return appointments.stream()
+                .map(app -> LocalDateTime.of(app.getDate(),
+                        app.getTime()))
+                .collect(Collectors.toList());
     }
 }

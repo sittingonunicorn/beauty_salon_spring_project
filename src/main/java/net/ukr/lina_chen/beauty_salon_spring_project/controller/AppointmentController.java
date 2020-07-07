@@ -24,14 +24,14 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.*;
 
@@ -101,54 +101,12 @@ public class AppointmentController {
         model.addAttribute(ERROR, error != null);
         Master master = appointment.getMaster();
         model.addAttribute("master", masterService.getLocalizedDTO().map(appointment.getMaster()));
-        Map<String, List<LocalTime>> dateTime = getScheduleMap(request, master, getDates(master),
-                getMastersBusySchedule(master.getId()));
-        model.addAttribute("workingHours", getMastersWorkingHours(master));
+        Map<String, List<LocalTime>> dateTime = appointmentService.getScheduleMap(request, master);
+        model.addAttribute("workingHours", masterService.getMastersWorkingHours(master));
         model.addAttribute("dateTime", dateTime);
         return "user/time.html";
     }
 
-    private List<LocalTime> getMastersWorkingHours(Master master) {
-        return Stream.iterate(master.getTimeBegin(), curr -> curr.plusHours(ITERATE_UNIT)).
-                limit(ChronoUnit.HOURS.between(master.getTimeBegin(), master.getTimeEnd())).
-                collect(Collectors.toList());
-    }
-
-    private Map<String, List<LocalTime>> getScheduleMap(HttpServletRequest request, Master master,
-                                                        List<LocalDate> dates,
-                                                        List<LocalDateTime> busyTime) {
-        ResourceBundle bundle = ResourceBundle.getBundle("messages",
-                RequestContextUtils.getLocale(request));
-        Map<String, List<LocalTime>> dateTime = new LinkedHashMap<>();
-        LocalDateTime now = LocalDateTime.now();
-        for (LocalDate date : dates) {
-            List<LocalTime> timeList = Stream.iterate(master.getTimeBegin(), time -> time.plusHours(ITERATE_UNIT))
-                    .limit(ChronoUnit.HOURS.between(master.getTimeBegin(), master.getTimeEnd()))
-                    .filter(time -> !busyTime.contains(LocalDateTime.of(date, time)))
-                    .filter(time -> now.isBefore(LocalDateTime.of(date, time)))
-                    .collect(Collectors.toList());
-            dateTime.put(date.format(DateTimeFormatter.ofPattern(bundle.getString("date.format"))), timeList);
-        }
-        return dateTime;
-    }
-
-    private List<LocalDate> getDates(Master master) {
-        LocalDate startDate = LocalDateTime.now().isBefore(
-                LocalDateTime.of(LocalDate.now(), master.getTimeEnd())) ?
-                LocalDate.now() : LocalDate.now().plusDays(ITERATE_UNIT);
-        return Stream.iterate(startDate, date -> date.plusDays(ITERATE_UNIT))
-                .limit(ChronoUnit.DAYS.between(startDate, startDate.plusDays(SCHEDULE_DAYS)))
-                .collect(Collectors.toList());
-    }
-
-    private List<LocalDateTime> getMastersBusySchedule(Long masterId) {
-        List<Appointment> appointments = appointmentService.getMastersBusyTime(masterId);
-        return appointments.stream()
-                .map(app -> LocalDateTime.of(LocalDate.parse(app.getDate().toString(),
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                        app.getTime()))
-                .collect(Collectors.toList());
-    }
 
     @GetMapping("saveappointment")
     public String saveAppointment(@RequestParam(required = false) String day,
@@ -167,13 +125,12 @@ public class AppointmentController {
         log.info("User is added to appointment: " + appointment.getUser().getName());
         Long id = appointmentService.saveAppointment(appointment);
         sessionStatus.setComplete();
-        createAppointment();
         return "redirect:appointment/"+id;
     }
 
     @GetMapping(APPOINTMENT+"/{appointmentId}")
     public String appointment(@PathVariable Long appointmentId, Model model) throws AppointmentNotFoundException {
-        model.addAttribute(APPOINTMENT, appointmentService.getLocalizedAppointmentById(appointmentId));
+        model.addAttribute("appointmentDTO", appointmentService.getLocalizedAppointmentById(appointmentId));
         return "user/appointment.html";
     }
 
