@@ -5,6 +5,7 @@ import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.AppointmentNotFo
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.DoubleTimeRequestException;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.MasterNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.model.dto.AppointmentDTO;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.dto.CreateAppointmentDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.model.entity.*;
 import net.ukr.lina_chen.beauty_salon_spring_project.model.service.AppointmentService;
 import net.ukr.lina_chen.beauty_salon_spring_project.model.service.BeautyServiceImpl;
@@ -53,8 +54,8 @@ public class AppointmentController {
     }
 
     @ModelAttribute("appointment")
-    public Appointment createAppointment() {
-        return new Appointment();
+    public CreateAppointmentDTO createAppointment() {
+        return new CreateAppointmentDTO();
     }
 
     @GetMapping("servicetypes")
@@ -76,20 +77,17 @@ public class AppointmentController {
     @GetMapping("masters/{beautyService}")
     public String mastersPage(Model model,
                               @PathVariable BeautyService beautyService,
-                              @ModelAttribute("appointment") Appointment appointment,
-                              @AuthenticationPrincipal User user,
-                              HttpServletRequest request) throws MasterNotFoundException {
+                              @ModelAttribute("appointment") CreateAppointmentDTO appointment) {
         appointment.setBeautyService(beautyService);
         log.info("Beautyservice is added to appointment: " + appointment.getBeautyService().getName());
-        appointment.setUser(user);
-        log.info("User is added to appointment: " + appointment.getUser().getName());
         model.addAttribute("masters", masterService.findAllByServiceType(beautyService.getServiceType().getId()));
         return "user/masters.html";
     }
 
     @GetMapping("approve/{masterId}")
     public String approvePage(@PathVariable Long masterId,
-                              @ModelAttribute("appointment") Appointment appointment) throws MasterNotFoundException {
+                              @ModelAttribute("appointment") CreateAppointmentDTO appointment)
+            throws MasterNotFoundException {
         appointment.setMaster(masterService.getMasterAccordingBeautyService(
                 masterId, appointment.getBeautyService().getServiceType().getId()));
         log.info("Master is added to appointment: id " + appointment.getMaster().getId());
@@ -98,23 +96,22 @@ public class AppointmentController {
 
     @GetMapping("approve/time")
     public String schedulePage(Model model, HttpServletRequest request,
-                               @ModelAttribute(APPOINTMENT) Appointment appointment,
+                               @ModelAttribute(APPOINTMENT) CreateAppointmentDTO appointment,
                                @RequestParam(value = ERROR, required = false) String error) {
         model.addAttribute(ERROR, error != null);
         Master master = appointment.getMaster();
         model.addAttribute("master", masterService.getLocalizedDTO().map(appointment.getMaster()));
-        Map<String, List<LocalTime>> dateTime = getDateTime(request, master);
-        model.addAttribute("workingHours",
-                Stream.iterate(master.getTimeBegin(), curr -> curr.plusHours(ITERATE_UNIT)).
-                        limit(ChronoUnit.HOURS.between(master.getTimeBegin(), master.getTimeEnd())).
-                        collect(Collectors.toList()));
+        Map<String, List<LocalTime>> dateTime = getScheduleMap(request, master, getDates(master),
+                getMastersBusySchedule(master.getId()));
+        model.addAttribute("workingHours", getMastersWorkingHours(master));
         model.addAttribute("dateTime", dateTime);
         return "user/time.html";
     }
 
-
-    private Map<String, List<LocalTime>> getDateTime(HttpServletRequest request, Master master) {
-        return getScheduleMap(request, master, getDates(master), getMastersBusySchedule(master.getId()));
+    private List<LocalTime> getMastersWorkingHours(Master master) {
+        return Stream.iterate(master.getTimeBegin(), curr -> curr.plusHours(ITERATE_UNIT)).
+                limit(ChronoUnit.HOURS.between(master.getTimeBegin(), master.getTimeEnd())).
+                collect(Collectors.toList());
     }
 
     private Map<String, List<LocalTime>> getScheduleMap(HttpServletRequest request, Master master,
@@ -156,16 +153,19 @@ public class AppointmentController {
     @GetMapping("saveappointment")
     public String saveAppointment(@RequestParam(required = false) String day,
                                   @RequestParam(required = false) String seanceTime,
-                                  @ModelAttribute(APPOINTMENT) Appointment appointment,
-                                  SessionStatus sessionStatus, HttpServletRequest request)
+                                  @ModelAttribute(APPOINTMENT) CreateAppointmentDTO createAppointmentDTO,
+                                  SessionStatus sessionStatus, HttpServletRequest request,
+                                  @AuthenticationPrincipal User user)
             throws DoubleTimeRequestException {
         ResourceBundle bundle = ResourceBundle.getBundle("messages",
                 RequestContextUtils.getLocale(request));
-        appointment.setDate(LocalDate.parse(day, DateTimeFormatter.ofPattern(bundle.getString("date.format"))));
-        log.info("Date is added to appointment: " + appointment.getDate());
-        appointment.setTime(LocalTime.parse(seanceTime));
-        log.info("Time is added to appointment: " + appointment.getTime());
-        Long id = appointmentService.createAppointment(appointment);
+        createAppointmentDTO.setDate(LocalDate.parse(day, DateTimeFormatter.ofPattern(bundle.getString("date.format"))));
+        log.info("Date is added to appointment: " + createAppointmentDTO.getDate());
+        createAppointmentDTO.setTime(LocalTime.parse(seanceTime));
+        log.info("Time is added to appointment: " + createAppointmentDTO.getTime());
+        Appointment appointment = appointmentService.createAppointment(createAppointmentDTO, user);
+        log.info("User is added to appointment: " + appointment.getUser().getName());
+        Long id = appointmentService.saveAppointment(appointment);
         sessionStatus.setComplete();
         createAppointment();
         return "redirect:appointment/"+id;

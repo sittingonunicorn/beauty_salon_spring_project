@@ -87,9 +87,7 @@ public class AdminPagesController {
                                            @PageableDefault(sort = {"date", "time"},
                                                    direction = Sort.Direction.ASC, size = 6) Pageable pageable,
                                            HttpServletRequest request) {
-
         model.addAttribute("appointments", appointmentService.findAppointmentsForMaster(masterId, pageable));
-
         return "admin/appointments.html";
     }
 }

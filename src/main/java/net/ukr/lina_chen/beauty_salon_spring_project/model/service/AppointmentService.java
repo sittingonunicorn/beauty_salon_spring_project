@@ -2,10 +2,12 @@ package net.ukr.lina_chen.beauty_salon_spring_project.model.service;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.ukr.lina_chen.beauty_salon_spring_project.model.dto.AppointmentDTO;
-import net.ukr.lina_chen.beauty_salon_spring_project.model.entity.Appointment;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.AppointmentNotFoundException;
 import net.ukr.lina_chen.beauty_salon_spring_project.exceptions.DoubleTimeRequestException;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.dto.AppointmentDTO;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.dto.CreateAppointmentDTO;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.entity.Appointment;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.entity.User;
 import net.ukr.lina_chen.beauty_salon_spring_project.model.mapper.LocalizedDtoMapper;
 import net.ukr.lina_chen.beauty_salon_spring_project.model.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +75,7 @@ public class AppointmentService {
     }
 
     @Transactional
-    public Long createAppointment(Appointment appointment) throws DoubleTimeRequestException {
+    public Long saveAppointment(Appointment appointment) throws DoubleTimeRequestException {
         if (isTimeBusy(appointment.getMaster().getId(),
                 appointment.getTime(), appointment.getDate())) {
             throw new DoubleTimeRequestException(appointment.getMaster().getUser().getName());
@@ -82,6 +84,16 @@ public class AppointmentService {
             log.info("Appointment's added to the schedule of master " + created.getMaster().getUser().getName());
             return created.getId();
         }
+    }
+
+    public Appointment createAppointment (CreateAppointmentDTO appointment, User user){
+        return Appointment.builder()
+                .beautyService(appointment.getBeautyService())
+                .date(appointment.getDate())
+                .time(appointment.getTime())
+                .master(appointment.getMaster())
+                .user(user)
+                .build();
     }
 
     public Appointment findAppointmentById(Long appointmentId) throws AppointmentNotFoundException {

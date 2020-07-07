@@ -20,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -60,12 +59,13 @@ public class MasterPagesController {
     }
 
     @GetMapping("appointments")
-    public String appointmentsPage(Model model, @AuthenticationPrincipal User user,
+    public String appointmentsPage(Model model, Principal principal,
                                    @PageableDefault(sort = {"date", "time"},
                                            direction = Sort.Direction.ASC, size = 6) Pageable pageable,
                                    @RequestParam(value = "error", required = false) String error,
                                    @RequestParam(value = "date", required = false) String date)
             throws MasterNotFoundException {
+        User user = userService.findByEmail(principal.getName());
         MasterDTO master = masterService.findMasterByUser(user);
         Page<AppointmentDTO> appointments = date != null ?
                 appointmentService.getMastersDailyAppointments(master.getId(), date, pageable)
@@ -95,12 +95,9 @@ public class MasterPagesController {
                                                   direction = Sort.Direction.DESC, size = 6) Pageable pageable)
             throws MasterNotFoundException {
         User user = userService.findByEmail(principal.getName());
-        System.out.println(user.getName());
         MasterDTO master = masterService.findMasterByUser(user);
-        System.out.println(master.getName());
         Page<ArchiveAppointmentDTO> archiveAppointments =
                 archiveAppointmentService.findCommentsForMaster(master.getId(), pageable);
-        archiveAppointments.forEach(System.out::println);
         model.addAttribute("archiveAppointments", archiveAppointments);
         model.addAttribute("pageNumbers", this.getPageNumbers(archiveAppointments.getTotalPages()));
         return "master/comments.html";

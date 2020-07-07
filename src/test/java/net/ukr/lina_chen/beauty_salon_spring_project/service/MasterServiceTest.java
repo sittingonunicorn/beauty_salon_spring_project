@@ -91,6 +91,6 @@ public class MasterServiceTest {
         when(masterRepository.findAll()).thenReturn(masters);
         List<MasterDTO> mastersDTO = masterService.findAll();
         verify(masterRepository, times(1)).findAll();
-        assertEquals("Inna", mastersDTO.get(0).getName());
+        assertEquals("Інна", mastersDTO.get(0).getName());
     }
 }
