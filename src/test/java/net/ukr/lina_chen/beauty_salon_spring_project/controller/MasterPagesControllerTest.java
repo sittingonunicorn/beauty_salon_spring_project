@@ -1,27 +1,39 @@
 package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 
 import net.ukr.lina_chen.beauty_salon_spring_project.controller.utility.MailService;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.dto.ArchiveAppointmentDTO;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.dto.MasterDTO;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.entity.User;
 import net.ukr.lina_chen.beauty_salon_spring_project.model.service.ArchiveAppointmentService;
+import net.ukr.lina_chen.beauty_salon_spring_project.model.service.MasterService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @WebAppConfiguration
-//@WithMockUser("inna@gmail.com")
 class MasterPagesControllerTest {
 
     @Autowired
@@ -32,6 +44,13 @@ class MasterPagesControllerTest {
 
     @MockBean
     private ArchiveAppointmentService archiveAppointmentService;
+
+    @MockBean
+    private MasterService masterService;
+
+    @Mock
+    private Page<ArchiveAppointmentDTO> archivePage;
+
     @MockBean
     private MailService mailService;
 
@@ -56,37 +75,24 @@ class MasterPagesControllerTest {
                 .andExpect(status().isOk());
     }
 
-
-    @Test
-    @WithUserDetails("inna@gmail.com")
-    void makeProvidedWithAppointmentId_whenMockMVC_thenResponseOK() throws Exception {
-        mockMvc.perform(get("/master/makeprovided")
-                .param("appointmentId", String.valueOf(14L))).andExpect((status().is3xxRedirection()))
-                .andExpect(redirectedUrl("/master/appointments"));
-    }
+//    @Test
+//    @WithUserDetails("inna@gmail.com")
+//    void makeProvidedWithAppointmentId_whenMockMVC_thenResponseOK() throws Exception {
+//        mockMvc.perform(get("/master/makeprovided")
+//                .param("appointmentId", String.valueOf(14L))).andExpect((status().is3xxRedirection()))
+//                .andExpect(redirectedUrl("/master/appointments"));
+//    }
 
     @Test
     @WithUserDetails("inna@gmail.com")
     void archiveAppointmentsPage() throws Exception {
-//        when(masterService.findMasterByUser(any(), anyBoolean())).thenReturn(MasterDTO.builder().id(1L).build());
-//        when(archiveAppointmentService.findCommentsForMaster(1L, any(), anyBoolean()))
-//                .thenReturn();
+        when(masterService.findMasterByUser(isA(User.class))).thenReturn(MasterDTO.builder().id(1L).build());
+        List<ArchiveAppointmentDTO> appointments = new ArrayList<>();
+        Page<ArchiveAppointmentDTO> page = new PageImpl(appointments);
+        when(archiveAppointmentService.findCommentsForMaster(eq(1L), isA(Pageable.class)))
+                .thenReturn(page);
         mockMvc.perform(get("/master/comments"))
-                .andExpect(status().isOk());
-//        System.out.println(masterService);
-//        System.out.println(archiveAppointmentService);
-//        verify(masterService, times(1)).findMasterByUser(
-//                (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal(), true);
-//        MasterDTO master = masterService.findMasterByUser(
-//                (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal(), true);
-//        verify(archiveAppointmentService, times(1)).findCommentsForMaster(master.getId(), any(), anyBoolean());
-    }
-
-    @Test
-    void handleMasterNotFoundException() {
-    }
-
-    @Test
-    void handleAppointmentNotFoundException() {
+                .andExpect(status().isOk())
+                .andExpect(view().name("master/comments.html"));
     }
 }
