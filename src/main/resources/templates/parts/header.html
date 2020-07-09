@@ -16,23 +16,23 @@
         </div>
         <div class="menu"  sec:authorize="hasAuthority('ADMIN')">
             <ul class="hr">
-                <li><a href="/admin/archiveappointments" th:text="#{link.comments}"></a></li>
-                <li><a href="/admin/appointments" th:text="#{link.appointments}"></a></li>
-                <li><a href="/user/servicetypes" th:text="#{link.create.new.appointment}"></a></li>
+                <li><a href="/admin/archiveappointments" th:text="#{link.comments}" class="btn btn-outline-info"></a></li>
+                <li><a href="/admin/appointments" th:text="#{link.appointments}" class="btn btn-outline-info"></a></li>
+                <li><a href="/user/servicetypes" th:text="#{link.create.new.appointment}" class="btn btn-outline-info"></a></li>
             </ul>
         </div>
         <div class="menu" sec:authorize="hasAuthority('MASTER')">
             <ul class="hr">
-                <li><a href="/master/comments" th:text="#{link.comments}"></a></li>
-                <li><a href="/master/appointments" th:text="#{link.appointments}"></a></li>
-                <li><a href="/user/servicetypes" th:text="#{link.create.new.appointment}"></a></li>
+                <li><a href="/master/comments" th:text="#{link.comments}" class="btn btn-outline-info"></a></li>
+                <li><a href="/master/appointments" th:text="#{link.appointments}" class="btn btn-outline-info"></a></li>
+                <li><a href="/user/servicetypes" th:text="#{link.create.new.appointment}" class="btn btn-outline-info"></a></li>
             </ul>
         </div>
         <div class="menu" sec:authorize="hasAuthority('USER')">
             <ul class="hr">
-                <li><a href="/user/servicetypes" th:text="#{link.create.new.appointment}"></a></li>
-                <li><a href="/user/archiveappointments" th:text="#{link.archive.appointments}"></a></li>
-                <li><a href="/user/appointments" th:text="#{link.appointments}"></a></li>
+                <li><a href="/user/servicetypes" th:text="#{link.create.new.appointment}" class="btn btn-outline-info"></a></li>
+                <li><a href="/user/archiveappointments" th:text="#{link.archive.appointments}" class="btn btn-outline-info"></a></li>
+                <li><a href="/user/appointments" th:text="#{link.appointments}" class="btn btn-outline-info"></a></li>
             </ul>
         </div>
     </div>

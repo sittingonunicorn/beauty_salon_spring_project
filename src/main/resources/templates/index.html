@@ -19,7 +19,9 @@
     <button type="submit" class="btn btn-info" onclick="location.href='/registration'"
             th:text="#{button.registration}">
     </button>
+    <h2 class="h2">Beauty Salon</h2>
 </nav>
-<p th:utext="#{message.task}"></p>
+<h5 th:utext="#{message.task}"></h5>
+<div th:replace="parts/footer :: footer"></div>
 </body>
 </html>

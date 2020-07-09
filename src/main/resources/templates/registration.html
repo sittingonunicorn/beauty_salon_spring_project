@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" th:href="@{../css/styles.css}">
+    <link rel="stylesheet" href="css/styles.css">
     <title>Beauty Salon Registration</title>
 </head>
 <body>
@@ -18,55 +16,67 @@
             th:text="#{language.ua}"></button>
     <button type="submit" class="btn btn-info" onclick="location.href='/login'"
             th:text="#{button.login}"></button>
+    <h2 class="h2">Beauty Salon</h2>
 </nav>
-<div class="container">
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <div class="card bg-light mb-3" style="margin-top:45px">
-                <div class="card-header">
-                    <h4 style="font-weight: bold; text-align: center;" th:text="#{form.registration}">Registration form</h4>
-                </div>
-                <div class="card-body">
-                    <div th:if="${emailError}">
-                        <div class="alert alert-danger" role="alert" th:text="#{email.not.unique}"></div>
+<div class="content">
+    <div class="content-inside">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-6" style="margin-left: auto; margin-right: auto;">
+                    <div class="card bg-light mb-3" style="align-items: center">
+                        <div class="card-header" style="width: 100%">
+                            <h4 style="font-weight: bold; text-align: center;" th:text="#{form.registration}">
+                                Registration
+                                form</h4>
+                        </div>
+                        <div class="card-body">
+                            <div th:if="${emailError}">
+                                <div class="alert alert-danger" role="alert" th:text="#{email.not.unique}"></div>
+                            </div>
+                            <div th:if="${errors!=null}" th:each="error: ${errors}">
+                                <div class="alert alert-danger" role="alert" th:text="${error}"></div>
+                            </div>
+                            <form method="post" th:action="@{/registration}" th:object="${userRegistrationDTO}">
+                                <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden">
+                                <div class="form-group">
+                                    <label for="e-mail" class="card-text" th:text="#{email}">E-mail</label>
+                                    <input required type="email" class="form-control" id="e-mail"
+                                           th:placeholder="#{email}"
+                                           name="email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password" class="card-text" th:text="#{password}">Password</label>
+                                    <input type="password" class="form-control" id="password"
+                                           th:placeholder="#{password}"
+                                           name="password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmPassword" class="card-text"
+                                           th:text="#{password.confirm}">Password</label>
+                                    <input type="password" class="form-control" id="confirmPassword"
+                                           th:placeholder="#{password.confirm}"
+                                           name="confirmPassword">
+                                </div>
+                                <div class="form-group">
+                                    <label for="name" class="card-text" th:text="#{name}">Name</label>
+                                    <input type="text" class="form-control" id="name" th:placeholder="#{name}"
+                                           name="name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="name" class="card-text" th:text="#{nameUkr}">Name</label>
+                                    <input type="text" class="form-control" id="nameUkr" th:placeholder="#{nameUkr}"
+                                           name="nameUkr">
+                                </div>
+                                <button type="submit" class="btn btn-outline-info" th:text="#{register}">Register
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                    <div th:if="${errors!=null}" th:each="error: ${errors}">
-                        <div class="alert alert-danger" role="alert" th:text="${error}"></div>
-                    </div>
-                    <form method="post" th:action="@{/registration}" th:object="${userRegistrationDTO}">
-                        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden">
-                        <div class="form-group">
-                            <label for="e-mail" class="card-text" th:text="#{email}">E-mail</label>
-                            <input required type="email" class="form-control" id="e-mail" th:placeholder="#{email}"
-                                   name="email">
-                        </div>
-                        <div class="form-group">
-                            <label for="password" class="card-text" th:text="#{password}">Password</label>
-                            <input type="password" class="form-control" id="password" th:placeholder="#{password}"
-                                   name="password">
-                        </div>
-                        <div class="form-group">
-                            <label for="confirmPassword" class="card-text" th:text="#{password.confirm}">Password</label>
-                            <input type="password" class="form-control" id="confirmPassword"
-                                   th:placeholder="#{password.confirm}"
-                                   name="confirmPassword">
-                        </div>
-                        <div class="form-group">
-                            <label for="name" class="card-text" th:text="#{name}">Name</label>
-                            <input type="text" class="form-control" id="name" th:placeholder="#{name}"
-                                   name="name">
-                        </div>
-                        <div class="form-group">
-                            <label for="name" class="card-text" th:text="#{nameUkr}">Name</label>
-                            <input type="text" class="form-control" id="nameUkr" th:placeholder="#{nameUkr}"
-                                   name="nameUkr">
-                        </div>
-                        <button type="submit" class="btn btn-outline-info" th:text="#{register}">Register</button>
-                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<div th:replace="parts/footer :: footer"></div>
 </body>
 </html>
