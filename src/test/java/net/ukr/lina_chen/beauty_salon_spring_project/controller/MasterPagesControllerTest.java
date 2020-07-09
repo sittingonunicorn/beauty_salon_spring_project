@@ -1,6 +1,5 @@
 package net.ukr.lina_chen.beauty_salon_spring_project.controller;
 
-import net.ukr.lina_chen.beauty_salon_spring_project.controller.utility.MailService;
 import net.ukr.lina_chen.beauty_salon_spring_project.model.dto.ArchiveAppointmentDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.model.dto.MasterDTO;
 import net.ukr.lina_chen.beauty_salon_spring_project.model.entity.User;
@@ -8,7 +7,6 @@ import net.ukr.lina_chen.beauty_salon_spring_project.model.service.ArchiveAppoin
 import net.ukr.lina_chen.beauty_salon_spring_project.model.service.MasterService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,9 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class MasterPagesControllerTest {
 
     @Autowired
-    private MasterPagesController masterPagesController;
-
-    @Autowired
     private MockMvc mockMvc;
 
     @MockBean
@@ -47,12 +42,6 @@ class MasterPagesControllerTest {
 
     @MockBean
     private MasterService masterService;
-
-    @Mock
-    private Page<ArchiveAppointmentDTO> archivePage;
-
-    @MockBean
-    private MailService mailService;
 
     @Test
     void masterAppointmentsPageUnauthorized() throws Exception {
@@ -88,6 +77,7 @@ class MasterPagesControllerTest {
     void archiveAppointmentsPage() throws Exception {
         when(masterService.findMasterByUser(isA(User.class))).thenReturn(MasterDTO.builder().id(1L).build());
         List<ArchiveAppointmentDTO> appointments = new ArrayList<>();
+        @SuppressWarnings("unchecked")
         Page<ArchiveAppointmentDTO> page = new PageImpl(appointments);
         when(archiveAppointmentService.findCommentsForMaster(eq(1L), isA(Pageable.class)))
                 .thenReturn(page);
