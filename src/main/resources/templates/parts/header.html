@@ -1,5 +1,6 @@
 <!--suppress ALL -->
-<header th:fragment="adminheader" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<header th:fragment="adminheader" xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <div>
         <div class="nav">
             <nav>
@@ -14,26 +15,42 @@
         <div>
             <h2 class="h2">Beauty Salon</h2>
         </div>
-        <div class="menu"  sec:authorize="hasAuthority('ADMIN')">
-            <ul class="hr">
-                <li><a href="/admin/archiveappointments" th:text="#{link.comments}" class="btn btn-outline-info"></a></li>
-                <li><a href="/admin/appointments" th:text="#{link.appointments}" class="btn btn-outline-info"></a></li>
-                <li><a href="/user/servicetypes" th:text="#{link.create.new.appointment}" class="btn btn-outline-info"></a></li>
-            </ul>
+        <div class="dropdown" sec:authorize="hasAuthority('ADMIN')" style="float: left">
+            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{menu.admin}">
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="/admin/archiveappointments" th:text="#{link.comments}"></a>
+                <a class="dropdown-item" href="/admin/appointments" th:text="#{link.appointments}"></a>
+            </div>
         </div>
-        <div class="menu" sec:authorize="hasAuthority('MASTER')">
-            <ul class="hr">
-                <li><a href="/master/comments" th:text="#{link.comments}" class="btn btn-outline-info"></a></li>
-                <li><a href="/master/appointments" th:text="#{link.appointments}" class="btn btn-outline-info"></a></li>
-                <li><a href="/user/servicetypes" th:text="#{link.create.new.appointment}" class="btn btn-outline-info"></a></li>
-            </ul>
-        </div>
-        <div class="menu" sec:authorize="hasAuthority('USER')">
-            <ul class="hr">
-                <li><a href="/user/servicetypes" th:text="#{link.create.new.appointment}" class="btn btn-outline-info"></a></li>
-                <li><a href="/user/archiveappointments" th:text="#{link.archive.appointments}" class="btn btn-outline-info"></a></li>
-                <li><a href="/user/appointments" th:text="#{link.appointments}" class="btn btn-outline-info"></a></li>
-            </ul>
+        <div class="dropdown" sec:authorize="hasAuthority('MASTER')" style="float: left">
+            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{menu.master}">
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="/master/comments" th:text="#{link.comments}"></a>
+            <a class="dropdown-item" href="/master/appointments" th:text="#{link.appointments}"></a>
         </div>
     </div>
+    <div class="dropdown" sec:authorize="isAuthenticated()" style="margin-left:160px">
+        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{menu.user}">
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="/user/servicetypes" th:text="#{link.create.new.appointment}"></a>
+            <a class="dropdown-item" href="/user/archiveappointments" th:text="#{link.archive.appointments}"></a>
+            <a class="dropdown-item" href="/user/appointments" th:text="#{link.appointments}"></a>
+        </div>
+    </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+            crossorigin="anonymous"></script>
 </header>
