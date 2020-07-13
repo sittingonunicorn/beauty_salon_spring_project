@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +34,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.*;
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.utility.IConstants.*;
 
 @Slf4j
 @RequestMapping("/user/")
@@ -136,8 +137,10 @@ public class AppointmentController {
 
     @GetMapping("appointments")
     public String appointmentsPage(Model model, @AuthenticationPrincipal User user,
-                                   @PageableDefault(sort = {"date", "time"}, direction = Sort.Direction.DESC,
-                                           size = 6) Pageable pageable,
+                                   @PageableDefault(size = 6) @SortDefault.SortDefaults({
+                                           @SortDefault(sort = "date", direction = Sort.Direction.DESC),
+                                           @SortDefault(sort = "time", direction = Sort.Direction.ASC)
+                                   }) Pageable pageable,
                                    @RequestParam(value = ERROR, required = false) String error) {
         Page<AppointmentDTO> appointments = appointmentService.findAppointmentsForUser(
                 user.getId(), pageable);

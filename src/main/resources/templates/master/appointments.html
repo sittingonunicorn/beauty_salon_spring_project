@@ -12,64 +12,69 @@
     </div>
     <p th:utext="#{message.master.schedule(${master.getName()})}">Master</p>
 </div>
-<table class="table table-hover">
-<tr class="table-info">
-<th th:each="date : ${dates}"> <a th:href="@{'/master/appointments?date='+${date}}" th:text="${date}"></a></th>
-</tr>
-</table>
+<div class="content">
+    <div class="content-inside">
+        <table class="table table-hover">
+            <tr class="table-info">
+                <th th:each="date : ${dates}"><a th:href="@{'/master/appointments?date='+${date}}"
+                                                 th:text="${date}"></a></th>
+            </tr>
+        </table>
 
-<form th:action="@{/master/makeprovided}">
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th th:text="#{var.beautyservice}">Service</th>
-            <th th:text="#{var.date}">Date</th>
-            <th th:text="#{var.time}">Time</th>
-            <th th:text="#{var.username}">User's name</th>
-            <th th:text="#{var.provided}">Provided</th>
-            <th>Set Provided</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:if="${#lists.isEmpty(appointments)}">
-            <td colspan="2"> No appointments available</td>
-        </tr>
-        <tr th:each="appointment : ${appointments}">
-            <td>
-                <span th:text="${appointment.getBeautyService()}">Service</span>
-            </td>
-            <td>
-                <span th:text="${appointment.getDate()}">Date</span>
-            </td>
-            <td>
-                <span th:text="${appointment.getTime()}">Time</span>
-            </td>
-            <td>
-                <span th:text="${appointment.getUserName()}">User's name</span>
-            </td>
-            <td>
-                <span th:text="#{|bool.${appointment.isProvided()}|}">Provided</span>
-            </td>
-            <td>
-                <div class="row-fluid practice" style="width: 99%; height: 100%;">
-                    <button type="submit" class="btn btn-outline-info" name="appointmentId"
-                            th:value="${appointment.id}" th:text="#{message.provided}">
-                        Finished
-                    </button>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</form>
-<nav aria-label="Page navigation example">
-    <ul class="pagination" th:if="${appointments.totalPages > 0}">
-        <li class="page-item" th:each="pageNumber : ${pageNumbers}">
-            <a class="page-link"
-               th:href="@{/master/appointments(size=${appointments.size}, page=${pageNumber})}"
-               th:text="${pageNumber+1}"></a></li>
-    </ul>
-</nav>
+        <form th:action="@{/master/makeprovided}">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th th:text="#{var.beautyservice}">Service</th>
+                    <th th:text="#{var.date}">Date</th>
+                    <th th:text="#{var.time}">Time</th>
+                    <th th:text="#{var.username}">User's name</th>
+                    <th th:text="#{var.provided}">Provided</th>
+                    <th th:text="#{message.set.provided}">Set Provided</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(appointments)}">
+                    <td colspan="2"> No appointments available</td>
+                </tr>
+                <tr th:each="appointment : ${appointments}">
+                    <td>
+                        <span th:text="${appointment.getBeautyService()}">Service</span>
+                    </td>
+                    <td>
+                        <span th:text="${appointment.getDate()}">Date</span>
+                    </td>
+                    <td>
+                        <span th:text="${appointment.getTime()}">Time</span>
+                    </td>
+                    <td>
+                        <span th:text="${appointment.getUserName()}">User's name</span>
+                    </td>
+                    <td>
+                        <span th:text="#{|bool.${appointment.isProvided()}|}">Provided</span>
+                    </td>
+                    <td>
+                        <div class="row-fluid practice" style="width: 99%; height: 100%;">
+                            <button type="submit" class="btn btn-outline-info" name="appointmentId"
+                                    th:value="${appointment.id}" th:text="#{message.provided}">
+                                Finished
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination" th:if="${appointments.totalPages > 0}">
+                <li class="page-item" th:each="pageNumber : ${pageNumbers}">
+                    <a class="page-link"
+                       th:href="@{/master/appointments(size=${appointments.size}, page=${pageNumber})}"
+                       th:text="${pageNumber+1}"></a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
 <div th:replace="parts/footer :: footer"></div>
 </body>
 </html>

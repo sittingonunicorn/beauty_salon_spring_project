@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.*;
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.utility.IConstants.*;
 
 
 @Slf4j

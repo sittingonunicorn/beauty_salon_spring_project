@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.DATE_FORMAT;
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.utility.IConstants.DATE_FORMAT;
 
 @Slf4j
 @Service
@@ -45,8 +45,8 @@ public class ArchiveAppointmentService {
         archiveAppointmentRepository.addCommentById(appointmentId, comment);
     }
 
-    public void save(ArchiveAppointment appointment) {
-        archiveAppointmentRepository.save(appointment);
+    public Long save(ArchiveAppointment appointment) {
+        return archiveAppointmentRepository.save(appointment).getId();
     }
 
     public ArchiveAppointmentDTO findById(Long appointmentId) throws AppointmentNotFoundException {

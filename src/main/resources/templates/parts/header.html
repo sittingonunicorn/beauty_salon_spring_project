@@ -15,34 +15,37 @@
         <div>
             <h2 class="h2">Beauty Salon</h2>
         </div>
-        <div class="dropdown" sec:authorize="hasAuthority('ADMIN')" style="float: left">
-            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{menu.admin}">
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="/admin/archiveappointments" th:text="#{link.comments}"></a>
-                <a class="dropdown-item" href="/admin/appointments" th:text="#{link.appointments}"></a>
+        <div class="flex-row">
+            <div class="dropdown" sec:authorize="isAuthenticated()">
+                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{menu.user}">
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="/user/servicetypes" th:text="#{link.create.new.appointment}"></a>
+                    <a class="dropdown-item" href="/user/archiveappointments"
+                       th:text="#{link.archive.appointments}"></a>
+                    <a class="dropdown-item" href="/user/appointments" th:text="#{link.appointments}"></a>
+                </div>
+            </div>
+            <div class="dropdown" sec:authorize="hasAuthority('ADMIN')">
+                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{menu.admin}">
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="/admin/archiveappointments" th:text="#{link.comments}"></a>
+                    <a class="dropdown-item" href="/admin/appointments" th:text="#{link.appointments}"></a>
+                </div>
+            </div>
+            <div class="dropdown" sec:authorize="hasAuthority('MASTER')">
+                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{menu.master}">
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="/master/comments" th:text="#{link.comments}"></a>
+                    <a class="dropdown-item" href="/master/appointments" th:text="#{link.appointments}"></a>
+                </div>
             </div>
         </div>
-        <div class="dropdown" sec:authorize="hasAuthority('MASTER')" style="float: left">
-            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{menu.master}">
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="/master/comments" th:text="#{link.comments}"></a>
-            <a class="dropdown-item" href="/master/appointments" th:text="#{link.appointments}"></a>
-        </div>
-    </div>
-    <div class="dropdown" sec:authorize="isAuthenticated()" style="margin-left:160px">
-        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{menu.user}">
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="/user/servicetypes" th:text="#{link.create.new.appointment}"></a>
-            <a class="dropdown-item" href="/user/archiveappointments" th:text="#{link.archive.appointments}"></a>
-            <a class="dropdown-item" href="/user/appointments" th:text="#{link.appointments}"></a>
-        </div>
-    </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
             integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"

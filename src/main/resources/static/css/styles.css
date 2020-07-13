@@ -12,11 +12,19 @@ html, body {
     min-height: 100%;
 }
 .content-inside {
-    padding: 20px 20px 70px;
+    padding: 20px 20px 50px;
 }
 
 .nav {
     padding-left: 70%;
+}
+
+.flex-row {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: row-reverse;
 }
 
 .h2 {

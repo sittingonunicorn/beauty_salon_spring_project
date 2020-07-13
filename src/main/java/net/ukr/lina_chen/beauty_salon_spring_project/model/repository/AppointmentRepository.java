@@ -20,7 +20,8 @@ import java.util.Optional;
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
     Page<Appointment> findAppointmentsByMasterIdAndProvidedFalseOrderByDate(@NonNull Long masterId, Pageable pageable);
 
-    Page<Appointment> findAppointmentsByUserIdOrderByDate(@NonNull Long userId, Pageable pageable);
+    Page<Appointment> findAppointmentsByUserIdAndProvidedOrderByDate(@NonNull Long userId, boolean IsProvided,
+                                                                     Pageable pageable);
 
     Optional<Appointment> findAppointmentByMasterIdAndTimeAndDate(@NonNull Long masterId, LocalTime time, LocalDate date);
 

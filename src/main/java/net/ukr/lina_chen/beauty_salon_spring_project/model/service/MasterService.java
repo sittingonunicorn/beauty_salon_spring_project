@@ -17,7 +17,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.ITERATE_UNIT;
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.utility.IConstants.ITERATE_UNIT;
 
 @Service
 public class MasterService {

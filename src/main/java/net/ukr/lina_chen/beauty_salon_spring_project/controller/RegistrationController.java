@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.REGISTRATION_PAGE;
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.utility.IConstants.REGISTRATION_PAGE;
 
 @Slf4j
 @Controller

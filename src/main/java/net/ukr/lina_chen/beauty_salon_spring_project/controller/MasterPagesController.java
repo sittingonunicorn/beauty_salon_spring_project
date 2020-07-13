@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.*;
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.utility.IConstants.*;
 
 @Slf4j
 @PreAuthorize("hasAuthority('MASTER')")
@@ -83,9 +83,9 @@ public class MasterPagesController {
     public String makeProvided(@RequestParam Long appointmentId) throws AppointmentNotFoundException {
         Appointment appointment = appointmentService.setAppointmentProvided(appointmentId);
         ArchiveAppointment archiveAppointment = new ArchiveAppointment(appointment, null);
-        archiveAppointmentService.save(archiveAppointment);
+        Long archiveId = archiveAppointmentService.save(archiveAppointment);
         appointmentService.deleteAppointment(appointment);
-        mailService.send(archiveAppointment.getUser().getEmail(), archiveAppointment.getMaster().getId());
+        mailService.send(archiveAppointment.getUser().getEmail(), archiveId);
         return "redirect:/master/appointments";
     }
 

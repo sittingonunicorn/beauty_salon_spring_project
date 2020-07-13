@@ -60,6 +60,7 @@ class MasterPagesControllerTest {
     @Test
     @WithUserDetails("inna@gmail.com")
     void masterAppointmentsPageMaster() throws Exception {
+        when(masterService.findMasterByUser(isA(User.class))).thenReturn(MasterDTO.builder().id(1L).build());
         mockMvc.perform(get("/master/appointments"))
                 .andExpect(status().isOk());
     }

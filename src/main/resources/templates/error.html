@@ -1,11 +1,30 @@
 <!DOCTYPE html>
 <!--suppress ALL -->
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="parts/head :: head">
-    <title>Error page</title>
+    <title>Beauty Salon Error page</title>
 </head>
 <body>
-<div th:replace="parts/header :: header"></div>
+<div class="nav">
+    <nav>
+        <button type="submit" class="btn btn-outline-info" onclick="location.href='?lang=en_US'"
+                th:text="#{language.en}"></button>
+        <button type="submit" class="btn btn-outline-info" onclick="location.href='?lang=ua_UA'"
+                th:text="#{language.ua}"></button>
+        <button type="button" class="btn btn-info" onclick="location.href='/logout'"
+                th:text="#{logout}" sec:authorize="isAuthenticated()"></button>
+        <button type="submit" class="btn btn-info" onclick="location.href='/login'"
+                th:text="#{button.login}" sec:authorize="isAnonymous()">
+        </button>
+        <button type="submit" class="btn btn-info" onclick="location.href='/registration'"
+                th:text="#{button.registration}" sec:authorize="isAnonymous()">
+        </button>
+    </nav>
+</div>
+<div>
+    <h2 class="h2">Beauty Salon</h2>
+</div>
 <h5 th:text="#{message.error}">Error</h5>
 <div th:replace="parts/footer :: footer"></div>
 </body>

@@ -28,12 +28,12 @@ public class MailService {
         this.mailSender = mailSender;
     }
 
-    public void send(String addressed, Long masterId) {
+    public void send(String addressed, Long appointmentId) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(username);
         message.setTo(addressed);
         message.setSubject(subject);
-        message.setText(text + masterId);
+        message.setText(text + appointmentId);
         mailSender.send(message);
     }
 }

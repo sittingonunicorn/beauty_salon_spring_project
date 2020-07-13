@@ -29,7 +29,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static net.ukr.lina_chen.beauty_salon_spring_project.controller.IConstants.*;
+import static net.ukr.lina_chen.beauty_salon_spring_project.controller.utility.IConstants.*;
 
 
 @Slf4j
@@ -49,7 +49,7 @@ public class AppointmentService {
     }
 
     public Page<AppointmentDTO> findAppointmentsForUser(@NonNull Long userId, Pageable pageable) {
-        return appointmentRepository.findAppointmentsByUserIdOrderByDate(userId, pageable)
+        return appointmentRepository.findAppointmentsByUserIdAndProvidedOrderByDate(userId, false, pageable)
                 .map(a -> getLocalizedDTO().map(a));
     }
 
@@ -98,11 +98,6 @@ public class AppointmentService {
                 .master(appointment.getMaster())
                 .user(user)
                 .build();
-    }
-
-    public Appointment findAppointmentById(Long appointmentId) throws AppointmentNotFoundException {
-        return appointmentRepository.findAppointmentById(appointmentId)
-                .orElseThrow(() -> new AppointmentNotFoundException(appointmentId));
     }
 
     public AppointmentDTO getLocalizedAppointmentById(Long appointmentId)
